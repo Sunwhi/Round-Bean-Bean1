@@ -134,6 +134,9 @@ GameObject:
   - component: {fileID: 205651918}
   - component: {fileID: 205651919}
   - component: {fileID: 205651920}
+  - component: {fileID: 205651921}
+  - component: {fileID: 205651922}
+  - component: {fileID: 205651923}
   m_Layer: 0
   m_Name: Animal
   m_TagString: Untagged
@@ -243,6 +246,64 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.5
+--- !u!50 &205651921
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 205651917}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
+--- !u!255 &205651922
+FixedJoint2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 205651917}
+  m_Enabled: 1
+  serializedVersion: 4
+  m_EnableCollision: 0
+  m_ConnectedRigidBody: {fileID: 1115786568}
+  m_BreakForce: Infinity
+  m_BreakTorque: Infinity
+  m_BreakAction: 3
+  m_AutoConfigureConnectedAnchor: 1
+  m_Anchor: {x: 0, y: 0}
+  m_ConnectedAnchor: {x: 0.00999999, y: 1.783}
+  m_DampingRatio: 0
+  m_Frequency: 0
+--- !u!114 &205651923
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 205651917}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78a6df6a5caac7644a842918ad4d31c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &304771338
 GameObject:
   m_ObjectHideFlags: 0
@@ -666,7 +727,7 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDrag: 3
+  m_LinearDrag: 1
   m_AngularDrag: 0.05
   m_GravityScale: 1.5
   m_Material: {fileID: 0}
@@ -727,8 +788,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a87810de68237534eac33c96fc06719a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  force: 1
-  jumpForce: 10
+  force: 4
+  jumpForce: 7
   isGround: 0
 --- !u!1 &2046649110
 GameObject:

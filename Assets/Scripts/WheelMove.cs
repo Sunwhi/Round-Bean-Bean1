@@ -16,17 +16,17 @@ public class Movement : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         if (Input.GetKey(KeyCode.D))
         {
-            rb.AddForce(Vector2.right * force);
+            rb.AddForce(Vector2.right * force , ForceMode2D.Force);
         }
         if(Input.GetKey(KeyCode.A)) 
         {
-            rb.AddForce(Vector2.left * force);
+            rb.AddForce(Vector2.left * force , ForceMode2D.Force);
         }
-        if(Input.GetKeyDown(KeyCode.Space) && isGround)
+        if(Input.GetKey(KeyCode.Space) && isGround)
         {
             rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
             isGround = false;

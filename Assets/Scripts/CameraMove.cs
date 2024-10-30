@@ -14,7 +14,7 @@ public class CameraMove : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void LateUpdate()
     {
         cameraPosition = new Vector3(circle.transform.position.x, circle.transform.position.y + 1, -10);
         transform.position = cameraPosition;
