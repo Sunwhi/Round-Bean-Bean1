@@ -8,10 +8,7 @@ public class AnimalPhysics : MonoBehaviour
 {
     [SerializeField] private float magnitude = 5.0f;
     Rigidbody2D rb;
-    //private Vector2 direction;
-    //private Vector2 velocity;
-    //private Vector2 acceleration;
-    //private Vector2 force;
+    //GameObject saddle = GameObject.Find("Saddle");
     
     // Start is called before the first frame update
     void Start()
@@ -22,6 +19,7 @@ public class AnimalPhysics : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+        // <기울이기 구현> 1,-1 / -1,-1 방향으로 힘을 가한다.
         if (Input.GetKey(KeyCode.RightArrow))
         {
             Vector2 direction = transform.right + (transform.up * (-1f));
@@ -37,16 +35,5 @@ public class AnimalPhysics : MonoBehaviour
             rb.AddForce(direction * magnitude, ForceMode2D.Force);
         }
     }
-    /*private void rightForce()
-    {
-        //Vector2.right
-        direction = transform.right + (transform.up * (-1f));
-        force = direction * magnitude;
-
-        acceleration = force / rb.mass;
-        velocity += acceleration / Time.deltaTime;
-
-        transform.position += (Vector3)velocity * Time.deltaTime;
-    }*/
 
 }
