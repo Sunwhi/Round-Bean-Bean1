@@ -1127,7 +1127,7 @@ MonoBehaviour:
   wheelRigidbody: {fileID: 1668159533}
   balanceForce: 200
   moveSpeed: 200
-  jumpForce: 10
+  jumpForce: 7
   isGround: 0
 --- !u!58 &1668159532
 CircleCollider2D:
@@ -1457,7 +1457,7 @@ Rigidbody2D:
   m_UseAutoMass: 0
   m_Mass: 0.3
   m_LinearDrag: 0
-  m_AngularDrag: 0.1
+  m_AngularDrag: 1
   m_GravityScale: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:

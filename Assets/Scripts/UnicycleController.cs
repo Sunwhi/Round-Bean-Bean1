@@ -24,13 +24,24 @@ public class UnicycleController : MonoBehaviour
         // 좌우 화살표 키로 균형 잡기 (회전력 적용)
         if (Input.GetKey(KeyCode.A))
         {
-            frameRigidbody.AddTorque(balanceForce * Time.deltaTime); // 반시계 방향 회전
+            if (frameRigidbody.velocity.magnitude > 1.0f && frameRigidbody.velocity.x >= 0) // 회전 속도 조절
+                frameRigidbody.AddTorque(-balanceForce * 1f * Time.deltaTime);
+            else
+                frameRigidbody.AddTorque(balanceForce * Time.deltaTime); // 반시계 방향 회전
         }
         else if (Input.GetKey(KeyCode.D))
         {
-            frameRigidbody.AddTorque(-balanceForce * Time.deltaTime); // 시계 방향 회전
+            if (frameRigidbody.velocity.magnitude > 1.0f && frameRigidbody.velocity.x < 0) // 회전 속도 조절
+                frameRigidbody.AddTorque(balanceForce * 1f * Time.deltaTime);
+            else
+                frameRigidbody.AddTorque(-balanceForce * Time.deltaTime); // 반시계 방향 회전
         }
-
+        /*
+        if (frameRigidbody.velocity.magnitude > 1.0f && frameRigidbody.velocity.x >= 0) // 회전 속도 조절
+            frameRigidbody.AddTorque(-balanceForce * 1f * Time.deltaTime);
+        if (frameRigidbody.velocity.magnitude > 1.0f && frameRigidbody.velocity.x < 0) // 회전 속도 조절
+            frameRigidbody.AddTorque(balanceForce * 1f * Time.deltaTime);
+        */
         // A, D 키로 바퀴를 회전시켜 전진/후진
         if (Input.GetKey(KeyCode.LeftArrow))
         {
@@ -46,11 +57,18 @@ public class UnicycleController : MonoBehaviour
             isGround = false;
         }
         
-        // 각회전 속도 조절, 너무 빠르지 않게
-        /*angularSpeed = frameRigidbody.velocity.magnitude;
+        //각회전 속도 조절, 너무 빠르지 않게
+        /*angularSpeed = frameRigidbody.velocity.magnitude; // angularSpeed: 회전 속력
         if (angularSpeed > 4)
         {
-            frameRigidbody.velocity -= frameRigidbody.velocity - Vector2()
+            if(frameRigidbody.velocity.x >= 0)
+            {
+                frameRigidbody.velocity -= frameRigidbody.velocity - (frameRigidbody.velocity / frameRigidbody.velocity * 4);
+            }
+            else
+            {
+                frameRigidbody.velocity -= frameRigidbody.velocity + (frameRigidbody.velocity / frameRigidbody.velocity * 4);
+            }
         }*/
     }
     private void OnCollisionEnter2D(Collision2D collision)
