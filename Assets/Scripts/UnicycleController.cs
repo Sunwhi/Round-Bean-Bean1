@@ -24,17 +24,19 @@ public class UnicycleController : MonoBehaviour
         // 좌우 화살표 키로 균형 잡기 (회전력 적용)
         if (Input.GetKey(KeyCode.A))
         {
-            if (frameRigidbody.velocity.magnitude > 1.0f && frameRigidbody.velocity.x >= 0) // 회전 속도 조절
+            frameRigidbody.AddTorque(balanceForce * Time.deltaTime); // 반시계 방향 회전
+            /*if (frameRigidbody.velocity.magnitude > 1.0f && frameRigidbody.velocity.x >= 0) // 회전 속도 조절
                 frameRigidbody.AddTorque(-balanceForce * 1f * Time.deltaTime);
             else
-                frameRigidbody.AddTorque(balanceForce * Time.deltaTime); // 반시계 방향 회전
+                frameRigidbody.AddTorque(balanceForce * Time.deltaTime); // 반시계 방향 회전*/
         }
         else if (Input.GetKey(KeyCode.D))
         {
-            if (frameRigidbody.velocity.magnitude > 1.0f && frameRigidbody.velocity.x < 0) // 회전 속도 조절
+            frameRigidbody.AddTorque(-balanceForce * Time.deltaTime);
+            /*if (frameRigidbody.velocity.magnitude > 1.0f && frameRigidbody.velocity.x < 0) // 회전 속도 조절
                 frameRigidbody.AddTorque(balanceForce * 1f * Time.deltaTime);
             else
-                frameRigidbody.AddTorque(-balanceForce * Time.deltaTime); // 반시계 방향 회전
+                frameRigidbody.AddTorque(-balanceForce * Time.deltaTime); // 반시계 방향 회전*/
         }
         /*
         if (frameRigidbody.velocity.magnitude > 1.0f && frameRigidbody.velocity.x >= 0) // 회전 속도 조절
