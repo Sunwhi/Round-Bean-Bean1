@@ -22,21 +22,21 @@ public class UnicycleController : MonoBehaviour
     {
 
         // 좌우 화살표 키로 균형 잡기 (회전력 적용)
-        if (Input.GetKey(KeyCode.LeftArrow))
+        if (Input.GetKey(KeyCode.A))
         {
             frameRigidbody.AddTorque(balanceForce * Time.deltaTime); // 반시계 방향 회전
         }
-        else if (Input.GetKey(KeyCode.RightArrow))
+        else if (Input.GetKey(KeyCode.D))
         {
             frameRigidbody.AddTorque(-balanceForce * Time.deltaTime); // 시계 방향 회전
         }
 
         // A, D 키로 바퀴를 회전시켜 전진/후진
-        if (Input.GetKey(KeyCode.A))
+        if (Input.GetKey(KeyCode.LeftArrow))
         {
             wheelRigidbody.AddTorque(moveSpeed * Time.deltaTime); // 왼쪽으로 회전
         }
-        else if (Input.GetKey(KeyCode.D))
+        else if (Input.GetKey(KeyCode.RightArrow))
         {
             wheelRigidbody.AddTorque(-moveSpeed * Time.deltaTime); // 오른쪽으로 회전
         }
