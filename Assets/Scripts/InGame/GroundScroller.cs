@@ -13,7 +13,7 @@ public class GroundScroller : MonoBehaviour
     public SpriteRenderer[] tiles;
     public Sprite[] groundImg;
     public GameObject player;
-    float cameraHalfWidth;
+    float cameraHalfWidth; 
     SpriteRenderer temp;
 
     // Start is called before the first frame update
@@ -21,6 +21,7 @@ public class GroundScroller : MonoBehaviour
     {
         temp = tiles[0];
         cameraHalfWidth = Camera.main.aspect * Camera.main.orthographicSize;
+        Debug.Log(cameraHalfWidth);
     }
 
     // Update is called once per frame
