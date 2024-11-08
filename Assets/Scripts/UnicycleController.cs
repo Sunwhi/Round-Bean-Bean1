@@ -62,7 +62,7 @@ public class UnicycleController : MonoBehaviour
     // 바닥에 닿았을때만 점프할 수 있게
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Ground"))
+        if (collision.gameObject.CompareTag("GGround"))
         {
             isGround = true;
         }
