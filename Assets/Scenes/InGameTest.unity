@@ -888,7 +888,7 @@ MonoBehaviour:
   frameRigidbody: {fileID: 1796770982}
   wheelRigidbody: {fileID: 1668159533}
   balanceForce: 200
-  moveSpeed: 200
+  moveSpeed: 250
   jumpForce: 8
   isGround: 0
 --- !u!58 &1668159532
@@ -940,7 +940,7 @@ Rigidbody2D:
   m_UseAutoMass: 0
   m_Mass: 1
   m_LinearDrag: 1
-  m_AngularDrag: 2
+  m_AngularDrag: 2.5
   m_GravityScale: 1.5
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -1033,6 +1033,7 @@ GameObject:
   - component: {fileID: 1796770982}
   - component: {fileID: 1796770983}
   - component: {fileID: 1796770986}
+  - component: {fileID: 1796770987}
   m_Layer: 0
   m_Name: Frame
   m_TagString: Untagged
@@ -1054,7 +1055,7 @@ Rigidbody2D:
   m_UseAutoMass: 0
   m_Mass: 0.25
   m_LinearDrag: 0
-  m_AngularDrag: 1
+  m_AngularDrag: 10
   m_GravityScale: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -1090,8 +1091,8 @@ HingeJoint2D:
     m_MaximumMotorForce: 10000
   m_UseLimits: 0
   m_AngleLimits:
-    m_LowerAngle: 0
-    m_UpperAngle: 180
+    m_LowerAngle: -90
+    m_UpperAngle: 90
 --- !u!212 &1796770984
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1206,6 +1207,19 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &1796770987
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1796770981}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 952d9fa23aacedd408d793c0cbcb16cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  frameRigidbody: {fileID: 1796770982}
 --- !u!1 &1836856138
 GameObject:
   m_ObjectHideFlags: 0
