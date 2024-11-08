@@ -50,7 +50,7 @@ public class UnicycleController : MonoBehaviour
             if(frameRigidbody.angularVelocity > 0 && Mathf.Abs(frameRigidbody.angularVelocity) > 150f)
                 frameRigidbody.AddTorque(-700f * Time.deltaTime);   
         }
-        //Debug.Log(Mathf.Abs(frameRigidbody.angularVelocity));
+
         // 스페이스바 점프
         if (Input.GetKey(KeyCode.Space) && isGround)
         {
