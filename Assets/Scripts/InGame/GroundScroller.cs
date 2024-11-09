@@ -21,12 +21,12 @@ public class GroundScroller : MonoBehaviour
     {
         temp = tiles[0];
         cameraHalfWidth = Camera.main.aspect * Camera.main.orthographicSize;
+        Debug.Log(cameraHalfWidth);
     }
 
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(player.transform.position.x);
         // check every tiles
         for (int i = 0; i < tiles.Length; i++)
         {
