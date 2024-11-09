@@ -21,17 +21,17 @@ public class GroundScroller : MonoBehaviour
     {
         temp = tiles[0];
         cameraHalfWidth = Camera.main.aspect * Camera.main.orthographicSize;
-        Debug.Log(cameraHalfWidth);
     }
 
     // Update is called once per frame
     void Update()
     {
+        Debug.Log(player.transform.position.x);
         // check every tiles
         for (int i = 0; i < tiles.Length; i++)
         {
             // set when to move the leftmost block that player already passed
-            if(player.transform.position.x - cameraHalfWidth-11 >= tiles[i].transform.position.x)
+            if(player.transform.position.x - cameraHalfWidth-7 >= tiles[i].transform.position.x) // cameraHalfWidth - 11 -> cameraHalfWidth - 7
             {
                 for(int q=0; q<tiles.Length; q++)
                 {
