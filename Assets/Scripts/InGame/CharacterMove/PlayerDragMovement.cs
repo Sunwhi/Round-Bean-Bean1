@@ -1,56 +1,55 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 
-public class NewBehaviourScript : MonoBehaviour
+public class PlayerDragMovement : MonoBehaviour
 {
-    private float screenWidthHalf;
-    [SerializeField] GameObject Protracter;
-    [SerializeField] GameObject Speedometer;
-    [SerializeField] GameObject mainCamera;
-    private float mainCameraXPos;
+    private Vector2 initialTouchPosition;
+    private bool isTouched;
+    private float screenHalfWidth;
+
+    [SerializeField] Rigidbody2D frameRigidbody;
+    [SerializeField] Rigidbody2D wheelRigidbody;
+    [SerializeField] private float balanceForce = 100f;
+    [SerializeField] private float moveSpeed = 5f;
+    [SerializeField] private float jumpForce = 10.0f;
+    [SerializeField] private bool isGround = false;
     // Start is called before the first frame update
     void Start()
     {
-        Protracter.SetActive(false);
-        Speedometer.SetActive(false);
-        mainCameraXPos = mainCamera.transform.position.x;
+        
     }
-    
+
     // Update is called once per frame
     void Update()
     {
-        if (Input.touchCount > 0)
+        if(Input.touchCount > 0)
         {
-            Touch touch1 = Input.GetTouch(0);
-            //Touch touch2 = Input.GetTouch(1);
+            Touch touch = Input.GetTouch(0);
 
-            screenWidthHalf = Screen.width / 2; 
-
-            Vector2 touch1Position = touch1.position; // c#에선 지역변수에 접근지정자 못 붙임. private 못 붙임!
-            //mainCameraXPos - screenWidthHalf < touch1Position.x && touch1Position.x < mainCameraXPos
-
-            if (touch1.phase == TouchPhase.Began ||  touch1.phase == TouchPhase.Moved)
+            if(touch.phase == TouchPhase.Began)
             {
-                if(touch1Position.x < screenWidthHalf)
+                initialTouchPosition = touch.position;
+                isTouched = true;
+            }
+            else if(touch.phase == TouchPhase.Moved && isTouched)
+            {
+                Vector2 currentTouchPosition = touch.position;
+                Vector2 dragDirection = currentTouchPosition - initialTouchPosition;
+                screenHalfWidth = Screen.width / 2;
+
+                if(initialTouchPosition.x < screenHalfWidth)
                 {
-                    Protracter.transform.position = Camera.main.ScreenToWorldPoint(touch1Position);
-                    Vector3 newPosition = Protracter.transform.position;
-                    newPosition.z = 0;
-                    Protracter.transform.position = newPosition;
-                    Protracter.SetActive(true);
-                }
-                else
-                {
-                    Speedometer.transform.position = Camera.main.ScreenToWorldPoint(touch1Position);
-                    Vector3 newPosition = Speedometer.transform.position;
-                    newPosition.z = 0;
-                    Speedometer.transform.position = newPosition;
-                    Speedometer.SetActive(true);
+                    if (dragDirection.x < 0)
+                    {
+                        frameRigidbody.AddTorque(balanceForce * Time.deltaTime); // 반시계 방향 회전
+                    }
+                    else if (dragDirection.x > 0)
+                    {
+                        frameRigidbody.AddTorque(-balanceForce * Time.deltaTime); // 시계 방향 회전
+                    }
                 }
             }
         }
-     
     }
 }
