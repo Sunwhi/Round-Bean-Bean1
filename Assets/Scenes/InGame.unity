@@ -492,7 +492,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   frameRigidbody: {fileID: 635412800}
   wheelRigidbody: {fileID: 256649934}
-  balanceForce: 200
+  balanceForce: 300
   moveSpeed: 250
   jumpForce: 8
   isGround: 0
