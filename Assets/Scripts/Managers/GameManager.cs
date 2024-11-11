@@ -5,7 +5,7 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     [SerializeField] Collider2D animalCollider;
-    private bool isGround = false;
+    public bool isGround = false;
     private bool gameOver;
 
     public static GameManager Instance { get; private set; } // ΩÃ±€≈Ê ¿ŒΩ∫≈œΩ∫
