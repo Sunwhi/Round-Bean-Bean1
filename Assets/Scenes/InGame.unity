@@ -524,7 +524,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   frameRigidbody: {fileID: 635412800}
   wheelRigidbody: {fileID: 256649934}
-  balanceForce: 200
+  balanceForce: 300
   moveSpeed: 250
   jumpForce: 8
   isGround: 0
@@ -1989,7 +1989,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 888336131}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 28cfb8881b9b44641b32b664e8c38511, type: 3}
   m_Name: 

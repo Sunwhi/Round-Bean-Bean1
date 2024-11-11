@@ -12,9 +12,9 @@ public class PlayerDragMovement : MonoBehaviour
 
     [SerializeField] Rigidbody2D frameRigidbody;
     [SerializeField] Rigidbody2D wheelRigidbody;
-    [SerializeField] private float balanceForce = 100f;
-    [SerializeField] private float moveSpeed = 5f;
-    [SerializeField] private float jumpForce = 10.0f;
+    [SerializeField] private float balanceForce;
+    [SerializeField] private float moveSpeed;
+    [SerializeField] private float jumpForce;
     [SerializeField] private bool isGround = false;
     // Start is called before the first frame update
     void Start()

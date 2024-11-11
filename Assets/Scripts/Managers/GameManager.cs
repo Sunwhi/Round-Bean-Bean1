@@ -1,7 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+/*
+ * GameManager 클래스 
+ * 싱글톤 이용하여 다른 씬이나 다른 오브젝트에서 GameManager 클래스 속 함수나 변수 공유 가능!
+ */
 public class GameManager : MonoBehaviour
 {
     [SerializeField] Collider2D animalCollider;
@@ -33,20 +36,14 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // AnimalCollision.cs에서 isGround가 true가 되었다면 GameOver함수를 호출한다.
         if (isGround) GameOver();
     }
 
+    // 게임을 멈춘다.
     private void GameOver()
     {
         Time.timeScale = 0;
         gameOver = true;
-    }
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.CompareTag("GGround"))
-        {
-            Debug.Log("collision");
-            isGround = true;
-        }
     }
 }
