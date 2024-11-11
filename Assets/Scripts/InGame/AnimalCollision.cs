@@ -19,7 +19,7 @@ public class AnimalCollision : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("GGround"))
         {
-            GameManager.Instance.isGround = true;
+            //GameManager.Instance.isGround = true;
         }
     }
 }
