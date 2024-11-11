@@ -31,7 +31,7 @@ public class GroundScroller : MonoBehaviour
         for (int i = 0; i < tiles.Length; i++)
         {
             // set when to move the leftmost block that player already passed
-            if(player.transform.position.x - cameraHalfWidth-6 >= tiles[i].transform.position.x) // cameraHalfWidth - 11 -> cameraHalfWidth - 7
+            if(player.transform.position.x - cameraHalfWidth-3 >= tiles[i].transform.position.x) // cameraHalfWidth - 11 -> cameraHalfWidth - 7
             {
                 for(int q=0; q<tiles.Length; q++)
                 {

@@ -30,7 +30,7 @@ public class NewBehaviourScript : MonoBehaviour
 
             Vector2 touch1Position = touch1.position; // c#에선 지역변수에 접근지정자 못 붙임. private 못 붙임!
             //mainCameraXPos - screenWidthHalf < touch1Position.x && touch1Position.x < mainCameraXPos
-
+                
             if (touch1.phase == TouchPhase.Began ||  touch1.phase == TouchPhase.Moved)
             {
 
