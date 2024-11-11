@@ -1872,6 +1872,7 @@ GameObject:
   - component: {fileID: 888336132}
   - component: {fileID: 888336133}
   - component: {fileID: 888336134}
+  - component: {fileID: 888336135}
   m_Layer: 0
   m_Name: Animal
   m_TagString: Untagged
@@ -1888,8 +1889,8 @@ Transform:
   m_GameObject: {fileID: 888336131}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.3857981, z: 0}
-  m_LocalScale: {x: 4.501006, y: 1.385798, z: 1}
+  m_LocalPosition: {x: 0, y: 1.22, z: 0}
+  m_LocalScale: {x: 3.600805, y: 1.1086384, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 635412805}
@@ -1981,6 +1982,18 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.5
+--- !u!114 &888336135
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 888336131}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28cfb8881b9b44641b32b664e8c38511, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1204084580
 GameObject:
   m_ObjectHideFlags: 0
@@ -2139,7 +2152,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0.5, z: 0}
-  m_LocalScale: {x: 2.9427798, y: 1.0241704, z: 1}
+  m_LocalScale: {x: 2, y: 1.0241704, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 635412805}
