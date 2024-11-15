@@ -1,14 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 /*
  * 화면 드래그를 통해 플레이어 움직임을 구현한다.
  */
 public class PlayerDragMovement : MonoBehaviour
 {
-    private Vector2 initialTouchPosition;
+    private Dictionary<int, Vector2> initialTouchPositions = new Dictionary<int, Vector2>();
     private bool isTouched;
-    private float screenHalfWidth = Screen.width / 2;
+    private float screenHalfWidth;
 
     [SerializeField] Rigidbody2D frameRigidbody;
     [SerializeField] Rigidbody2D wheelRigidbody;
@@ -16,98 +17,134 @@ public class PlayerDragMovement : MonoBehaviour
     [SerializeField] private float moveSpeed;
     [SerializeField] private float jumpForce;
     [SerializeField] private bool isGround = false;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        screenHalfWidth = Screen.width / 2;
     }
-
 
     // Update is called once per frame
     void Update()
     {
-        if(Input.touchCount > 0)
+        //for문 안 쓰면터치 개수가 한개일 때 문제 발생
+        if (Input.touchCount > 0)
         {
-            Touch touch = Input.GetTouch(0);
-
-            // 터치를 시작했을 때
-            if(touch.phase == TouchPhase.Began)
+            for (int i = 0; i < Input.touchCount; i++)
             {
-
-                initialTouchPosition = touch.position; // 처음 터치 위치 저장
-                isTouched = true; // 터치중임
+                Touch touch = Input.GetTouch(i);
+                TouchControl(touch);
             }
-            // 터치한 상태로 움직일 때(드래그)
-            else if((touch.phase == TouchPhase.Moved || touch.phase == TouchPhase.Stationary) && isTouched)
+        }
+    }
+    private void TouchControl(Touch touch)
+    {
+        int touchId = touch.fingerId;
+
+        if (touch.phase == TouchPhase.Began)
+        {
+            if(!initialTouchPositions.ContainsKey(touchId))
             {
-
-                Vector2 currentTouchPosition = touch.position; // 드래그한 후 위치를 계속 새로 받는다.
-                Vector2 dragDirection = currentTouchPosition - initialTouchPosition; // 드래그방향
-
-                //화면 왼쪽 터치
-                if (initialTouchPosition.x < screenHalfWidth)
-                {
-                    if (dragDirection.x < 0)
-                    {
-                        frameRigidbody.AddTorque(balanceForce * Time.deltaTime); // 반시계 방향 회전
-                    }
-                    else if (dragDirection.x > 0)
-                    {
-                        frameRigidbody.AddTorque(-balanceForce * Time.deltaTime); // 시계 방향 회전
-                    }
-                }
-                //화면 오른쪽 터치
-                else if (initialTouchPosition.x > screenHalfWidth)
-                {
-                    if (dragDirection.x < 0)
-                    {
-                        // 왼쪽으로 굴러감
-                        wheelRigidbody.AddTorque(moveSpeed * Time.deltaTime);
-
-                        if(dragDirection.y < 0 && isGround)
-                        {
-                            if(touch.phase == TouchPhase.Ended)
-                            {
-                                wheelRigidbody.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
-                                isGround = false;
-                            }
-                        }
-
-                        //오른쪽으로 가다가 왼쪽으로 확 꺾을 때 관성을 줄이기 위한 조건문
-                        if (frameRigidbody.angularVelocity < 0 && Mathf.Abs(frameRigidbody.angularVelocity) > 150f)
-                            frameRigidbody.AddTorque(700f * Time.deltaTime);
-                    }
-                    else if (dragDirection.x > 0)
-                    {
-                        // 오른쪽으로 굴러감
-                        wheelRigidbody.AddTorque(-moveSpeed * Time.deltaTime);
-
-                        if (dragDirection.y < 0 && isGround)
-                        {
-                            if (touch.phase == TouchPhase.Ended)
-                            {
-                                wheelRigidbody.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
-                                isGround = false;
-                            }
-                        }
-
-                        //왼쪽으로 가다가 오른쪽으로 확 꺾을 때 관성을 줄이기 위한 조건문
-                        if (frameRigidbody.angularVelocity > 0 && Mathf.Abs(frameRigidbody.angularVelocity) > 150f)
-                            frameRigidbody.AddTorque(-700f * Time.deltaTime);
-                    }
-                }
+                initialTouchPositions[touchId] = touch.position;
             }
-            // 점프!
-            else if(touch.phase == TouchPhase.Ended)
-            {
-                Vector2 currentTouchPosition = touch.position; // 드래그한 후 위치를 계속 새로 받는다.
-                Vector2 dragDirection = currentTouchPosition - initialTouchPosition; // 드래그방향
+            isTouched = true; // 터치중임
+        }
 
-                if(dragDirection.y<0 && isGround && (initialTouchPosition.x > screenHalfWidth))
+        if(initialTouchPositions.ContainsKey(touchId))
+        {
+            Vector2 initialTouchPosition = initialTouchPositions[touchId];
+
+            if (initialTouchPosition.x < screenHalfWidth)
+            {
+                LeftTouchControl(touch, initialTouchPosition);
+            }
+            else
+            {
+                RightTouchControl(touch, initialTouchPosition);
+            }
+        }
+
+        if(touch.phase == TouchPhase.Ended || touch.phase == TouchPhase.Canceled)
+        {
+            initialTouchPositions.Remove(touchId);
+        }
+    }
+
+    private void LeftTouchControl(Touch touch, Vector2 leftInitialTouchPosition)
+    {
+        // 터치한 상태로 움직일 때(드래그)
+        if ((touch.phase == TouchPhase.Moved || touch.phase == TouchPhase.Stationary) && isTouched)
+        {
+            Vector2 currentTouchPosition = touch.position; // 드래그한 후 위치를 계속 새로 받는다.
+            Vector2 dragDirection = currentTouchPosition - leftInitialTouchPosition; // 드래그방향
+
+            Debug.Log("화면 왼쪽");
+            if (dragDirection.x < 0)
+            {
+                frameRigidbody.AddTorque(balanceForce * Time.deltaTime); // 반시계 방향 회전
+            }
+            else
+            {
+                frameRigidbody.AddTorque(-balanceForce * Time.deltaTime); // 시계 방향 회전
+            }
+        }
+    }
+    private void RightTouchControl(Touch touch, Vector2 rightInitialTouchPosition)
+    {
+        // 터치한 상태로 움직일 때(드래그)
+        if ((touch.phase == TouchPhase.Moved || touch.phase == TouchPhase.Stationary) && isTouched)
+        {
+            Vector2 currentTouchPosition = touch.position; // 드래그한 후 위치를 계속 새로 받는다.
+            Vector2 dragDirection = currentTouchPosition - rightInitialTouchPosition; // 드래그방향
+
+            Debug.Log("화면 오른쪽");
+            if (dragDirection.x < 0)
+            {
+                // 왼쪽으로 굴러감
+                wheelRigidbody.AddTorque(moveSpeed * Time.deltaTime);
+
+                if (dragDirection.y < 0 && isGround)
                 {
-                    wheelRigidbody.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
-                    isGround = false;
+                    if (touch.phase == TouchPhase.Ended)
+                    {
+                        wheelRigidbody.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+                        isGround = false;
+                    }
                 }
+
+                //오른쪽으로 가다가 왼쪽으로 확 꺾을 때 관성을 줄이기 위한 조건문
+                if (frameRigidbody.angularVelocity < 0 && Mathf.Abs(frameRigidbody.angularVelocity) > 150f)
+                    frameRigidbody.AddTorque(700f * Time.deltaTime);
+            }
+            else
+            {
+                // 오른쪽으로 굴러감
+                wheelRigidbody.AddTorque(-moveSpeed * Time.deltaTime);
+
+                if (dragDirection.y < 0 && isGround)
+                {
+                    if (touch.phase == TouchPhase.Ended)
+                    {
+                        wheelRigidbody.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+                        isGround = false;
+                    }
+                }
+
+                //왼쪽으로 가다가 오른쪽으로 확 꺾을 때 관성을 줄이기 위한 조건문
+                if (frameRigidbody.angularVelocity > 0 && Mathf.Abs(frameRigidbody.angularVelocity) > 150f)
+                    frameRigidbody.AddTorque(-700f * Time.deltaTime);
+            }
+        }
+        // 점프!
+        else if (touch.phase == TouchPhase.Ended)
+        {
+            Vector2 currentTouchPosition = touch.position; // 드래그한 후 위치를 계속 새로 받는다.
+            Vector2 dragDirection = currentTouchPosition - rightInitialTouchPosition; // 드래그방향
+
+            if (dragDirection.y < 0 && isGround && (rightInitialTouchPosition.x > screenHalfWidth))
+            {
+                wheelRigidbody.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+                isGround = false;
             }
         }
     }

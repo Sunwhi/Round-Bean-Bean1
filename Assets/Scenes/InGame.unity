@@ -506,7 +506,7 @@ MonoBehaviour:
   frameRigidbody: {fileID: 635412800}
   wheelRigidbody: {fileID: 256649934}
   balanceForce: 300
-  moveSpeed: 250
+  moveSpeed: 300
   jumpForce: 8
   isGround: 0
 --- !u!114 &256649938
@@ -535,8 +535,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a500bf79699b7d4bb80b74b6eaa0356, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Protracter: {fileID: 0}
-  Speedometer: {fileID: 0}
+  frameRigidbody: {fileID: 635412800}
+  wheelRigidbody: {fileID: 256649934}
+  balanceForce: 350
+  moveSpeed: 300
+  jumpForce: 8
+  isGround: 0
 --- !u!1 &293683636
 GameObject:
   m_ObjectHideFlags: 0
