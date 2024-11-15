@@ -7,6 +7,7 @@ using UnityEngine;
  */
 public class PlayerDragMovement : MonoBehaviour
 {
+    // 왼쪽 오른쪽 터치 각각 따로 보관하는 딕셔너리
     private Dictionary<int, Vector2> initialTouchPositions = new Dictionary<int, Vector2>();
     private bool isTouched;
     private float screenHalfWidth;
@@ -27,7 +28,7 @@ public class PlayerDragMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //for문 안 쓰면터치 개수가 한개일 때 문제 발생
+        //for문 안 쓰면 터치 개수가 한개일 때 문제 발생
         if (Input.touchCount > 0)
         {
             for (int i = 0; i < Input.touchCount; i++)
@@ -39,6 +40,7 @@ public class PlayerDragMovement : MonoBehaviour
     }
     private void TouchControl(Touch touch)
     {
+        // 터치에 고유한 fingerId 할당
         int touchId = touch.fingerId;
 
         if (touch.phase == TouchPhase.Began)
@@ -72,13 +74,14 @@ public class PlayerDragMovement : MonoBehaviour
 
     private void LeftTouchControl(Touch touch, Vector2 leftInitialTouchPosition)
     {
+        //Debug.Log(touch.fingerId);
         // 터치한 상태로 움직일 때(드래그)
         if ((touch.phase == TouchPhase.Moved || touch.phase == TouchPhase.Stationary) && isTouched)
         {
             Vector2 currentTouchPosition = touch.position; // 드래그한 후 위치를 계속 새로 받는다.
             Vector2 dragDirection = currentTouchPosition - leftInitialTouchPosition; // 드래그방향
 
-            Debug.Log("화면 왼쪽");
+            //Debug.Log("화면 왼쪽");
             if (dragDirection.x < 0)
             {
                 frameRigidbody.AddTorque(balanceForce * Time.deltaTime); // 반시계 방향 회전
@@ -91,13 +94,14 @@ public class PlayerDragMovement : MonoBehaviour
     }
     private void RightTouchControl(Touch touch, Vector2 rightInitialTouchPosition)
     {
+        //Debug.Log(touch.fingerId);
         // 터치한 상태로 움직일 때(드래그)
         if ((touch.phase == TouchPhase.Moved || touch.phase == TouchPhase.Stationary) && isTouched)
         {
             Vector2 currentTouchPosition = touch.position; // 드래그한 후 위치를 계속 새로 받는다.
             Vector2 dragDirection = currentTouchPosition - rightInitialTouchPosition; // 드래그방향
 
-            Debug.Log("화면 오른쪽");
+            //Debug.Log("화면 오른쪽");
             if (dragDirection.x < 0)
             {
                 // 왼쪽으로 굴러감
