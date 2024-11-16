@@ -2712,7 +2712,7 @@ GameObject:
   - component: {fileID: 888336133}
   - component: {fileID: 888336134}
   - component: {fileID: 888336135}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: animal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2772,8 +2772,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 1680429511
+  m_SortingLayer: 1
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: dfd023410740e1f44836a2562b489ec0, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -4137,7 +4137,7 @@ SceneRoots:
   - {fileID: 434243837}
   - {fileID: 644607142}
   - {fileID: 448950820}
-  - {fileID: 231217277}
   - {fileID: 654881458}
+  - {fileID: 231217277}
   - {fileID: 399878225}
   - {fileID: 136280334}
