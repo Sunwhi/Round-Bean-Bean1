@@ -46,7 +46,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // Start is called before the first frame update
+
     void Start()
     {
         inGameScene = SceneManager.GetActiveScene(); // 현재 작동되고 있는 InGame씬을 저장함
@@ -55,10 +55,9 @@ public class GameManager : MonoBehaviour
         playerDragMovement = wheel.GetComponent <PlayerDragMovement>();
         time = 0; // 매 판마다 시간 0으로 초기화
         onlyOnce = 0; // 매 판마다 0으로 초기화
-
     }
 
-    // Update is called once per frame
+
     void Update()
     {
 
@@ -72,8 +71,9 @@ public class GameManager : MonoBehaviour
         if (gameOver) GameOver();
     }
 
-    // 초 단위의 time을 분과 초로 나누어서 표기함
-    // 00:00 (분, 초)로 표기됨.
+    /* 초 단위의 time을 분과 초로 나누어서 표기함
+     * 00:00 (분, 초)로 표기됨.
+    */
     public string FormatTime(float time)
     {
         int seconds = Mathf.FloorToInt(time);
@@ -82,23 +82,22 @@ public class GameManager : MonoBehaviour
         return $"{minutes} : {remainSeconds:00}";
     }
 
-    // 게임오버시에 여러가지 작용 구현
+    /*
+     * 게임오버시 여러가지 작용 구현한 함수
+     */
     private void GameOver()
     {
-        // 게임이 딱 끝났을 때 한번만 finalScore에 저장, 딱 한번만 PlayerPrefs 기록 새롭게 쓰기
+        // 게임이 딱 끝났을 때 한번만 finalScore에 저장 / 딱 한번만 PlayerPrefs 기록 새롭게 쓰기
+        // 이거 안하면 Update문 계속 호출되어 모든 기록들이 같아짐.
         if(onlyOnce == 0)
         {
             finalScore = time;
-            ScoreSorting(finalScore);
+            RecordNewScore(finalScore);
 
             onlyOnce = 1;
-            //Debug.Log(FormatTime(finalScore));
         }
 
         
-
-        // 플레이어프렙스에 43.4431s 형식으로 스코어 저장 -> 업적화면에서 관리 -> 배열 만들어서 정렬하고 5개 기록만 남기고 나머지 자른다는 형식으로 관리
-        //PlayerPrefs.SetFloat("score", finalScore); 
 
         Time.timeScale = 1f; // 시간 약간 느리게
         textGameOver.SetActive(true); // 게임오버 텍스트
@@ -134,7 +133,7 @@ public class GameManager : MonoBehaviour
 
 
 
-        // 게임 재시작 -> 현재 씬을 다시 로드한다.
+        // 'R' 눌러 게임 재시작 -> 현재 씬을 다시 로드한다.
         if(Input.GetKeyDown(KeyCode.R))
         {
             SceneManager.LoadScene(inGameScene.name);
@@ -142,10 +141,11 @@ public class GameManager : MonoBehaviour
     }
 
     /*
-     * 스코어를 넣으면 PlayerPrefs에 기존 스코어들의 순서에 맞춰 새롭게 기록한다.
-     * 클리어에 사용!
+     * 스코어를 넣으면 PlayerPrefs에 기존 스코어들의 순서에 맞춰 새롭게 기록한다. 
+     * 즉, 정렬되어 기록들이 저장.
+     * 나중에 클리어 구현할 때 사용!
      */
-    private void ScoreSorting(float finalScore)
+    private void RecordNewScore(float finalScore)
     {
         int newScoreIdx = 0; // 새로운 기록이 저장될 Index
         string scoreNum; // PlayerPrefs에 접근할 string
@@ -157,21 +157,19 @@ public class GameManager : MonoBehaviour
             scoreNum = "score" + i;
 
             if(finalScore < PlayerPrefs.GetFloat(scoreNum))
-            {
-                //Debug.Log("final : " + finalScore);
-               // Debug.Log(scoreNum + " : " + PlayerPrefs.GetFloat(scoreNum));
+            { 
                 newScoreIdx = i;
-               // Debug.Log(newScoreIdx);
                 break;
             }
         }
 
-        // 새로운 기록 PlayerPrefs에 끼워넣기
+        // 새로운 기록 PlayerPrefs에 newScoreIdx에 끼워넣기
+        // 뒤에서부터 앞으로. 뒤에서부터 한칸 앞의 기록들이 뒤로 이동
         for(int i = 4; i>=newScoreIdx; i--)
         {
             scoreNum = "score" + i;
 
-            if (i == newScoreIdx)
+            if (i == newScoreIdx) // 만약 새롭게 기록될 index라면 기록하고 튀어
             {
                 PlayerPrefs.SetFloat(scoreNum, finalScore);
                 return;
@@ -179,7 +177,7 @@ public class GameManager : MonoBehaviour
 
             frontScoreNum = "score" + (i - 1);
 
-            PlayerPrefs.SetFloat(scoreNum,PlayerPrefs.GetFloat(frontScoreNum)); // 전의 score를 앞으로 넘긴다
+            PlayerPrefs.SetFloat(scoreNum,PlayerPrefs.GetFloat(frontScoreNum)); // 앞의 score를 뒤로 넘긴다
         }
     }
 }
