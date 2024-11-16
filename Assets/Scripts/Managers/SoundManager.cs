@@ -12,10 +12,10 @@ public class SoundManager : MonoBehaviour
 
     public AudioSource audioSource;
     // Start is called before the first frame update
-    void Start()
-    {
-        soundOnImage = button.image.sprite;
-        
+    void Start() 
+    { 
+        //PlayBGM(string name,float fadeDuration)
+        soundOnImage = button.image.sprite;        
     }
 
     // Update is called once per frame
