@@ -13,11 +13,11 @@ using UnityEngine.SceneManagement;
  */
 public class GameManager : MonoBehaviour
 {
-    Scene inGameScene;
+    Scene inGameScene; // 현재 인게임 씬 저장
 
     [SerializeField] Collider2D animalCollider;
-    public bool gameOver;
-    int onlyOnce = 0; // 게임 끝나고 딱 한번만 기록 저장하기 위해 만든 임시변수
+    public bool gameOver = false;
+    int onlyOnce; // 게임 끝나고 딱 한번만 기록 저장하기 위해 만든 임시변수
 
     float time;
     float finalScore; // 최종 시간 기록
@@ -38,7 +38,7 @@ public class GameManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject); // 씬이 바뀌어도 유지
+            //DontDestroyOnLoad(gameObject); // 씬이 바뀌어도 유지 -> 씬 재시작(게임 재시작)시에 변수들이 초기화되지 않는 문제가 발생! DontDestroyOnLoad는 잠시 끄는걸로
         }
         else
         {
@@ -49,11 +49,12 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        inGameScene = SceneManager.GetActiveScene();
+        inGameScene = SceneManager.GetActiveScene(); // 현재 작동되고 있는 InGame씬을 저장함
 
         unicycleController = wheel.GetComponent<UnicycleController>();
         playerDragMovement = wheel.GetComponent <PlayerDragMovement>();
-        time = 0;
+        time = 0; // 매 판마다 시간 0으로 초기화
+        onlyOnce = 0; // 매 판마다 0으로 초기화
     }
 
     // Update is called once per frame
@@ -91,6 +92,7 @@ public class GameManager : MonoBehaviour
             Debug.Log(FormatTime(finalScore));
         }
 
+        
 
         // 플레이어프렙스에 00:00형식으로 스코어 저장 -> 업적화면에서 관리 -> 배열 만들어서 정렬하고 10개 기록만 남기고 나머지 자른다는 형식으로 관리
         PlayerPrefs.SetString("score", FormatTime(finalScore)); 
@@ -114,10 +116,13 @@ public class GameManager : MonoBehaviour
         {
             animalRigidBody.AddTorque(-20f * Time.deltaTime);
         }
-        // 이동관련 스크립트 막아서 게임오버 이후 움직이지 못하게
+        // 이동관련 스크립트 막아서 게임오버 이후 움직이지 못하게 함
         playerDragMovement.enabled = false;
         unicycleController.enabled = false;
 
+
+
+        // 게임 재시작 -> 현재 씬을 다시 로드한다.
         if(Input.GetKeyDown(KeyCode.R))
         {
             SceneManager.LoadScene(inGameScene.name);
