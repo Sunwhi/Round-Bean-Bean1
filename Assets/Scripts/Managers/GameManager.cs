@@ -99,7 +99,7 @@ public class GameManager : MonoBehaviour
 
         
 
-        Time.timeScale = 1f; // 시간 약간 느리게
+        Time.timeScale = 1f; // 시간 약간 느리게 -> 아님
         textGameOver.SetActive(true); // 게임오버 텍스트
 
 
@@ -161,6 +161,7 @@ public class GameManager : MonoBehaviour
                 newScoreIdx = i;
                 break;
             }
+            if (i == 4) return; // 5개의 기록들에 속하지 않으면 아예 기록 X 그리고 return
         }
 
         // 새로운 기록 PlayerPrefs에 newScoreIdx에 끼워넣기
