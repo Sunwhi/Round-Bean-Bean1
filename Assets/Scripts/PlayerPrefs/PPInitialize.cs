@@ -56,8 +56,8 @@ public class PPTEST : MonoBehaviour
         {
             scoreNum = "score" + i;
             PlayerPrefs.SetFloat(scoreNum, 10000f); // 초기화 숫자는 10000f
-            dateNum = "date" + 0;
-            PlayerPrefs.SetString(dateNum, DateTime.Now.ToString("yyyy-MM-dd"));
+            dateNum = "date" + i;
+            PlayerPrefs.SetString(dateNum, null);
         }
         PlayerPrefs.SetInt("Initialized", 1);
 
