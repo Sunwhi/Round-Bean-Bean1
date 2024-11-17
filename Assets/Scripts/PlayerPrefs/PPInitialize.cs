@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,6 +8,7 @@ public class PPTEST : MonoBehaviour
     float score;
     string strScore;
     string scoreNum;
+    string dateNum;
     // Start is called before the first frame update
     void Start()
     {
@@ -35,6 +37,9 @@ public class PPTEST : MonoBehaviour
                 
                 strScore = FormatTime(score);
                 Debug.Log(scoreNum + " : " + strScore);
+
+                dateNum = "date" + i;
+                Debug.Log("date : " + PlayerPrefs.GetString(dateNum));
             }
         }
         // I 누르면 초기화
@@ -44,6 +49,20 @@ public class PPTEST : MonoBehaviour
         }
     }
 
+    // PlayerPrefs 초기화. 게임 깔았을 때 초기 상태 확인 위해서.
+    void PlayerPrefsInitialize()
+    {
+        for (int i = 0; i < 5; i++)
+        {
+            scoreNum = "score" + i;
+            PlayerPrefs.SetFloat(scoreNum, 10000f); // 초기화 숫자는 10000f
+            dateNum = "date" + 0;
+            PlayerPrefs.SetString(dateNum, DateTime.Now.ToString("yyyy-MM-dd"));
+        }
+        PlayerPrefs.SetInt("Initialized", 1);
+
+        Debug.Log("PlayerPrefs are newly Initialized");
+    }
 
     // 기록 예쁘게 표시 00 : 00
     public string FormatTime(float time)
@@ -54,16 +73,5 @@ public class PPTEST : MonoBehaviour
         return $"{minutes} : {remainSeconds:00}";
     }
 
-    // PlayerPrefs 초기화. 게임 깔았을 때 초기 상태 확인 위해서.
-    void PlayerPrefsInitialize()
-    {
-        for (int i = 0; i < 5; i++)
-        {
-            scoreNum = "score" + i;
-            PlayerPrefs.SetFloat(scoreNum, 10000f); // 초기화 숫자는 10000f
-        }
-        PlayerPrefs.SetInt("Initialized", 1);
-
-        Debug.Log("PlayerPrefs are newly Initialized");
-    }
+    
 }

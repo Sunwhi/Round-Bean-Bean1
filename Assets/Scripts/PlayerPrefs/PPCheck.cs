@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using UnityEngine;
 using UnityEngine.SocialPlatforms.Impl;
 
@@ -8,6 +9,7 @@ public class PPConfirm : MonoBehaviour
     float score;
     string strScore;
     string scoreNum;
+    string dateNum;
     // Start is called before the first frame update
     void Start()
     {
@@ -26,6 +28,9 @@ public class PPConfirm : MonoBehaviour
 
                 strScore = GameManager.Instance.FormatTime(score);
                 Debug.Log(scoreNum + " : " + strScore);
+
+                dateNum = "date" + i;
+                Debug.Log(PlayerPrefs.GetString(dateNum));
             }
         }
     }

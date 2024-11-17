@@ -151,6 +151,9 @@ public class GameManager : MonoBehaviour
         string scoreNum; // PlayerPrefs에 접근할 string
         string frontScoreNum; // 새로운 기록 끼워넣을때 scoreNum의 앞 가리키기
 
+        string dateNum;
+        string frontDateNum;
+
         // 새로운 기록이 몇번째 기록인가 찾기
         for(int i=0; i<5; i++)
         {
@@ -169,16 +172,20 @@ public class GameManager : MonoBehaviour
         for(int i = 4; i>=newScoreIdx; i--)
         {
             scoreNum = "score" + i;
+            dateNum = "date" + i;
 
             if (i == newScoreIdx) // 만약 새롭게 기록될 index라면 기록하고 튀어
             {
                 PlayerPrefs.SetFloat(scoreNum, finalScore);
+                PlayerPrefs.SetString(dateNum, DateTime.Now.ToString("yyyy-MM-dd"));
                 return;
             }
 
             frontScoreNum = "score" + (i - 1);
+            frontDateNum = "date" + (i - 1);    
 
-            PlayerPrefs.SetFloat(scoreNum,PlayerPrefs.GetFloat(frontScoreNum)); // 앞의 score를 뒤로 넘긴다
+            PlayerPrefs.SetFloat(scoreNum, PlayerPrefs.GetFloat(frontScoreNum)); // 앞의 score를 뒤로 넘긴다
+            PlayerPrefs.SetString(dateNum, PlayerPrefs.GetString(frontDateNum));
         }
     }
 }
