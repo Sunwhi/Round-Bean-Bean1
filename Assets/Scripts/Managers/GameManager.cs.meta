@@ -3,7 +3,13 @@ guid: 519b6b4a50b8a75418f054ebd283f96f
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - animalCollider: {instanceID: 0}
+  - textTime: {instanceID: 0}
+  - textGameOver: {instanceID: 0}
+  - animal: {instanceID: 0}
+  - frameRigidBody: {instanceID: 0}
+  - wheel: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

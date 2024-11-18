@@ -17,16 +17,19 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] Collider2D animalCollider;
     public bool gameOver = false;
+    public bool gameClear = false;
     int onlyOnce; // 게임 끝나고 딱 한번만 기록 저장하기 위해 만든 임시변수
 
     float time; // 게임 시간 기록
     float finalScore; // 최종 시간 기록
     [SerializeField] TextMeshProUGUI textTime;  // 시간을 나타내는 텍스트
     [SerializeField] GameObject textGameOver; // 게임오버 텍스트, setActive() 호출 위해서 GameObject로 
+    [SerializeField] GameObject textGameClear; // 게임 클리어 텍스트
 
     [SerializeField] GameObject animal;
     [SerializeField] Rigidbody2D frameRigidBody;
     public GameObject wheel;
+    public GameObject frame;
     private UnicycleController unicycleController;
     private PlayerDragMovement playerDragMovement;
 
@@ -64,11 +67,13 @@ public class GameManager : MonoBehaviour
         time += Time.deltaTime;
 
         //textTime에 현재 시간을 표시
-        if (!gameOver)
+        if (!gameOver && !gameClear)
             textTime.text = FormatTime(time);
 
         // AnimalCollision.cs에서 isGround가 true가 되었다면 GameOver함수를 호출한다.
         if (gameOver) GameOver();
+
+        if (gameClear) GameClear();
     }
 
     /* 초 단위의 time을 분과 초로 나누어서 표기함
@@ -102,8 +107,6 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 1f; // 시간 약간 느리게 -> 아님
         textGameOver.SetActive(true); // 게임오버 텍스트
 
-
-
         /* 동물 자전거에서 분리시키고, 이동방향으로 데굴데굴 구르게 */
         animal.transform.SetParent(null);
 
@@ -135,6 +138,39 @@ public class GameManager : MonoBehaviour
 
         // 'R' 눌러 게임 재시작 -> 현재 씬을 다시 로드한다.
         if(Input.GetKeyDown(KeyCode.R))
+        {
+            SceneManager.LoadScene(inGameScene.name);
+        }
+    }
+
+    private void GameClear()
+    {
+        // 게임이 딱 끝났을 때 한번만 finalScore에 저장 / 딱 한번만 PlayerPrefs 기록 새롭게 쓰기
+        // 이거 안하면 Update문 계속 호출되어 모든 기록들이 같아짐.
+        if (onlyOnce == 0)
+        {
+            finalScore = time;
+            RecordNewScore(finalScore);
+
+            onlyOnce = 1;
+        }
+
+
+
+        Time.timeScale = 1f; // 시간 약간 느리게 -> 아님
+        textGameClear.SetActive(true); // 게임 클리어 텍스트
+
+        // 이동관련 스크립트 막아서 게임오버 이후 움직이지 못하게 함
+        playerDragMovement.enabled = false;
+        unicycleController.enabled = false;
+
+        // 바퀴 세워지고, 동물은 위로 점프?
+        //animal.transform.SetParent(null); // 외발자전거 위에서 점프할거니까 분리?
+        Rigidbody2D rigidbody = frame.GetComponent<Rigidbody2D>();
+        rigidbody.freezeRotation = true;
+
+        // 'R' 눌러 게임 재시작 -> 현재 씬을 다시 로드한다.
+        if (Input.GetKeyDown(KeyCode.R))
         {
             SceneManager.LoadScene(inGameScene.name);
         }

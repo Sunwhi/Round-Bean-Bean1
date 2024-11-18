@@ -13,7 +13,7 @@ public class AnimalCollision : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     // 만약 동물이 땅와 닿는다면 GameManager의 gameOver = true;
@@ -22,6 +22,15 @@ public class AnimalCollision : MonoBehaviour
         if (collision.gameObject.CompareTag("GGround"))
         {
             GameManager.Instance.gameOver = true;
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+
+        if (collision.gameObject.CompareTag("FinishLine"))
+        {
+            GameManager.Instance.gameClear = true;
         }
     }
 }
