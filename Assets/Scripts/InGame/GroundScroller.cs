@@ -32,13 +32,11 @@ public class GroundScroller : MonoBehaviour
     private int tilesEnd = 1;
 
     private int obstacleCount = 0;
+    private int obstacleCount_temp = 0;
     private int obstacleDelay = 0;
     private float obstacleChance = 0;
     private bool[] obstacleFlag = new bool[17]; // false: judgeable, true: already judged. set to false when declared
 
-
-
-    // Start is called before the first frame update
     void Start()
     {
         temp = tiles[0];
@@ -64,9 +62,9 @@ public class GroundScroller : MonoBehaviour
         // summer: 10m, autumn: 21m, winter: 33m, spring2: 45m
         if (distance < 10 * 2) SetSeason("spring");
         else if (distance < 21 * 2) SetSeason("summer");
-        else if (distance < 33 * 200) SetSeason("autumn"); // 가을 이후의 장애물 디버깅을 위해 잠시 거리를 늘려 두었음
-        else if (distance < 45 * 2) SetSeason("winter");
-        else if (distance < 50 * 2) SetSeason("spring"); // spring2
+        else if (distance < 33 * 10) SetSeason("autumn"); // 가을 이후의 장애물 디버깅을 위해 거리를 늘리는 부분 (*2를 늘리면 됨)
+        else if (distance < 45 * 10) SetSeason("winter");
+        else if (distance < 50 * 10) SetSeason("spring"); // spring2
 
         // check every tiles
         for (int i = 0; i < tiles.Length; i++)
@@ -97,59 +95,88 @@ public class GroundScroller : MonoBehaviour
             // summer: 0.2/4m, autumn: 0.25/2m, winter: 0.3/1m
             if (player.transform.position.x + cameraHalfWidth * 0.59 <= tiles[i].transform.position.x
                 && player.transform.position.x + cameraHalfWidth * 0.61 >= tiles[i].transform.position.x // when the block reaches at 80% of the display
-                && !obstacleFlag[i] && seasonNow >= 1) // and spawning obstacles is not judged yet, and season is after spring
+                && !obstacleFlag[i] && seasonNow >= 1) // and spawning obstacles is not judged yet, and season is after spring 
             {
-                // 문제의 가을 이후 생성 알고리즘 부분. 
+                // 문제의 가을 이후 생성 알고리즘 부분.
                 if (seasonNow >= 2) 
                 {
-                    #region autumn_spawnCliffsAndRocks
-                    obstacleFlag[i] = true; // true: have been judged
-                    bool cliffJudge = ProbabilityRandom(obstacleChance);
-                    if (obstacleCount > 0 && cliffJudge)
+                    #region afterAutumn_deprecated
+                    //obstacleFlag[i] = true; // true: have been judged
+                    //bool cliffJudge = ProbabilityRandom(obstacleChance);
+                    //if (obstacleCount > 0 && cliffJudge)
+                    //{
+                    //    bool cliffOrRock = ProbabilityRandom(0.5f); // 50% probability
+                    //    if (cliffOrRock) // cliff first, when true
+                    //    {
+                    //        SetTile(tiles[i], false); // hide tile 
+                    //        var rock = ObjectPool.GetObject();
+                    //        rock.transform.position = new Vector2(tiles[i].transform.position.x + 10, -0.5f);
+                    //        Debug.Log("cliff first! spawned at tile " + i);
+                    //    }
+                    //    else // rock first, when true
+                    //    {
+                    //        var rock = ObjectPool.GetObject();
+                    //        rock.transform.position = new Vector2(tiles[i].transform.position.x, -0.5f);
+                    //        try
+                    //        {
+                    //            SetTile(tiles[i + 5], false); // hide tile
+                    //        }
+                    //        catch (IndexOutOfRangeException)
+                    //        {
+                    //            SetTile(tiles[i - 12], false); // hide tile
+                    //        }
+                    //        Debug.Log("rock first! spawned at tile " + i);
+                    //    }
+
+                    //    // obstacles do not spawn more until following 5 blocks
+                    //    obstacleCount = -5;
+
+                    //    Debug.Log("obstacleCount : " + obstacleCount);
+                    //    break;
+                    //}
+                    //else
+                    //{
+                    //    obstacleCount++;
+                    //    Debug.Log("obstacleCount : " + obstacleCount);
+                    //    break;
+                    //}
+                    #endregion
+
+
+                    // 24.11.18 생성 로직 테스트를 위해 작성된 가을 이후 절벽 로직. 돌과 별개로 작동 중이므로 동시 생성 가능.
+                    obstacleFlag[i] = true;
+                    if (obstacleCount_temp > 0)
                     {
-                        bool cliffOrRock = ProbabilityRandom(0.5f); // 50% probability
-                        if (cliffOrRock) // cliff first, when true
+                        bool cliffJudge = ProbabilityRandom(obstacleChance);
+                        Debug.Log("...judging cliffs...");
+                        if (cliffJudge)
                         {
                             SetTile(tiles[i], false); // hide tile 
-                            Instantiate(rock, new Vector2(tiles[i].transform.position.x + 10, -0.5f), new Quaternion(0, 0, 0, 0)); // spawn rock after 5 block
-                            Debug.Log("cliff first! spawned at " + i);
                         }
-                        else // rock first, when true
-                        {
-                            Instantiate(rock, new Vector2(tiles[i].transform.position.x, -0.5f), new Quaternion(0, 0, 0, 0)); // spawn rock after 5 block
-                            try
-                            {
-                                SetTile(tiles[i + 5], false); // hide tile
-                            }
-                            catch (IndexOutOfRangeException)
-                            {
-                                SetTile(tiles[i - 12], false); // hide tile
-                            }
-                            Debug.Log("rock first! spawned at " + i);
-                        }
-
-                        // obstacles do not spawn more until following 5 blocks
-                        obstacleCount = -5;
-
-                        Debug.Log("obstacleCount : " + obstacleCount);
-                        break;
+                        obstacleCount_temp = obstacleDelay + 1; // 성공하든 실패하든 8m(4칸)마다 판정하므로 딜레이 적용.
+                        Debug.Log("obstacleCount_temp: " + obstacleCount_temp);
                     }
                     else
                     {
-                        obstacleCount++;
-                        Debug.Log("obstacleCount : " + obstacleCount);
-                        break;
+                        obstacleCount_temp++;
+                        Debug.Log("obstacleCount_temp: " + obstacleCount_temp);
                     }
-                    #endregion
                 }
-                #region summer_spawnOnlyRocks
-                // 여름 - 돌만 생성됨. 두 칸마다 판정이 아닌 매 칸 판정 후 생성 시 다음 두 칸은 생성 방지하는 방식.
+
+                #region summer
+                // 여름 - 돌만 생성됨. 
+                // 24.11.18 기준 생성 로직 테스트를 위해 전 계절에 적용 중.
                 obstacleFlag[i] = true; // true: have been judged
-                bool rockJudge = ProbabilityRandom(obstacleChance);
-                if (obstacleCount > 0 && rockJudge)
+                if (obstacleCount > 0)
                 {
-                    Instantiate(rock, new Vector2(tiles[i].transform.position.x + 2, -0.5f), new Quaternion(0, 0, 0, 0)); // spawn rock
-                    obstacleCount = obstacleDelay;
+                    bool rockJudge = ProbabilityRandom(obstacleChance);
+                    Debug.Log("...judging rocks...");
+                    if (rockJudge)
+                    {
+                        var rock = ObjectPool.GetObject();
+                        rock.transform.position = new Vector2(tiles[i].transform.position.x + 3.5f, -0.5f);
+                    }
+                    obstacleCount = obstacleDelay + 1; // 성공하든 실패하든 8m(4칸)마다 판정하므로 딜레이 적용.
                     Debug.Log("obstacleCount: " + obstacleCount);
                 }
                 else
@@ -158,7 +185,6 @@ public class GroundScroller : MonoBehaviour
                     Debug.Log("obstacleCount: " + obstacleCount);
                 }
                 #endregion
-
             }
         }
     }
@@ -211,21 +237,16 @@ public class GroundScroller : MonoBehaviour
                 tilesStart = autumnTilesIndex;
                 tilesEnd = winterTilesIndex;
                 seasonNow = 2;
-                obstacleDelay = -2;
+                obstacleDelay = -4; // -2;
                 obstacleChance = 0.25f;
                 break;
             case "winter":
                 tilesStart = winterTilesIndex;
                 tilesEnd = groundImg.Length;
                 seasonNow = 3;
-                obstacleDelay = -1;
+                obstacleDelay = -4; // -1;
                 obstacleChance = 0.3f;
                 break;
-            //case "spring2": // 생각해보니 필요가 없음. 일단 폐기 보류
-            //    tilesStart = springTilesIndex;
-            //    tilesEnd = summerTilesIndex;
-            //    seasonNow = 4;
-            //    break;
             default:
                 throw new Exception("Season name not valid");
         }

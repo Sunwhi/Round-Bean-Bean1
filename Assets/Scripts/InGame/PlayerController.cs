@@ -1,8 +1,9 @@
 /**
  * In-game scene
- * temporarily written script for controlling map scroll as player moves.
- * Need to be replaced later.
- * basic movement(no tilting) and jump, random character among 3
+ * 맵 스크롤링 구현을 위해 임시로 작성된 캐릭터 동작 코드.
+ * 현재 다른 스크립트로 대체되었음.
+ * line 34~35를 캐릭터 랜덤 시작 기능에 이용할 것.
+ *   24.11.17 기준 캐릭터 이미지가 없어 미구현인 상태
  */
 
 

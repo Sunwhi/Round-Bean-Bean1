@@ -20,7 +20,6 @@ public class UnicycleController : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-
         // A,D 키로 균형 잡기 (회전력 적용)
         if (Input.GetKey(KeyCode.A))
         {
