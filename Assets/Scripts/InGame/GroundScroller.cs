@@ -31,8 +31,10 @@ public class GroundScroller : MonoBehaviour
     private int tilesStart = 0;
     private int tilesEnd = 1;
 
-    private int obstacleCount = 0;
-    private int obstacleCount_temp = 0;
+    private int obstacleCount_rock = 0;
+    private int obstacleCount_cliff = 0;
+    private bool rockJudge = false;
+    private bool cliffJudge = false;
     private int obstacleDelay = 0;
     private float obstacleChance = 0;
     private bool[] obstacleFlag = new bool[17]; // false: judgeable, true: already judged. set to false when declared
@@ -97,95 +99,71 @@ public class GroundScroller : MonoBehaviour
                 && player.transform.position.x + cameraHalfWidth * 0.61 >= tiles[i].transform.position.x // when the block reaches at 80% of the display
                 && !obstacleFlag[i] && seasonNow >= 1) // and spawning obstacles is not judged yet, and season is after spring 
             {
-                // 문제의 가을 이후 생성 알고리즘 부분.
+                obstacleFlag[i] = true;
+                // 가을 이후 생성 알고리즘
                 if (seasonNow >= 2) 
                 {
-                    #region afterAutumn_deprecated
-                    //obstacleFlag[i] = true; // true: have been judged
-                    //bool cliffJudge = ProbabilityRandom(obstacleChance);
-                    //if (obstacleCount > 0 && cliffJudge)
-                    //{
-                    //    bool cliffOrRock = ProbabilityRandom(0.5f); // 50% probability
-                    //    if (cliffOrRock) // cliff first, when true
-                    //    {
-                    //        SetTile(tiles[i], false); // hide tile 
-                    //        var rock = ObjectPool.GetObject();
-                    //        rock.transform.position = new Vector2(tiles[i].transform.position.x + 10, -0.5f);
-                    //        Debug.Log("cliff first! spawned at tile " + i);
-                    //    }
-                    //    else // rock first, when true
-                    //    {
-                    //        var rock = ObjectPool.GetObject();
-                    //        rock.transform.position = new Vector2(tiles[i].transform.position.x, -0.5f);
-                    //        try
-                    //        {
-                    //            SetTile(tiles[i + 5], false); // hide tile
-                    //        }
-                    //        catch (IndexOutOfRangeException)
-                    //        {
-                    //            SetTile(tiles[i - 12], false); // hide tile
-                    //        }
-                    //        Debug.Log("rock first! spawned at tile " + i);
-                    //    }
-
-                    //    // obstacles do not spawn more until following 5 blocks
-                    //    obstacleCount = -5;
-
-                    //    Debug.Log("obstacleCount : " + obstacleCount);
-                    //    break;
-                    //}
-                    //else
-                    //{
-                    //    obstacleCount++;
-                    //    Debug.Log("obstacleCount : " + obstacleCount);
-                    //    break;
-                    //}
-                    #endregion
-
-
-                    // 24.11.18 생성 로직 테스트를 위해 작성된 가을 이후 절벽 로직. 돌과 별개로 작동 중이므로 동시 생성 가능.
-                    obstacleFlag[i] = true;
-                    if (obstacleCount_temp > 0)
+                    // 24.11.18 생성 로직 테스트를 위해 작성된 가을 이후 절벽 로직. 돌과 동시 생성인 경우 50% 확률로 하나만 골라 생성.
+                    if (obstacleCount_cliff > 0)
                     {
-                        bool cliffJudge = ProbabilityRandom(obstacleChance);
-                        Debug.Log("...judging cliffs...");
+                        cliffJudge = ProbabilityRandom(obstacleChance);
+                        rockJudge = ProbabilityRandom(obstacleChance);
+                        Debug.Log("...judging cliffs and rocks..." + cliffJudge + ", " + rockJudge);
                         if (cliffJudge)
                         {
-                            SetTile(tiles[i], false); // hide tile 
+                            if (rockJudge)
+                            {
+                                bool cliffOrRock = ProbabilityRandom(0.5f); // true: cliff, false: rock
+                                if (cliffOrRock)
+                                {
+                                    SetTile(tiles[i], false); // hide tile = spawn cliff
+                                    Debug.Log("cliff selected");
+                                }
+                                else
+                                {
+                                    var rock = ObjectPool.GetObject();
+                                    rock.transform.position = new Vector2(tiles[i].transform.position.x + 0.5f, -0.5f); // spawn rock
+                                    Debug.Log("rock selected");
+                                }
+                            }
+                            else SetTile(tiles[i], false); // hide tile
                         }
-                        obstacleCount_temp = obstacleDelay + 1; // 성공하든 실패하든 8m(4칸)마다 판정하므로 딜레이 적용.
-                        Debug.Log("obstacleCount_temp: " + obstacleCount_temp);
+                        obstacleCount_cliff = obstacleDelay + 1; // 성공하든 실패하든 8m(4칸)마다 판정하므로 딜레이 적용.
+                        obstacleCount_rock = obstacleDelay + 1;
+                        Debug.Log("obstacleCount_cliff and rock : " + obstacleCount_cliff + ", " + obstacleCount_rock);
+                        break;
                     }
                     else
                     {
-                        obstacleCount_temp++;
-                        Debug.Log("obstacleCount_temp: " + obstacleCount_temp);
+                        obstacleCount_cliff++;
+                        Debug.Log("obstacleCount_cliff: " + obstacleCount_cliff);
+                        break;
                     }
                 }
 
                 #region summer
                 // 여름 - 돌만 생성됨. 
                 // 24.11.18 기준 생성 로직 테스트를 위해 전 계절에 적용 중.
-                obstacleFlag[i] = true; // true: have been judged
-                if (obstacleCount > 0)
+
+                if (obstacleCount_rock > 0) // 가을 이후 절벽과의 동시 생성 여부 파악을 위해 미리 돌 판정
                 {
-                    bool rockJudge = ProbabilityRandom(obstacleChance);
-                    Debug.Log("...judging rocks...");
+                    rockJudge = ProbabilityRandom(obstacleChance);
+                    Debug.Log("...judging rocks..." + rockJudge);
                     if (rockJudge)
                     {
                         var rock = ObjectPool.GetObject();
-                        rock.transform.position = new Vector2(tiles[i].transform.position.x + 3.5f, -0.5f);
+                        rock.transform.position = new Vector2(tiles[i].transform.position.x + 0.5f, -0.5f); // spawn rock
                     }
-                    obstacleCount = obstacleDelay + 1; // 성공하든 실패하든 8m(4칸)마다 판정하므로 딜레이 적용.
-                    Debug.Log("obstacleCount: " + obstacleCount);
+                    obstacleCount_rock = obstacleDelay - 1;
+                    Debug.Log("obstacleCount_rock: " + obstacleCount_rock);
                 }
                 else
                 {
-                    obstacleCount++;
-                    Debug.Log("obstacleCount: " + obstacleCount);
+                    obstacleCount_rock++;
+                    Debug.Log("obstacleCount_rock: " + obstacleCount_rock);
                 }
-                #endregion
             }
+                #endregion
         }
     }
 
@@ -238,7 +216,7 @@ public class GroundScroller : MonoBehaviour
                 tilesEnd = winterTilesIndex;
                 seasonNow = 2;
                 obstacleDelay = -4; // -2;
-                obstacleChance = 0.25f;
+                obstacleChance = 1f;
                 break;
             case "winter":
                 tilesStart = winterTilesIndex;
