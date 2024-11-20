@@ -168,7 +168,6 @@ public class GameManager : MonoBehaviour
         }
 
 
-        Time.timeScale = 1f; // 시간 약간 느리게 -> 아님
         textGameClear.SetActive(true); // 게임 클리어 텍스트
 
         // 이동관련 스크립트 막아서 게임오버 이후 움직이지 못하게 함
@@ -181,11 +180,12 @@ public class GameManager : MonoBehaviour
         frameRigidBody.freezeRotation = true;
 
 
-        Vector2 v = new Vector2(-0.1f, 0);
-        if(frameRigidBody.velocity.magnitude <0.00001)
+        Vector2 v = new Vector2(-1f, 0);
+        if (frameRigidBody.velocity.x > 0)
         {
             frameRigidBody.AddForce(v, ForceMode2D.Force);
             Debug.Log(frameRigidBody.velocity.magnitude);
+            Debug.Log("hello");
         }
         // 만약 속도가 0이 되면 자전거 각을 90도로 세운다.
         if (frameRigidBody.velocity.magnitude == 0)
