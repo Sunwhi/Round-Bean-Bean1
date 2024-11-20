@@ -18,7 +18,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] Collider2D animalCollider;
     public bool gameOver = false;
     public bool gameClear = false;
-    int onlyOnce; // 게임 끝나고 딱 한번만 기록 저장하기 위해 만든 임시변수
+    int callFinalScoreOnce; // 게임 끝나고 딱 한번만 기록 저장하기 위해 만든 임시변수
+    // GameOver(), GameClear() 함수 각 한번씩만 호출하기 위한 변수
+    //bool isGameOverCalled = false; 
+    //bool isGameClearCalled = false;
 
     float time; // 게임 시간 기록
     float finalScore; // 최종 시간 기록
@@ -57,7 +60,7 @@ public class GameManager : MonoBehaviour
         unicycleController = wheel.GetComponent<UnicycleController>();
         playerDragMovement = wheel.GetComponent <PlayerDragMovement>();
         time = 0; // 매 판마다 시간 0으로 초기화
-        onlyOnce = 0; // 매 판마다 0으로 초기화
+        callFinalScoreOnce = 0; // 매 판마다 0으로 초기화
     }
 
 
@@ -71,9 +74,21 @@ public class GameManager : MonoBehaviour
             textTime.text = FormatTime(time);
 
         // AnimalCollision.cs에서 isGround가 true가 되었다면 GameOver함수를 호출한다.
-        if (gameOver) GameOver();
+        // isGameOverCalled로 GameOver()함수가 한번만 실행되도록 함. 아니면 계속 호출됨. -> 잠시 폐기
+        if (gameOver)
+        {
+            GameOver();
+        }
+        // isGameClearCalled로 GameClear()함수가 한번만 실행되도록 함. 아니면 계속 호출됨.
+        if (gameClear)
+        {
+            GameClear();
+        }
 
-        if (gameClear) GameClear();
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            SceneManager.LoadScene(inGameScene.name);
+        }
     }
 
     /* 초 단위의 time을 분과 초로 나누어서 표기함
@@ -94,22 +109,20 @@ public class GameManager : MonoBehaviour
     {
         // 게임이 딱 끝났을 때 한번만 finalScore에 저장 / 딱 한번만 PlayerPrefs 기록 새롭게 쓰기
         // 이거 안하면 Update문 계속 호출되어 모든 기록들이 같아짐.
-        if(onlyOnce == 0)
+        if(callFinalScoreOnce == 0)
         {
             finalScore = time;
             RecordNewScore(finalScore);
 
-            onlyOnce = 1;
+            callFinalScoreOnce = 1;
         }
 
         
-
         Time.timeScale = 1f; // 시간 약간 느리게 -> 아님
         textGameOver.SetActive(true); // 게임오버 텍스트
 
         /* 동물 자전거에서 분리시키고, 이동방향으로 데굴데굴 구르게 */
         animal.transform.SetParent(null);
-
         if(animal.GetComponent<Rigidbody2D>() == null)
         {
             animal.AddComponent<Rigidbody2D>();
@@ -135,7 +148,6 @@ public class GameManager : MonoBehaviour
         //ScoreSorting(finalScore); // 기록 PlayerPrefs에 저장
 
 
-
         // 'R' 눌러 게임 재시작 -> 현재 씬을 다시 로드한다.
         if(Input.GetKeyDown(KeyCode.R))
         {
@@ -147,14 +159,13 @@ public class GameManager : MonoBehaviour
     {
         // 게임이 딱 끝났을 때 한번만 finalScore에 저장 / 딱 한번만 PlayerPrefs 기록 새롭게 쓰기
         // 이거 안하면 Update문 계속 호출되어 모든 기록들이 같아짐.
-        if (onlyOnce == 0)
+        if (callFinalScoreOnce == 0)
         {
             finalScore = time;
             RecordNewScore(finalScore);
 
-            onlyOnce = 1;
+            callFinalScoreOnce = 1;
         }
-
 
 
         Time.timeScale = 1f; // 시간 약간 느리게 -> 아님
@@ -164,11 +175,32 @@ public class GameManager : MonoBehaviour
         playerDragMovement.enabled = false;
         unicycleController.enabled = false;
 
+
         // 바퀴 세워지고, 동물은 위로 점프?
         //animal.transform.SetParent(null); // 외발자전거 위에서 점프할거니까 분리?
-        Rigidbody2D rigidbody = frame.GetComponent<Rigidbody2D>();
-        rigidbody.freezeRotation = true;
+        frameRigidBody.freezeRotation = true;
 
+
+        Vector2 v = new Vector2(-0.1f, 0);
+        if(frameRigidBody.velocity.magnitude <0.00001)
+        {
+            frameRigidBody.AddForce(v, ForceMode2D.Force);
+            Debug.Log(frameRigidBody.velocity.magnitude);
+        }
+        // 만약 속도가 0이 되면 자전거 각을 90도로 세운다.
+        if (frameRigidBody.velocity.magnitude == 0)
+        {
+            Time.timeScale = 0;
+            frameRigidBody.freezeRotation = false;
+            if(frameRigidBody.transform.rotation.z > 0)
+            {
+                frameRigidBody.AddTorque(-100f * Time.deltaTime);
+            }
+            else
+            {
+                frameRigidBody.AddTorque(100f * Time.deltaTime);
+            }
+        }
         // 'R' 눌러 게임 재시작 -> 현재 씬을 다시 로드한다.
         if (Input.GetKeyDown(KeyCode.R))
         {
