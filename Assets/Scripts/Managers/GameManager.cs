@@ -180,30 +180,39 @@ public class GameManager : MonoBehaviour
         frameRigidBody.freezeRotation = true;
 
 
-        Vector2 v = new Vector2(-1f, 0);
-        if (frameRigidBody.velocity.x > 0)
-        {
-            frameRigidBody.AddForce(v, ForceMode2D.Force);
+        //Vector2 v = new Vector2(-0.1f, 0);
+        /* {
+            //frameRigidBody.AddForce(v, ForceMode2D.Force);
             Debug.Log(frameRigidBody.velocity.magnitude);
-            Debug.Log("hello");
-        }
+        }*/
         // 만약 속도가 0이 되면 자전거 각을 90도로 세운다.
-        if (frameRigidBody.velocity.magnitude == 0)
+        if (frameRigidBody.velocity.x < 0.1)
         {
-            Time.timeScale = 0;
+            float currentZRotation = frameRigidBody.transform.rotation.eulerAngles.z;
+            if (currentZRotation > 180f) currentZRotation -= 360;
+
             frameRigidBody.freezeRotation = false;
-            if(frameRigidBody.transform.rotation.z > 0)
+            if(Mathf.Abs(currentZRotation) > 0.1)
             {
-                frameRigidBody.AddTorque(-100f * Time.deltaTime);
+                if (currentZRotation > 0) // 왼쪽으로 기울때
+                {
+                    frameRigidBody.transform.Rotate(new Vector3(0, 0, -100f * Time.deltaTime));
+                }
+                else
+                {
+                    frameRigidBody.transform.Rotate(new Vector3(0, 0, 100f * Time.deltaTime));
+                }
             }
             else
             {
-                frameRigidBody.AddTorque(100f * Time.deltaTime);
+                Time.timeScale = 0;
             }
         }
+
         // 'R' 눌러 게임 재시작 -> 현재 씬을 다시 로드한다.
         if (Input.GetKeyDown(KeyCode.R))
         {
+            Time.timeScale = 1f;
             SceneManager.LoadScene(inGameScene.name);
         }
     }
