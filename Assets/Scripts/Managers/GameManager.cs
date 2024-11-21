@@ -7,6 +7,7 @@ using System;
 using Unity.Properties;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
+using Unity.VisualScripting;
 /*
  * GameManager 클래스 
  * 싱글톤 이용하여 다른 씬이나 다른 오브젝트에서 GameManager 클래스 속 함수나 변수 공유 가능!
@@ -31,8 +32,8 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] GameObject animal;
     [SerializeField] Rigidbody2D frameRigidBody;
-    public GameObject wheel;
-    public GameObject frame;
+    [SerializeField] GameObject wheel;
+    [SerializeField] GameObject frame;
     private UnicycleController unicycleController;
     private PlayerDragMovement playerDragMovement;
 
@@ -163,6 +164,7 @@ public class GameManager : MonoBehaviour
         {
             finalScore = time;
             RecordNewScore(finalScore);
+            ReplaceJoint(); // HingeJoint -> FixedJoint
 
             callFinalScoreOnce = 1;
         }
@@ -180,33 +182,27 @@ public class GameManager : MonoBehaviour
         frameRigidBody.freezeRotation = true;
 
 
-        //Vector2 v = new Vector2(-0.1f, 0);
-        /* {
-            //frameRigidBody.AddForce(v, ForceMode2D.Force);
-            Debug.Log(frameRigidBody.velocity.magnitude);
-        }*/
-        // 만약 속도가 0이 되면 자전거 각을 90도로 세운다.
-        if (frameRigidBody.velocity.x < 0.1)
-        {
-            float currentZRotation = frameRigidBody.transform.rotation.eulerAngles.z;
-            if (currentZRotation > 180f) currentZRotation -= 360;
+        float currentZRotation = frameRigidBody.transform.rotation.eulerAngles.z;
+        if (currentZRotation > 180f) currentZRotation -= 360;
 
-            frameRigidBody.freezeRotation = false;
-            if(Mathf.Abs(currentZRotation) > 0.1)
+        //frameRigidBody.freezeRotation = false;
+
+        if (Mathf.Abs(currentZRotation) > 0.1)
+        {
+            Quaternion targetRotation = Quaternion.Euler(0, 0, 0);
+            float rotationSpeed = 0.05f;
+            if(currentZRotation < 0)
             {
-                if (currentZRotation > 0) // 왼쪽으로 기울때
-                {
-                    frameRigidBody.transform.Rotate(new Vector3(0, 0, -100f * Time.deltaTime));
-                }
-                else
-                {
-                    frameRigidBody.transform.Rotate(new Vector3(0, 0, 100f * Time.deltaTime));
-                }
+                frameRigidBody.transform.rotation = Quaternion.RotateTowards(frameRigidBody.transform.rotation, targetRotation, rotationSpeed);
             }
             else
             {
-                Time.timeScale = 0;
+                frameRigidBody.transform.rotation = Quaternion.RotateTowards(frameRigidBody.transform.rotation, targetRotation, rotationSpeed);
             }
+        }
+        else
+        {
+            Time.timeScale = 0;
         }
 
         // 'R' 눌러 게임 재시작 -> 현재 씬을 다시 로드한다.
@@ -216,7 +212,21 @@ public class GameManager : MonoBehaviour
             SceneManager.LoadScene(inGameScene.name);
         }
     }
+    /*
+     * hingeJoint2D -> fixedJoint2D
+     */
+    private void ReplaceJoint()
+    {
+        HingeJoint2D hingeJoint2D = frame.transform.GetComponent<HingeJoint2D>();
 
+        if(hingeJoint2D != null)
+        {
+            Destroy(hingeJoint2D);
+        }
+
+        FixedJoint2D fixedJoint2D = frame.transform.AddComponent<FixedJoint2D>();
+        fixedJoint2D.connectedBody = wheel.GetComponent<Rigidbody2D>();
+    }
     /*
      * 스코어를 넣으면 PlayerPrefs에 기존 스코어들의 순서에 맞춰 새롭게 기록한다. 
      * 즉, 정렬되어 기록들이 저장.
