@@ -180,15 +180,13 @@ public class GameManager : MonoBehaviour
         unicycleController.enabled = false;
 
 
-        // 바퀴 세워지고, 동물은 위로 점프?
         frameRigidBody.freezeRotation = true;
 
-
+        // 현재 각도를 오일러 각도로 변환
         float currentZRotation = frameRigidBody.transform.rotation.eulerAngles.z;
         if (currentZRotation > 180f) currentZRotation -= 360;
 
-        //frameRigidBody.freezeRotation = false;
-
+        // 자전거를 서서히 세운다.
         if (Mathf.Abs(currentZRotation) > 0.1)
         {
             Quaternion targetRotation = Quaternion.Euler(0, 0, 0);
@@ -207,6 +205,7 @@ public class GameManager : MonoBehaviour
             // 속도가 줄어들면 animal 점프
             if(frameRigidBody.velocity.magnitude < 0.1)
             {
+                // 점프 한번
                 if (animal.GetComponent<Rigidbody2D>() == null)
                 {
                     textGameClear.SetActive(false);
@@ -218,6 +217,7 @@ public class GameManager : MonoBehaviour
                     animalRigidBody.AddForce(Vector2.up * 5, ForceMode2D.Impulse);
                     jumpTwice++;
                 }
+                // 점프 두번, 세번
                 else if(jumpTwice == 1)
                 {
                     StartCoroutine(clearJump1());
@@ -235,6 +235,7 @@ public class GameManager : MonoBehaviour
             SceneManager.LoadScene(inGameScene.name);
         }
     }
+    // 코루틴으로 구현한 점프. 첫 번째, 두 번째 점프와 시간차를 두고 뛴다.
     IEnumerator clearJump1()
     {
         yield return new WaitForSecondsRealtime(1.1f);
