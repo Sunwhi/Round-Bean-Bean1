@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour
     public bool gameOver = false;
     public bool gameClear = false;
     int callFinalScoreOnce; // 게임 끝나고 딱 한번만 기록 저장하기 위해 만든 임시변수
+    int callReplaceJointOnce;
     // GameOver(), GameClear() 함수 각 한번씩만 호출하기 위한 변수
     //bool isGameOverCalled = false; 
     //bool isGameClearCalled = false;
@@ -29,6 +30,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI textTime;  // 시간을 나타내는 텍스트
     [SerializeField] GameObject textGameOver; // 게임오버 텍스트, setActive() 호출 위해서 GameObject로 
     [SerializeField] GameObject textGameClear; // 게임 클리어 텍스트
+    [SerializeField] GameObject particles1, particles2;
 
     [SerializeField] GameObject animal;
     [SerializeField] Rigidbody2D frameRigidBody;
@@ -36,6 +38,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject frame;
     private UnicycleController unicycleController;
     private PlayerDragMovement playerDragMovement;
+    int jumpTwice = 0;
 
     public static GameManager Instance { get; private set; } // 싱글톤 인스턴스
 
@@ -164,13 +167,13 @@ public class GameManager : MonoBehaviour
         {
             finalScore = time;
             RecordNewScore(finalScore);
-            ReplaceJoint(); // HingeJoint -> FixedJoint
+
+            textGameClear.SetActive(true); // 게임 클리어 텍스트
+            particles1.SetActive(true);
+            particles2.SetActive(true);
 
             callFinalScoreOnce = 1;
         }
-
-
-        textGameClear.SetActive(true); // 게임 클리어 텍스트
 
         // 이동관련 스크립트 막아서 게임오버 이후 움직이지 못하게 함
         playerDragMovement.enabled = false;
@@ -178,7 +181,6 @@ public class GameManager : MonoBehaviour
 
 
         // 바퀴 세워지고, 동물은 위로 점프?
-        //animal.transform.SetParent(null); // 외발자전거 위에서 점프할거니까 분리?
         frameRigidBody.freezeRotation = true;
 
 
@@ -202,8 +204,29 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            Time.timeScale = 0;
+            // 속도가 줄어들면 animal 점프
+            if(frameRigidBody.velocity.magnitude < 0.1)
+            {
+                if (animal.GetComponent<Rigidbody2D>() == null)
+                {
+                    textGameClear.SetActive(false);
+                    animal.transform.SetParent(null); // 외발자전거 위에서 점프할거니까 분리
+
+                    animal.AddComponent<Rigidbody2D>();
+                    Rigidbody2D animalRigidBody = animal.GetComponent<Rigidbody2D>();
+
+                    animalRigidBody.AddForce(Vector2.up * 5, ForceMode2D.Impulse);
+                    jumpTwice++;
+                }
+                else if(jumpTwice == 1)
+                {
+                    StartCoroutine(clearJump1());
+                    StartCoroutine(clearJump2());
+                    jumpTwice++;
+                }
+            }
         }
+
 
         // 'R' 눌러 게임 재시작 -> 현재 씬을 다시 로드한다.
         if (Input.GetKeyDown(KeyCode.R))
@@ -211,6 +234,18 @@ public class GameManager : MonoBehaviour
             Time.timeScale = 1f;
             SceneManager.LoadScene(inGameScene.name);
         }
+    }
+    IEnumerator clearJump1()
+    {
+        yield return new WaitForSecondsRealtime(1.1f);
+        Rigidbody2D animalRigidBody = animal.GetComponent<Rigidbody2D>();
+        animalRigidBody.AddForce(Vector2.up * 5, ForceMode2D.Impulse);
+    }
+    IEnumerator clearJump2()
+    {
+        yield return new WaitForSecondsRealtime(2.2f);
+        Rigidbody2D animalRigidBody = animal.GetComponent<Rigidbody2D>();
+        animalRigidBody.AddForce(Vector2.up * 5, ForceMode2D.Impulse);
     }
     /*
      * hingeJoint2D -> fixedJoint2D
@@ -275,4 +310,5 @@ public class GameManager : MonoBehaviour
             PlayerPrefs.SetString(dateNum, PlayerPrefs.GetString(frontDateNum));
         }
     }
+
 }
