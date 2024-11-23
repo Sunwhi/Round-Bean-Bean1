@@ -7,6 +7,7 @@ using TMPro;
 public class ClearScoreUI : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI finalScoreText;
+    [SerializeField] GameObject newRecordText;
     [SerializeField] GameObject clearText;
     [SerializeField] Image clearBackgroundPanel;
     [SerializeField] GameObject homeBtn;
@@ -44,6 +45,13 @@ public class ClearScoreUI : MonoBehaviour
             if(!homeBtn.activeSelf)
             {
                 StartCoroutine(clearBtn());
+            }
+            if (!newRecordText.activeSelf && finalScoreText.rectTransform.localPosition.y == 200)
+            {
+                if (GameManager.Instance.isNewRecord)
+                {
+                    newRecordText.SetActive(true);
+                }
             }
         }
 

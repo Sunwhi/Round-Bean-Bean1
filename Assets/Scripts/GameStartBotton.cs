@@ -9,4 +9,8 @@ public class GameStartBotton : MonoBehaviour
     {
         SceneManager.LoadScene("InGame");
     }
+    public void HomeBtn()
+    {
+        SceneManager.LoadScene("MainScene");
+    }
 }

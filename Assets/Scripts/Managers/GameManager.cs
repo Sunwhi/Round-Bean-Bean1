@@ -26,7 +26,8 @@ public class GameManager : MonoBehaviour
     //bool isGameClearCalled = false;
 
     float time; // 게임 시간 기록
-    float finalScore; // 최종 시간 기록
+    public float finalScore; // 최종 시간 기록
+    public bool isNewRecord = false; // NEW RECORD! 출력 여부 결정
     [SerializeField] TextMeshProUGUI textTime;  // 시간을 나타내는 텍스트
     [SerializeField] GameObject textGameOver; // 게임오버 텍스트, setActive() 호출 위해서 GameObject로 
     [SerializeField] GameObject textGameClear; // 게임 클리어 텍스트
@@ -250,7 +251,7 @@ public class GameManager : MonoBehaviour
     }
     /*
      * hingeJoint2D -> fixedJoint2D
-     */
+     
     private void ReplaceJoint()
     {
         HingeJoint2D hingeJoint2D = frame.transform.GetComponent<HingeJoint2D>();
@@ -262,7 +263,7 @@ public class GameManager : MonoBehaviour
 
         FixedJoint2D fixedJoint2D = frame.transform.AddComponent<FixedJoint2D>();
         fixedJoint2D.connectedBody = wheel.GetComponent<Rigidbody2D>();
-    }
+    }*/
     /*
      * 스코어를 넣으면 PlayerPrefs에 기존 스코어들의 순서에 맞춰 새롭게 기록한다. 
      * 즉, 정렬되어 기록들이 저장.
@@ -290,6 +291,7 @@ public class GameManager : MonoBehaviour
             if (i == 4) return; // 5개의 기록들에 속하지 않으면 아예 기록 X 그리고 return
         }
 
+        if(newScoreIdx == 0) isNewRecord = true;
         // 새로운 기록 PlayerPrefs에 newScoreIdx에 끼워넣기
         // 뒤에서부터 앞으로. 뒤에서부터 한칸 앞의 기록들이 뒤로 이동
         for(int i = 4; i>=newScoreIdx; i--)
