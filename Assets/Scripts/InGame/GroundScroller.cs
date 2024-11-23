@@ -37,7 +37,7 @@ public class GroundScroller : MonoBehaviour
     private bool cliffJudge = false;
     private int obstacleDelay = 0;
     private float obstacleChance = 0;
-    private bool[] obstacleFlag = new bool[17]; // false: judgeable, true: already judged. set to false when declared
+    private bool[] obstacleFlag = new bool[21]; // false: judgeable, true: already judged. set to false when declared
 
     void Start()
     {
@@ -72,7 +72,7 @@ public class GroundScroller : MonoBehaviour
         for (int i = 0; i < tiles.Length; i++)
         {
             // set when to move the leftmost block that player already passed
-            if (player.transform.position.x - cameraHalfWidth - 7 >= tiles[i].transform.position.x) // cameraHalfWidth - 11 -> cameraHalfWidth - 7
+            if (player.transform.position.x - cameraHalfWidth - 15 >= tiles[i].transform.position.x) // cameraHalfWidth - 11 -> cameraHalfWidth - 7
             {
                 for (int q = 0; q < tiles.Length; q++)
                 {
@@ -103,6 +103,7 @@ public class GroundScroller : MonoBehaviour
                 // 가을 이후 생성 알고리즘
                 if (seasonNow >= 2) 
                 {
+                #region afterAutumn
                     // 24.11.18 생성 로직 테스트를 위해 작성된 가을 이후 절벽 로직. 돌과 동시 생성인 경우 50% 확률로 하나만 골라 생성.
                     if (obstacleCount_cliff > 0)
                     {
@@ -139,8 +140,8 @@ public class GroundScroller : MonoBehaviour
                         Debug.Log("obstacleCount_cliff: " + obstacleCount_cliff);
                         break;
                     }
+                #endregion
                 }
-
                 #region summer
                 // 여름 - 돌만 생성됨. 
                 // 24.11.18 기준 생성 로직 테스트를 위해 전 계절에 적용 중.
@@ -162,8 +163,8 @@ public class GroundScroller : MonoBehaviour
                     obstacleCount_rock++;
                     Debug.Log("obstacleCount_rock: " + obstacleCount_rock);
                 }
-            }
                 #endregion
+            }
         }
     }
 
