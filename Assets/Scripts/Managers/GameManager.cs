@@ -104,7 +104,7 @@ public class GameManager : MonoBehaviour
         int seconds = Mathf.FloorToInt(time);
         int minutes = seconds / 60;
         int remainSeconds = seconds % 60;
-        return $"{minutes} : {remainSeconds:00}";
+        return $"{minutes:00} : {remainSeconds:00}";
     }
 
     /*
