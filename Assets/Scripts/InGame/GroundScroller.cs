@@ -39,6 +39,8 @@ public class GroundScroller : MonoBehaviour
     private float obstacleChance = 0;
     private bool[] obstacleFlag = new bool[21]; // false: judgeable, true: already judged. set to false when declared
 
+    [SerializeField] GameObject textGoForward; // 역행 금지 안내 텍스트
+
     void Start()
     {
         temp = tiles[0];
@@ -60,7 +62,24 @@ public class GroundScroller : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        distance = player.transform.position.x - startPos;
+        // 최대 도달 거리 업데이트
+        if (player.transform.position.x > distance)
+        {
+            distance = player.transform.position.x - startPos;
+        }
+
+        // 최대 도달 거리보다 한참 뒤에 있을 때 ( = 역행 시도 시)
+        if (player.transform.position.x < distance - 16 && !GameManager.Instance.gameOver) // 역행하다가 게임오버 시 텍스트가 겹치는 문제 방지
+        {
+            Time.timeScale = 0; // 게임 일시정지. GameManager에 함수를 추가해서 이용하는 게 더 바람직할까?
+            textGoForward.SetActive(true); // 안내 텍스트 표시
+        }
+        if (Time.timeScale == 0 && Input.GetKey(KeyCode.RightArrow))
+        {
+            Time.timeScale = 1; // 일시정지 해제
+            textGoForward.SetActive(false); // 안내 텍스트 숨김
+        }
+
         // summer: 10m, autumn: 21m, winter: 33m, spring2: 45m
         if (distance < 10 * 2) SetSeason("spring");
         else if (distance < 21 * 2) SetSeason("summer");
@@ -72,7 +91,7 @@ public class GroundScroller : MonoBehaviour
         for (int i = 0; i < tiles.Length; i++)
         {
             // set when to move the leftmost block that player already passed
-            if (player.transform.position.x - cameraHalfWidth - 15 >= tiles[i].transform.position.x) // cameraHalfWidth - 11 -> cameraHalfWidth - 7
+            if (player.transform.position.x - cameraHalfWidth - 19 >= tiles[i].transform.position.x) // cameraHalfWidth - 11 -> cameraHalfWidth - 7
             {
                 for (int q = 0; q < tiles.Length; q++)
                 {
@@ -91,7 +110,7 @@ public class GroundScroller : MonoBehaviour
                 tiles[i].sprite = groundImg[UnityEngine.Random.Range(tilesStart, tilesEnd)];
             }
 
-
+            if (tiles[i].sprite == groundImg[0]) obstacleFlag[i] = true; // 봄인 경우 판정 불필요, 여름 진입하자마자 바로 역행 시 봄에서 판정을 시도하는 문제 방지
 
             // spawning obstacles. is seperation to another file needed? and possible?
             // summer: 0.2/4m, autumn: 0.25/2m, winter: 0.3/1m
