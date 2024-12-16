@@ -30,7 +30,7 @@ public class PPTEST : MonoBehaviour
         // P 누르면 기록 확인 가능
         if(Input.GetKeyUp(KeyCode.P))
         {
-            for(int i = 0; i < 5; i++)
+            for(int i = 0; i < 10; i++)
             {
                 scoreNum = "score" + i;
                 score = PlayerPrefs.GetFloat(scoreNum);
@@ -52,7 +52,7 @@ public class PPTEST : MonoBehaviour
     // PlayerPrefs 초기화. 게임 깔았을 때 초기 상태 확인 위해서.
     void PlayerPrefsInitialize()
     {
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 10; i++)
         {
             scoreNum = "score" + i;
             PlayerPrefs.SetFloat(scoreNum, 10000f); // 초기화 숫자는 10000f

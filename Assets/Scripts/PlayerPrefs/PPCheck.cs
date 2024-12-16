@@ -21,7 +21,7 @@ public class PPConfirm : MonoBehaviour
     {
         if (Input.GetKeyUp(KeyCode.P))
         {
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 10; i++)
             {
                 scoreNum = "score" + i;
                 score = PlayerPrefs.GetFloat(scoreNum);

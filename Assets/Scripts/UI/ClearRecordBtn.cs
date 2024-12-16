@@ -7,6 +7,16 @@ public class CleasRecordBtn : MonoBehaviour
     [SerializeField] GameObject ClearRecordPanel;
     public void ClearRecordBtn()
     {
-        ClearRecordPanel.SetActive(true);
+        if (!ClearRecordPanel.activeSelf)
+        {
+            ClearRecordPanel.SetActive(true);
+        }
+    }
+    public void ExitBtn()
+    {
+        if(ClearRecordPanel.activeSelf)
+        {
+            ClearRecordPanel.SetActive(false);
+        }
     }
 }
