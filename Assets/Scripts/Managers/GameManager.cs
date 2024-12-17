@@ -279,7 +279,7 @@ public class GameManager : MonoBehaviour
         string frontDateNum;
 
         // 새로운 기록이 몇번째 기록인가 찾기
-        for(int i=0; i<5; i++)
+        for(int i=0; i<10; i++)
         {
             scoreNum = "score" + i;
 
@@ -294,7 +294,7 @@ public class GameManager : MonoBehaviour
         if(newScoreIdx == 0) isNewRecord = true;
         // 새로운 기록 PlayerPrefs에 newScoreIdx에 끼워넣기
         // 뒤에서부터 앞으로. 뒤에서부터 한칸 앞의 기록들이 뒤로 이동
-        for(int i = 4; i>=newScoreIdx; i--)
+        for(int i = 9; i>=newScoreIdx; i--)
         {
             scoreNum = "score" + i;
             dateNum = "date" + i;

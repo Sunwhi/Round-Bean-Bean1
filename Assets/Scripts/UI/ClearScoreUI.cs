@@ -13,6 +13,7 @@ public class ClearScoreUI : MonoBehaviour
     [SerializeField] Image clearBackgroundPanel;
     [SerializeField] GameObject homeBtn;
     [SerializeField] GameObject recordBtn;
+    [SerializeField] GameObject playAgainBtn;
 
     private Vector2 startPosition;
     [SerializeField] Vector2 endPosition;
@@ -67,6 +68,7 @@ public class ClearScoreUI : MonoBehaviour
 
         homeBtn.SetActive(true);
         recordBtn.SetActive(true); 
+        playAgainBtn.SetActive(true);
     }
 
 
