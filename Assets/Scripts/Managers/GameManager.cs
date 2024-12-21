@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] Collider2D animalCollider;
     public bool gameOver = false;
     public bool gameClear = false;
+    public bool gamePaused = false; // 게임 중단 -> 모자 썼을 때, 설정창
     int callFinalScoreOnce; // 게임 끝나고 딱 한번만 기록 저장하기 위해 만든 임시변수
     int callReplaceJointOnce;
     // GameOver(), GameClear() 함수 각 한번씩만 호출하기 위한 변수
@@ -40,6 +41,15 @@ public class GameManager : MonoBehaviour
     private UnicycleController unicycleController;
     private PlayerDragMovement playerDragMovement;
     int jumpTwice = 0;
+
+    // 모자 떨어트렸을 때
+    [SerializeField] GameObject hat;
+    SpriteRenderer hatSP;
+    //Collision2D hatColl;
+    public float fadeDuration = 10f;
+    public bool hatFall = false;
+    public bool hatOn = false;
+    private float timer;
 
     public static GameManager Instance { get; private set; } // 싱글톤 인스턴스
 
@@ -66,13 +76,16 @@ public class GameManager : MonoBehaviour
         playerDragMovement = wheel.GetComponent <PlayerDragMovement>();
         time = 0; // 매 판마다 시간 0으로 초기화
         callFinalScoreOnce = 0; // 매 판마다 0으로 초기화
-    }
 
+        //hatColl = hat.GetComponent<Collision2D>();
+    }
 
     void Update()
     {
-
-        time += Time.deltaTime;
+        //게임이 중단되지 않는 이상 시간점수 센다.
+        if(!gamePaused && !hatOn) time += Time.deltaTime;
+        //모자이벤트 -> 1.5배 느리게 저장
+        if (hatOn) time += Time.deltaTime * 0.5f;
 
         //textTime에 현재 시간을 표시
         if (!gameOver && !gameClear)
@@ -94,6 +107,22 @@ public class GameManager : MonoBehaviour
         {
             SceneManager.LoadScene(inGameScene.name);
         }
+
+        if(hatFall && !hat.IsDestroyed()) HatFall();
+    }
+
+    private void HatFall()
+    {
+        //모자가 머리에서 떨어졌을 때
+        //투명도를 서서히 낮추고 해당 모자를 없앤다.
+        hatSP = hat.GetComponent<SpriteRenderer>();
+
+        timer += Time.deltaTime;
+        Color color = hatSP.color;
+        color.a = Mathf.Lerp(color.a, 0, timer / fadeDuration);
+        hatSP.color = color;
+
+        if (color.a < 0.01) Destroy(hat);
     }
 
     /* 초 단위의 time을 분과 초로 나누어서 표기함
