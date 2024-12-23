@@ -8450,6 +8450,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ClearRecordPanel: {fileID: 1604568312}
+  BackgroundPanel: {fileID: 0}
+  achieveBtn: {fileID: 0}
 --- !u!1 &1629250473
 GameObject:
   m_ObjectHideFlags: 0
@@ -8621,7 +8623,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 821, y: 394}
+  m_AnchoredPosition: {x: -1150, y: 550}
   m_SizeDelta: {x: 180, y: 180}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1632561507
@@ -8731,6 +8733,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ClearRecordPanel: {fileID: 1604568312}
+  BackgroundPanel: {fileID: 0}
+  achieveBtn: {fileID: 0}
 --- !u!1 &1682153896
 GameObject:
   m_ObjectHideFlags: 0
@@ -14403,7 +14407,7 @@ Transform:
   m_GameObject: {fileID: 1784260656}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 7.25, y: 0.67, z: 0}
+  m_LocalPosition: {x: 6.37, y: 0.81, z: 0}
   m_LocalScale: {x: 0.24999999, y: 0.25, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
