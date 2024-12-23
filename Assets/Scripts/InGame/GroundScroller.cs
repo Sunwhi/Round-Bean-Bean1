@@ -1,7 +1,7 @@
 /**
  * In-game Scene
  * infinite map scrolling & obstacle spawning
- * 
+ * 맵 생성 관련 전반
  */
 using System;
 using System.Collections;
@@ -14,7 +14,8 @@ public class GroundScroller : MonoBehaviour
 {
     public SpriteRenderer[] tiles;
     public Sprite[] groundImg;
-    public GameObject rock;
+    public SpriteRenderer[] seasonSign;
+
     public GameObject player;
     float cameraHalfWidth;
     SpriteRenderer temp; // for scrolling tiles
@@ -22,7 +23,8 @@ public class GroundScroller : MonoBehaviour
     private float startPos;
     public float distance;
 
-    private int seasonNow = 0; // 계절 기록용 변수, 장애물 생성 가능여부 판정에 사용함. 0: spring, 1: summer, 2: autumn, 3: winter, 4: spring2(미사용)
+
+    private int currentSeason = 0; // 계절 기록용 변수, 장애물 생성 가능여부 판정에 사용함. 0: spring, 1: summer, 2: autumn, 3: winter
     private int springTilesIndex = 0; // 나중에 계절당 타일 여러 개 생길 거 대비.. 지만 좋은 방법은 아닐지도. 더 나은 방식 고민해볼것
     private int summerTilesIndex = 1;
     private int autumnTilesIndex = 2;
@@ -46,18 +48,7 @@ public class GroundScroller : MonoBehaviour
         temp = tiles[0];
         cameraHalfWidth = Camera.main.aspect * Camera.main.orthographicSize;
         startPos = player.transform.position.x;
-
-        //StartCoroutine(DistanceLog());
     }
-    // 1초마다 이동거리 로그에 찍기 (디버깅용)
-    //private IEnumerator DistanceLog()
-    //{
-    //    while (true)
-    //    {
-    //        yield return new WaitForSeconds(1);
-    //        Debug.Log("distance: " + distance);
-    //    }
-    //}
 
     // Update is called once per frame
     void Update()
@@ -80,18 +71,13 @@ public class GroundScroller : MonoBehaviour
             textGoForward.SetActive(false); // 안내 텍스트 숨김
         }
 
-        // summer: 10m, autumn: 21m, winter: 33m, spring2: 45m
-        if (distance < 10 * 2) SetSeason("spring");
-        else if (distance < 21 * 2) SetSeason("summer");
-        else if (distance < 33 * 10) SetSeason("autumn"); // 가을 이후의 장애물 디버깅을 위해 거리를 늘리는 부분 (*2를 늘리면 됨)
-        else if (distance < 45 * 10) SetSeason("winter");
-        else if (distance < 50 * 10) SetSeason("spring"); // spring2
+        UpdateSeason(distance);
 
         // check every tiles
         for (int i = 0; i < tiles.Length; i++)
         {
             // set when to move the leftmost block that player already passed
-            if (player.transform.position.x - cameraHalfWidth - 19 >= tiles[i].transform.position.x) // cameraHalfWidth - 11 -> cameraHalfWidth - 7
+            if (player.transform.position.x - cameraHalfWidth - 19 >= tiles[i].transform.position.x)
             {
                 for (int q = 0; q < tiles.Length; q++)
                 {
@@ -116,11 +102,11 @@ public class GroundScroller : MonoBehaviour
             // summer: 0.2/4m, autumn: 0.25/2m, winter: 0.3/1m
             if (player.transform.position.x + cameraHalfWidth * 0.59 <= tiles[i].transform.position.x
                 && player.transform.position.x + cameraHalfWidth * 0.61 >= tiles[i].transform.position.x // when the block reaches at 80% of the display
-                && !obstacleFlag[i] && seasonNow >= 1) // and spawning obstacles is not judged yet, and season is after spring 
+                && !obstacleFlag[i] && currentSeason >= 1) // and spawning obstacles is not judged yet, and season is after spring 
             {
                 obstacleFlag[i] = true;
                 // 가을 이후 생성 알고리즘
-                if (seasonNow >= 2) 
+                if (currentSeason >= 2) 
                 {
                 #region afterAutumn
                     // 24.11.18 생성 로직 테스트를 위해 작성된 가을 이후 절벽 로직. 돌과 동시 생성인 경우 50% 확률로 하나만 골라 생성.
@@ -210,38 +196,40 @@ public class GroundScroller : MonoBehaviour
     }
 
     /// <summary>
-    /// function for changing groundImg Index according to the season
+    /// 계절 변경을 위한 함수. UpdateSeason에 의해 계절이 변경될 때만 호출됨.
     /// </summary>
-    /// <param name="season">"spring" | "summer" | "autumn" | "winter". other strings are not accepted.</param>
+    /// <param name="season">0: spring, 1: summer, 2: autumn, 3: winter. other values are not accepted.</param>
     /// <exception cref="Exception"></exception>
-    private void SetSeason(string season) // change tile image range 
+    private void SetSeason(int season) // change tile image range 
     {
+        Debug.Log("season set to " + season);
+        CreateSeasonSign(season, distance); // 계절 변경 안내 표지판 생성
         switch (season)
         {
-            case "spring":
+            case 0:
                 tilesStart = springTilesIndex;
                 tilesEnd = summerTilesIndex;
-                seasonNow = 0;
-                obstacleChance = 0f; // 계절별 생성 확률 변경은 여기서 각 obstacleChance 값 변경 (1 이하)
+                currentSeason = 0;
+                obstacleChance = 0f; // 계절별 생성 확률 변경은 여기서 각 obstacleChance 값 변경 (0 이상 1 이하)
                 break;
-            case "summer":
+            case 1:
                 tilesStart = summerTilesIndex;
                 tilesEnd = autumnTilesIndex;
-                seasonNow = 1;
+                currentSeason = 1;
                 obstacleDelay = -4; // 장애물이 생성된 경우 다음 4칸 동안은 등장하지 않음. 
                 obstacleChance = 0.2f;
                 break;
-            case "autumn":
+            case 2:
                 tilesStart = autumnTilesIndex;
                 tilesEnd = winterTilesIndex;
-                seasonNow = 2;
+                currentSeason = 2;
                 obstacleDelay = -4; // -2;
-                obstacleChance = 1f;
+                obstacleChance = 0.25f;
                 break;
-            case "winter":
+            case 3:
                 tilesStart = winterTilesIndex;
                 tilesEnd = groundImg.Length;
-                seasonNow = 3;
+                currentSeason = 3;
                 obstacleDelay = -4; // -1;
                 obstacleChance = 0.3f;
                 break;
@@ -250,4 +238,39 @@ public class GroundScroller : MonoBehaviour
         }
     }
 
+
+    /// <summary>
+    /// 계절 변화를 함수로 분리. 또한 string을 이용하던 방식 대신 currentSeason 변수 하나로 통일.
+    /// 매 프레임마다 거리에 따라 계절을 반복하여 set하는 대신
+    /// 계절이 바뀌는 경우에만 새롭게 set하도록 함.
+    /// </summary>
+    /// <param name="distance">현재 게임 플레이에서 최대 도달 거리</param>
+    private void UpdateSeason(float distance)
+    {
+        int newSeason = 0;
+
+        // summer: 10m, autumn: 21m, winter: 33m, spring2: 45m
+        if (distance < 10 * 2) newSeason = 0;
+        else if (distance < 21 * 2) newSeason = 1;
+        else if (distance < 33 * 2) newSeason = 2; // 가을 이후의 장애물 디버깅을 위해 거리를 늘리는 부분 (*2를 늘리면 됨)
+        else if (distance < 45 * 2) newSeason = 3;
+        else if (distance < 50 * 2) newSeason = 0; // spring2
+
+        if (newSeason != currentSeason)
+        {
+            currentSeason = newSeason;
+            SetSeason(currentSeason);
+        }
+    }
+
+    /// <summary>
+    /// 계절 변경 안내 표지판 생성 함수.
+    /// 절댓값으로 생성하지 않고 계절이 바뀌는 위치에서 알아서 생성되도록 함.
+    /// </summary>
+    /// <param name="season">계절에 해당하는 표지판을 세우기 위함</param>
+    private void CreateSeasonSign(int season, float distance)
+    {
+        seasonSign[season].transform.position = new Vector2(distance+12, 1f);
+        seasonSign[season].gameObject.SetActive(true);
+    }
 }
