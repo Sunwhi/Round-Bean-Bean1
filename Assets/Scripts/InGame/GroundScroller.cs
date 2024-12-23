@@ -23,7 +23,6 @@ public class GroundScroller : MonoBehaviour
     private float startPos;
     public float distance;
 
-
     private int currentSeason = 0; // 계절 기록용 변수, 장애물 생성 가능여부 판정에 사용함. 0: spring, 1: summer, 2: autumn, 3: winter
     private int springTilesIndex = 0; // 나중에 계절당 타일 여러 개 생길 거 대비.. 지만 좋은 방법은 아닐지도. 더 나은 방식 고민해볼것
     private int summerTilesIndex = 1;
@@ -88,7 +87,7 @@ public class GroundScroller : MonoBehaviour
                     }
                 }
                 // move block next to the rightmost block
-                tiles[i].transform.position = new Vector2(temp.transform.position.x + 2, -2f);
+                tiles[i].transform.position = new Vector3(temp.transform.position.x + 2, -2f, 1f);
                 SetTile(tiles[i], true); // show tiles, just in case disabled last time
                 obstacleFlag[i] = false; // reloaded, judge again
 
@@ -270,7 +269,7 @@ public class GroundScroller : MonoBehaviour
     /// <param name="season">계절에 해당하는 표지판을 세우기 위함</param>
     private void CreateSeasonSign(int season, float distance)
     {
-        seasonSign[season].transform.position = new Vector2(distance+12, 1f);
+        seasonSign[season].transform.position = new Vector3(distance+12, 1f, 0.5f); // z 값이 클수록 뒤로. groundImg는 1f, 나머지는 0f이다.
         seasonSign[season].gameObject.SetActive(true);
     }
 }
