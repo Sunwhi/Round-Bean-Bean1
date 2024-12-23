@@ -19,6 +19,9 @@ public class PlayerDragMovement : MonoBehaviour
     [SerializeField] private float jumpForce;
     [SerializeField] private bool isGround = false;
 
+    [SerializeField] GameObject textGoForward; // 역행 금지 안내 텍스트.
+    // groundscroller에서 함수를 가져오려 했으나 키보드 기반 조작 코드를 삭제하게 될 경우를 고려해 분리 작성하였음.
+
     // Start is called before the first frame update
     void Start()
     {
@@ -122,6 +125,12 @@ public class PlayerDragMovement : MonoBehaviour
             }
             else
             {
+                // 일시정지 상황이 아닌데 게임이 멈춰 있는 경우, 즉 역행 방지로 인한 정지 상황인 경우
+                if (Time.timeScale == 0 && !GameManager.Instance.gamePaused)
+                {
+                    Time.timeScale = 1; // 일시정지 해제
+                    textGoForward.SetActive(false); // 안내 텍스트 숨김
+                }
                 // 오른쪽으로 굴러감
                 wheelRigidbody.AddTorque(-moveSpeed * Time.deltaTime);
 
