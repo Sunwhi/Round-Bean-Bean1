@@ -1407,7 +1407,7 @@ MonoBehaviour:
   - {fileID: 1316518486}
   - {fileID: 1369492802}
   player: {fileID: 256649931}
-  hat: {fileID: 0}
+  hat: {fileID: 1784260656}
   distance: 0
   textGoForward: {fileID: 1014711397}
 --- !u!1 &234105139
