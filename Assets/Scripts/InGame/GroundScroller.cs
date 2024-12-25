@@ -17,6 +17,7 @@ public class GroundScroller : MonoBehaviour
     public SpriteRenderer[] seasonSign;
 
     public GameObject player;
+    public GameObject hat;
     float cameraHalfWidth;
     SpriteRenderer temp; // for scrolling tiles
 
@@ -32,8 +33,8 @@ public class GroundScroller : MonoBehaviour
     private int tilesStart = 0;
     private int tilesEnd = 1;
 
-    private int obstacleCount_rock = 0;
-    private int obstacleCount_cliff = 0;
+    private int obstacleCount = 0;
+    private int hatCount = 0;
     private bool rockJudge = false;
     private bool cliffJudge = false;
     private int obstacleDelay = 0;
@@ -98,23 +99,40 @@ public class GroundScroller : MonoBehaviour
             if (tiles[i].sprite == groundImg[0]) obstacleFlag[i] = true; // 봄인 경우 판정 불필요, 여름 진입하자마자 바로 역행 시 봄에서 판정을 시도하는 문제 방지
 
             // spawning obstacles. is seperation to another file needed? and possible?
-            // summer: 0.2/4m, autumn: 0.25/2m, winter: 0.3/1m
             if (player.transform.position.x + cameraHalfWidth * 0.59 <= tiles[i].transform.position.x
                 && player.transform.position.x + cameraHalfWidth * 0.61 >= tiles[i].transform.position.x // when the block reaches at 80% of the display
                 && !obstacleFlag[i] && currentSeason >= 1) // and spawning obstacles is not judged yet, and season is after spring 
             {
-                obstacleFlag[i] = true;
+                obstacleFlag[i] = true; // 중복판정 방지
+
+                if (hatCount >= 3 && !GameManager.Instance.hatOn && obstacleCount > 0)
+                // 장애물이 3번 이상 나타나지 않은 경우, 또한 현재 모자를 쓰고 있지 않은 경우. 장애물이 생길 칸에 모자 생성
+                // TODO: hatCount의 증가는 모자를 쓴 상태에서도 적용되는가?
+                // 적용 시 모자를 떨구자마자 모자가 나오는 상황이 발생. 우선은 미적용으로 둠. 적용해야 하는 경우 아래의 if (!GameManager.Instance.hatOn) 들을 지울 것.
+                {
+                    bool hatJudge = ProbabilityRandom(0.8f);
+                    if (hatJudge)
+                    {
+                        var newHat = Instantiate(hat, new Vector2(tiles[i].transform.position.x + 0.5f, -0.5f), new Quaternion(0, 0, 0, 0));
+                        obstacleCount = obstacleDelay + 1; // 딜레이 적용
+                        hatCount = 0;
+                        Debug.Log("hat spawned");
+                        break; // 모자 생성 시 이후 장애물 판정은 필요없음
+                    }
+                    hatCount = 0; // else
+                    Debug.Log("hat spawn failed");
+                }
+
                 // 가을 이후 생성 알고리즘
                 if (currentSeason >= 2) 
                 {
                 #region afterAutumn
-                    // 24.11.18 생성 로직 테스트를 위해 작성된 가을 이후 절벽 로직. 돌과 동시 생성인 경우 50% 확률로 하나만 골라 생성.
-                    if (obstacleCount_cliff > 0)
+                    if (obstacleCount > 0) // 24.12.25 obstacleCount_rock과 obstacleCount_cliff 통합
                     {
                         cliffJudge = ProbabilityRandom(obstacleChance);
                         rockJudge = ProbabilityRandom(obstacleChance);
                         Debug.Log("...judging cliffs and rocks..." + cliffJudge + ", " + rockJudge);
-                        if (cliffJudge)
+                        if (cliffJudge) 
                         {
                             if (rockJudge)
                             {
@@ -130,27 +148,36 @@ public class GroundScroller : MonoBehaviour
                                     rock.transform.position = new Vector2(tiles[i].transform.position.x + 0.5f, -0.5f); // spawn rock
                                     Debug.Log("rock selected");
                                 }
+                                hatCount = 0;
+                                break;
                             }
                             else SetTile(tiles[i], false); // hide tile
+                            hatCount = 0;
+                            break;
                         }
-                        obstacleCount_cliff = obstacleDelay + 1; // 성공하든 실패하든 8m(4칸)마다 판정하므로 딜레이 적용.
-                        obstacleCount_rock = obstacleDelay + 1;
-                        Debug.Log("obstacleCount_cliff and rock : " + obstacleCount_cliff + ", " + obstacleCount_rock);
+                        else if (!cliffJudge && rockJudge) // cliffJudge가 false고 rockjudge가 true인 경우를 처리 안했어서 추가함.
+                        {
+                            var rock = ObjectPool.GetObject();
+                            rock.transform.position = new Vector2(tiles[i].transform.position.x + 0.5f, -0.5f); // spawn rock
+                            Debug.Log("rock selected");
+                            hatCount = 0;
+                            break;
+                        }
+                        obstacleCount = obstacleDelay + 1; // 성공하든 실패하든 8m(4칸)마다 판정하므로 딜레이 적용.
+                        if (!GameManager.Instance.hatOn) hatCount++; // 장애물 생성에 실패한 경우, 모자를 안 쓰고 있으면 hat count 증가.
+                        Debug.Log("hatCount: " + hatCount);
                         break;
                     }
-                    else
+                    else // 아직 생성될 때가 아닌 경우 (obstacleDelay에 걸리는 경우)
                     {
-                        obstacleCount_cliff++;
-                        Debug.Log("obstacleCount_cliff: " + obstacleCount_cliff);
+                        obstacleCount++;
                         break;
                     }
                 #endregion
                 }
                 #region summer
                 // 여름 - 돌만 생성됨. 
-                // 24.11.18 기준 생성 로직 테스트를 위해 전 계절에 적용 중.
-
-                if (obstacleCount_rock > 0) // 가을 이후 절벽과의 동시 생성 여부 파악을 위해 미리 돌 판정
+                if (obstacleCount > 0) // 가을 이후 절벽과의 동시 생성 여부 파악을 위해 미리 돌 판정
                 {
                     rockJudge = ProbabilityRandom(obstacleChance);
                     Debug.Log("...judging rocks..." + rockJudge);
@@ -158,14 +185,20 @@ public class GroundScroller : MonoBehaviour
                     {
                         var rock = ObjectPool.GetObject();
                         rock.transform.position = new Vector2(tiles[i].transform.position.x + 0.5f, -0.5f); // spawn rock
+                        hatCount = 0;
                     }
-                    obstacleCount_rock = obstacleDelay - 1;
-                    Debug.Log("obstacleCount_rock: " + obstacleCount_rock);
+                    else
+                    {
+                        if (!GameManager.Instance.hatOn) hatCount++;
+                    }
+                    obstacleCount = obstacleDelay + 1;
+                    Debug.Log("hatCount: " + hatCount);
+                    //Debug.Log("obstacleCount: " + obstacleCount);
                 }
                 else
                 {
-                    obstacleCount_rock++;
-                    Debug.Log("obstacleCount_rock: " + obstacleCount_rock);
+                    obstacleCount++;
+                    //Debug.Log("obstacleCount: " + obstacleCount);
                 }
                 #endregion
             }
@@ -205,6 +238,8 @@ public class GroundScroller : MonoBehaviour
         CreateSeasonSign(season, distance); // 계절 변경 안내 표지판 생성
         switch (season)
         {
+
+            // summer: 20%/4m, autumn: 25%/2m, winter: 30%/1m
             case 0:
                 tilesStart = springTilesIndex;
                 tilesEnd = summerTilesIndex;
@@ -250,8 +285,8 @@ public class GroundScroller : MonoBehaviour
 
         // summer: 10m, autumn: 21m, winter: 33m, spring2: 45m
         if (distance < 10 * 2) newSeason = 0;
-        else if (distance < 21 * 2) newSeason = 1;
-        else if (distance < 33 * 2) newSeason = 2; // 가을 이후의 장애물 디버깅을 위해 거리를 늘리는 부분 (*2를 늘리면 됨)
+        else if (distance < 21 * 20) newSeason = 1;
+        else if (distance < 33 * 20) newSeason = 2; // 가을 이후의 장애물 디버깅을 위해 거리를 늘리는 부분 (*2를 늘리면 됨)
         else if (distance < 45 * 2) newSeason = 3;
         else if (distance < 50 * 2) newSeason = 0; // spring2
 
