@@ -36,10 +36,11 @@ public class Hat : MonoBehaviour
     {
         if (hatOn)
         {
-            this.transform.position = hatTargetPosition.position;
-            this.transform.rotation = hatTargetPosition.rotation;
-
-            Vector3 currentRotation = transform.eulerAngles;
+            //모자를 동물 머리 위에 부착
+            //this.transform.position = hatTargetPosition.position;
+            //this.transform.rotation = hatTargetPosition.rotation;
+            /*
+            Vector3 currentRotation = frame.transform.eulerAngles;
 
             // Z값을 -180 ~ 180 범위로 변환 (Unity는 0 ~ 360으로 반환하기 때문에)
             float zRotation = currentRotation.z;
@@ -62,15 +63,24 @@ public class Hat : MonoBehaviour
                 GameManager.Instance.hatFall = true;
                 GameManager.Instance.hatOn = false;
             }
+            */
+            //모자가 타겟 포지션보다 y축으로 아래로 1만큼 떨어지면 hatFall판정
+            if (hatTargetPosition.position.y - transform.position.y > 1)
+            {
+                hatOn = false;
+                hatFall = true;
+                GameManager.Instance.hatFall = true;
+                GameManager.Instance.hatOn = false;
+            }
         }
         if(hatFall)
         {
-            rigidBody.simulated = true;
+            //rigidBody.simulated = true;
             // 한번만 실행, 
             if(one == 1)
             {
-                rigidBody.velocity = Vector3.zero;
-                rigidBody.angularVelocity = 0f;
+                //rigidBody.velocity = Vector3.zero;
+                //rigidBody.angularVelocity = 0f;
                 one++;
             }
             
@@ -83,6 +93,13 @@ public class Hat : MonoBehaviour
         {
             if(!hatFall) HatAnimation();
         }
+        /*if (collision.gameObject.CompareTag("GGround") && hatOn)
+        {
+            hatOn = false;
+            hatFall = true;
+            GameManager.Instance.hatFall = true;
+            GameManager.Instance.hatOn = false;
+        }*/
     }
     void HatAnimation()
     {
@@ -97,7 +114,7 @@ public class Hat : MonoBehaviour
         frameRigidBody.isKinematic = true;
         wheelRigidBody.isKinematic = true;
         // 모자의 rigidbody 물리작용 멈춤
-        rigidBody.simulated = false;
+        //rigidBody.simulated = false;
 
         hatTargetRotation = hatTargetPosition.rotation.eulerAngles;
         // 모자 애니메이션

@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Xml;
 using UnityEngine;
 
+/*
+ * 키보드로 조작하는 스크립트
+ */
 public class UnicycleController : MonoBehaviour
 {
     [SerializeField] Rigidbody2D frameRigidbody;
@@ -11,6 +14,9 @@ public class UnicycleController : MonoBehaviour
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float jumpForce = 10.0f;
     [SerializeField] private bool isGround = false;
+    [SerializeField] GameObject hat;
+    
+    [SerializeField] GameObject currentHatPosition; // 동물의 child로 놓음으로써 점프했을 때 동물의 위치를 따라가게
     // Start is called before the first frame update
     void Start()
     {
@@ -57,7 +63,22 @@ public class UnicycleController : MonoBehaviour
             isGround = false;
         }
     }
-    
+    private void Update()
+    {
+        // 점프하기 직전까지 currentHatPosition에 모자의 위치를 로컬(동물기준)로 저장
+        if(isGround)
+        {
+            currentHatPosition.transform.position = hat.transform.position; 
+            currentHatPosition.transform.rotation = hat.transform.rotation;
+        }
+        // 모자를 동물 머리 위에 부착(동물 기준으로)
+        if (GameManager.Instance.hatOn && !isGround)
+        {
+            hat.transform.position = currentHatPosition.transform.position;
+            hat.transform.rotation = currentHatPosition.transform.rotation;
+        }
+    }
+
     // 바닥에 닿았을때만 점프할 수 있게
     private void OnCollisionEnter2D(Collision2D collision)
     {

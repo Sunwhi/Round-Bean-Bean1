@@ -116,6 +116,11 @@ public class GameManager : MonoBehaviour
         //모자가 머리에서 떨어졌을 때
         //투명도를 서서히 낮추고 해당 모자를 없앤다.
         hatSP = hat.GetComponent<SpriteRenderer>();
+        BoxCollider2D hatCollider = hat.GetComponent <BoxCollider2D>();
+        CircleCollider2D wheelCollider = wheel.GetComponent<CircleCollider2D>();
+        Physics2D.IgnoreCollision(hatCollider, wheelCollider);
+        hat.layer = 3;
+        //hatCollider.enabled = false;
 
         timer += Time.deltaTime;
         Color color = hatSP.color;

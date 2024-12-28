@@ -18,6 +18,8 @@ public class PlayerDragMovement : MonoBehaviour
     [SerializeField] private float moveSpeed;
     [SerializeField] private float jumpForce;
     [SerializeField] private bool isGround = false;
+    [SerializeField] GameObject hat;
+    [SerializeField] GameObject currentHatPosition;
 
     [SerializeField] GameObject textGoForward; // 역행 금지 안내 텍스트.
     // groundscroller에서 함수를 가져오려 했으나 키보드 기반 조작 코드를 삭제하게 될 경우를 고려해 분리 작성하였음.
@@ -39,6 +41,18 @@ public class PlayerDragMovement : MonoBehaviour
                 Touch touch = Input.GetTouch(i);
                 TouchControl(touch);
             }
+        }
+        // 점프하기 직전까지 currentHatPosition에 모자의 위치를 로컬(동물기준)로 저장
+        if (isGround)
+        {
+            currentHatPosition.transform.position = hat.transform.position;
+            currentHatPosition.transform.rotation = hat.transform.rotation;
+        }
+        // 모자를 동물 머리 위에 부착(동물 기준으로)
+        if (GameManager.Instance.hatOn && !isGround)
+        {
+            hat.transform.position = currentHatPosition.transform.position;
+            hat.transform.rotation = currentHatPosition.transform.rotation;
         }
     }
     private void TouchControl(Touch touch)

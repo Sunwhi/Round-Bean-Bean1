@@ -266,7 +266,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 15175110}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: HatPosition
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -282,7 +282,7 @@ Transform:
   m_GameObject: {fileID: 15175109}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.22799999, y: 1.021, z: 0}
+  m_LocalPosition: {x: 0.22799999, y: 1, z: 0}
   m_LocalScale: {x: 0.27771568, y: 0.9020074, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1559,7 +1559,7 @@ GameObject:
   - component: {fileID: 256649937}
   - component: {fileID: 256649939}
   - component: {fileID: 256649940}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Wheel
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -1713,6 +1713,8 @@ MonoBehaviour:
   moveSpeed: 300
   jumpForce: 8
   isGround: 0
+  hat: {fileID: 1784260656}
+  currentHatPosition: {fileID: 1547342636}
 --- !u!114 &256649939
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1731,6 +1733,8 @@ MonoBehaviour:
   moveSpeed: 300
   jumpForce: 8
   isGround: 0
+  hat: {fileID: 1784260656}
+  currentHatPosition: {fileID: 1547342636}
   textGoForward: {fileID: 1014711397}
 --- !u!114 &256649940
 MonoBehaviour:
@@ -3869,7 +3873,7 @@ GameObject:
   m_Component:
   - component: {fileID: 489720182}
   - component: {fileID: 489720183}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Square
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4558,7 +4562,7 @@ GameObject:
   - component: {fileID: 635412803}
   - component: {fileID: 635412802}
   - component: {fileID: 635412806}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Frame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4853,7 +4857,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 654881458}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Player1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5548,9 +5552,10 @@ GameObject:
   m_Component:
   - component: {fileID: 888336132}
   - component: {fileID: 888336133}
-  - component: {fileID: 888336134}
   - component: {fileID: 888336135}
-  m_Layer: 5
+  - component: {fileID: 888336136}
+  - component: {fileID: 888336137}
+  m_Layer: 6
   m_Name: animal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5571,6 +5576,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 15175110}
+  - {fileID: 1547342637}
   m_Father: {fileID: 635412805}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &888336133
@@ -5625,7 +5631,64 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!58 &888336134
+--- !u!114 &888336135
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 888336131}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28cfb8881b9b44641b32b664e8c38511, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!61 &888336136
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 888336131}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.21949941, y: 0.003355205}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 2.18, y: 1.96}
+    newSize: {x: 1, y: 1}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 1.0945628, y: 1.7833916}
+  m_EdgeRadius: 0
+--- !u!58 &888336137
 CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5657,21 +5720,9 @@ CircleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.17425299, y: -0.04738033}
+  m_Offset: {x: 0.1225853, y: -0.011786222}
   serializedVersion: 2
-  m_Radius: 0.8756205
---- !u!114 &888336135
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 888336131}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 28cfb8881b9b44641b32b664e8c38511, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Radius: 0.748173
 --- !u!1 &895790262
 GameObject:
   m_ObjectHideFlags: 0
@@ -7285,7 +7336,7 @@ GameObject:
   - component: {fileID: 1396818557}
   - component: {fileID: 1396818559}
   - component: {fileID: 1396818558}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Saddle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8067,6 +8118,51 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: -20, y: -20}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &1547342636
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1547342637}
+  - component: {fileID: 1547342638}
+  m_Layer: 6
+  m_Name: CurrentHatPos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1547342637
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1547342636}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 888336132}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1547342638
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1547342636}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ea740d61d7ce464ba9497361544da20, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hat: {fileID: 1784260656}
 --- !u!1 &1599849944
 GameObject:
   m_ObjectHideFlags: 0
@@ -14283,7 +14379,7 @@ BoxCollider2D:
   m_GameObject: {fileID: 1784260656}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 7cd60876fc5f6f640a1a2cd053dbb176, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -14331,10 +14427,10 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 0.01
+  m_Mass: 0.02
   m_LinearDrag: 0
-  m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_AngularDrag: 3
+  m_GravityScale: 2
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -15415,7 +15511,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 519b6b4a50b8a75418f054ebd283f96f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animalCollider: {fileID: 888336134}
+  animalCollider: {fileID: 0}
   gameOver: 0
   gameClear: 0
   gamePaused: 0
