@@ -257,14 +257,14 @@ public class GroundScroller : MonoBehaviour
                 tilesStart = autumnTilesIndex;
                 tilesEnd = winterTilesIndex;
                 currentSeason = 2;
-                obstacleDelay = -4; // -2;
+                obstacleDelay = -2; 
                 obstacleChance = 0.25f;
                 break;
             case 3:
                 tilesStart = winterTilesIndex;
                 tilesEnd = groundImg.Length;
                 currentSeason = 3;
-                obstacleDelay = -4; // -1;
+                obstacleDelay = -1; 
                 obstacleChance = 0.3f;
                 break;
             default:
@@ -283,12 +283,12 @@ public class GroundScroller : MonoBehaviour
     {
         int newSeason = 0;
 
-        // summer: 10m, autumn: 21m, winter: 33m, spring2: 45m
-        if (distance < 10 * 2) newSeason = 0;
-        else if (distance < 21 * 20) newSeason = 1;
-        else if (distance < 33 * 20) newSeason = 2; // 가을 이후의 장애물 디버깅을 위해 거리를 늘리는 부분 (*2를 늘리면 됨)
-        else if (distance < 45 * 2) newSeason = 3;
-        else if (distance < 50 * 2) newSeason = 0; // spring2
+        // 24.12.28 기준 봄 50m, 여름 50m, 가을 55m, 겨울 60m, 봄2 10m
+        if (distance < 50 * 1) newSeason = 0;
+        else if (distance < 100 * 1) newSeason = 1;
+        else if (distance < 155 * 1) newSeason = 2; // 가을 이후의 장애물 디버깅을 위해 거리를 늘리는 부분 (곱하는 수를 조정하면 됨)
+        else if (distance < 215 * 1) newSeason = 3;
+        else if (distance < 225 * 1) newSeason = 0; // spring2
 
         if (newSeason != currentSeason)
         {
@@ -299,12 +299,12 @@ public class GroundScroller : MonoBehaviour
 
     /// <summary>
     /// 계절 변경 안내 표지판 생성 함수.
-    /// 절댓값으로 생성하지 않고 계절이 바뀌는 위치에서 알아서 생성되도록 함.
+    /// 계절이 바뀌는 위치에서 알아서 생성되도록 함.
     /// </summary>
     /// <param name="season">계절에 해당하는 표지판을 세우기 위함</param>
     private void CreateSeasonSign(int season, float distance)
     {
-        seasonSign[season].transform.position = new Vector3(distance+12, 1f, 0.5f); // z 값이 클수록 뒤로. groundImg는 1f, 나머지는 0f이다.
+        seasonSign[season].transform.position = new Vector3(distance+11, 1f, 0.5f); // z 값이 클수록 뒤로. groundImg는 1f, 나머지는 0f이다.
         seasonSign[season].gameObject.SetActive(true);
     }
 }
