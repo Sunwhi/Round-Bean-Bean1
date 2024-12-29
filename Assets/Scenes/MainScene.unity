@@ -135,6 +135,7 @@ GameObject:
   - component: {fileID: 57071459}
   - component: {fileID: 57071458}
   - component: {fileID: 57071457}
+  - component: {fileID: 57071461}
   m_Layer: 5
   m_Name: Canvas(Overlay)
   m_TagString: Untagged
@@ -226,6 +227,21 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &57071461
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 57071456}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b0100fe1c99ba4c8ed415cbd075972, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  AchievePanel: {fileID: 988773256}
+  BackgroundPanel: {fileID: 1678883408}
+  achieveBtn: {fileID: 1397552774}
 --- !u!1 &66861464
 GameObject:
   m_ObjectHideFlags: 0
@@ -1400,7 +1416,6 @@ GameObject:
   - component: {fileID: 516378153}
   - component: {fileID: 516378152}
   - component: {fileID: 516378151}
-  - component: {fileID: 516378150}
   m_Layer: 5
   m_Name: ExitBtn
   m_TagString: Untagged
@@ -1428,21 +1443,6 @@ RectTransform:
   m_AnchoredPosition: {x: -1150, y: 550}
   m_SizeDelta: {x: 180, y: 180}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &516378150
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 516378148}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 458d9baad07cf5c419c0a0a667bf14d7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ClearRecordPanel: {fileID: 988773256}
-  BackgroundPanel: {fileID: 0}
-  achieveBtn: {fileID: 1397552774}
 --- !u!114 &516378151
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1487,8 +1487,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 988773258}
-        m_TargetAssemblyTypeName: CleasRecordBtn, Assembly-CSharp
+      - m_Target: {fileID: 988773262}
+        m_TargetAssemblyTypeName: MainMenuBtn, Assembly-CSharp
         m_MethodName: ExitBtn
         m_Mode: 1
         m_Arguments:
@@ -2789,7 +2789,7 @@ GameObject:
   - component: {fileID: 988773261}
   - component: {fileID: 988773260}
   - component: {fileID: 988773259}
-  - component: {fileID: 988773258}
+  - component: {fileID: 988773262}
   m_Layer: 5
   m_Name: AchievePanel
   m_TagString: Untagged
@@ -2819,21 +2819,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 1920, y: 1080}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &988773258
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 988773256}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 458d9baad07cf5c419c0a0a667bf14d7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ClearRecordPanel: {fileID: 988773256}
-  BackgroundPanel: {fileID: 1678883408}
-  achieveBtn: {fileID: 1397552774}
 --- !u!114 &988773259
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2902,6 +2887,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 988773256}
   m_CullTransparentMesh: 1
+--- !u!114 &988773262
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 988773256}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b0100fe1c99ba4c8ed415cbd075972, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  AchievePanel: {fileID: 988773256}
+  BackgroundPanel: {fileID: 1678883408}
+  achieveBtn: {fileID: 1397552774}
 --- !u!1 &1200421748
 GameObject:
   m_ObjectHideFlags: 0
@@ -4234,8 +4234,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 988773258}
-        m_TargetAssemblyTypeName: CleasRecordBtn, Assembly-CSharp
+      - m_Target: {fileID: 988773262}
+        m_TargetAssemblyTypeName: MainMenuBtn, Assembly-CSharp
         m_MethodName: ClearRecordBtn
         m_Mode: 1
         m_Arguments:
@@ -4310,6 +4310,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ClearRecordPanel: {fileID: 988773256}
   BackgroundPanel: {fileID: 1678883408}
+  OptionPanel: {fileID: 0}
   achieveBtn: {fileID: 1397552774}
 --- !u!1 &1398299058
 GameObject:

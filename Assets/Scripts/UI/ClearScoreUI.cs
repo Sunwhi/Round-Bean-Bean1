@@ -10,7 +10,7 @@ public class ClearScoreUI : MonoBehaviour
     [SerializeField] TextMeshProUGUI finalScoreText;
     [SerializeField] GameObject newRecordText;
     [SerializeField] GameObject clearText;
-    [SerializeField] Image clearBackgroundPanel;
+    [SerializeField] GameObject clearBackgroundPanel;
     [SerializeField] GameObject homeBtn;
     [SerializeField] GameObject recordBtn;
     [SerializeField] GameObject playAgainBtn;
@@ -42,9 +42,10 @@ public class ClearScoreUI : MonoBehaviour
             finalScoreText.rectTransform.localScale = scale * Vector2.one;
 
             // 클리어 배경 화면 어둡게, panel이용해서 
-            Color color = clearBackgroundPanel.color;
+            clearBackgroundPanel.SetActive(true);
+            Color color = clearBackgroundPanel.GetComponent<Image>().color;
             color.a = Mathf.Lerp(0, 0.7f, timer / animationDuration);
-            clearBackgroundPanel.color = color;
+            clearBackgroundPanel.GetComponent<Image>().color = color;
 
             if(!homeBtn.activeSelf)
             {

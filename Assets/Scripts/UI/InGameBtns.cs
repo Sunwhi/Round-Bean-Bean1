@@ -8,18 +8,28 @@ public class CleasRecordBtn : MonoBehaviour
 {
     
     [SerializeField] GameObject ClearRecordPanel;
-    // 업적창 배경 어둡게 하기 위한 Panel
+    // 업적창 배경, 옵션창 배경 어둡게 하기 위한 Panel
     [SerializeField] GameObject BackgroundPanel;
+    [SerializeField] GameObject OptionPanel;
+    [SerializeField] GameObject ConfirmPanel;
     [SerializeField] Button achieveBtn;
+    [SerializeField] GameObject optionExitBtn;
+
     public void StartGame()
     {
         SceneManager.LoadScene("InGame");
     }
-    public void HomeBtn()
+    public void ClearHomeBtn()
     {
         SceneManager.LoadScene("MainScene");
+        Time.timeScale = 1.0f;
     }
-    public void playAgainBtn()
+    public void OptionHomeBtn()
+    {
+        ConfirmPanel.SetActive(true);
+        optionExitBtn.SetActive(false);
+    }
+    public void PlayAgainBtn()
     {
         Time.timeScale = 1;
         SceneManager.LoadScene("InGame");
@@ -30,10 +40,6 @@ public class CleasRecordBtn : MonoBehaviour
         {
             ClearRecordPanel.SetActive(true);
         }
-        if (!BackgroundPanel.activeSelf)
-        {
-            BackgroundPanel.SetActive(true);
-        }
     }
     public void ExitBtn()
     {
@@ -41,13 +47,32 @@ public class CleasRecordBtn : MonoBehaviour
         {
             ClearRecordPanel.SetActive(false);
         }
-        if (BackgroundPanel.activeSelf)
-        {
-            BackgroundPanel.SetActive(false);
-        }
+    }
+    public void OptionExitBtn()
+    {
+        BackgroundPanel.SetActive(false);
+        OptionPanel.SetActive(false);
+        Time.timeScale = 1;
+    }
+    public void OptionBtn()
+    {
+        OptionPanel.SetActive(true);
+        BackgroundPanel.SetActive(true);
+        Time.timeScale = 0;
     }
 
-    private void Start()
+    public void ConfirmYes()
+    {
+        SceneManager.LoadScene("MainScene");
+        Time.timeScale = 1.0f;
+    }
+    public void ConfirmNo()
+    {
+        ConfirmPanel.SetActive(false);
+        optionExitBtn.SetActive(true);
+    }
+
+    void Update()
     {
         float score = PlayerPrefs.GetFloat("score0");
         // 기록이 안 남아있을 시 버튼 흐리고 터치 x
