@@ -49,6 +49,9 @@ public class GameManager : MonoBehaviour
     public float fadeDuration = 10f;
     public bool hatFall = false;
     public bool hatOn = false;
+    // k->keyboard(UnicycleController.cs), t->touch(PlayerDragMovement.cs)
+    public bool kJumpWithNoHat = false; // 모자가 없는 상태에서 점프해서 모자를 먹었을 때 오류를 막기 위한 변수. 자세한 설명 -> UnicycleController.cs
+    public bool tJumpWithNoHat = false;
     private float timer;
 
     public static GameManager Instance { get; private set; } // 싱글톤 인스턴스
@@ -119,7 +122,7 @@ public class GameManager : MonoBehaviour
         BoxCollider2D hatCollider = hat.GetComponent <BoxCollider2D>();
         CircleCollider2D wheelCollider = wheel.GetComponent<CircleCollider2D>();
         Physics2D.IgnoreCollision(hatCollider, wheelCollider);
-        hat.layer = 3;
+        hat.layer = 3; // 더이상 캐릭터와 부딪히지 않게 레이어를 바꾼다.
         //hatCollider.enabled = false;
 
         timer += Time.deltaTime;

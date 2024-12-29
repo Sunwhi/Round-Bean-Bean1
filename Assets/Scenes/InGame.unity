@@ -15789,7 +15789,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ded18f0d1fabc3438e2d1e970664e25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  finish: 10
+  finish: 225
 --- !u!1 &1767274486
 GameObject:
   m_ObjectHideFlags: 0
@@ -17506,6 +17506,8 @@ MonoBehaviour:
   fadeDuration: 700
   hatFall: 0
   hatOn: 0
+  kJumpWithNoHat: 0
+  tJumpWithNoHat: 0
 --- !u!1 &2044792671
 GameObject:
   m_ObjectHideFlags: 0

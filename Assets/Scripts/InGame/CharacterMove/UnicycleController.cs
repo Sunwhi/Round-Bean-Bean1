@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Xml;
+using Unity.VisualScripting;
 using UnityEngine;
 
 /*
@@ -61,22 +62,34 @@ public class UnicycleController : MonoBehaviour
         {
             wheelRigidbody.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
             isGround = false;
+            // 점프 한 상태, 모자가 머리에 없다 -> jumpWithNoHat:true 
+            if (!GameManager.Instance.hatOn) GameManager.Instance.kJumpWithNoHat = true;
         }
+
+        if(isGround) GameManager.Instance.kJumpWithNoHat = false; // 땅에 닿아있을 때는 항상 false로 
+        // jumpWithNoHat은 모자가 없고 점프했을 때에만 true가 된다. 그리고 딱 이 순간에만 모자를 먹었을 때 예외처리를 한다.
     }
     private void Update()
-    {
-        // 점프하기 직전까지 currentHatPosition에 모자의 위치를 로컬(동물기준)로 저장
-        if(isGround)
+    { 
+        // 점프 한 상태에서 모자를 썼을 때 바닥의 위치로 모자가 이동하는 오류를 고치기 위해
+        // 모자가 있이 점프한 상태에서만 모자가 머리에 붙어있도록 바꿈.
+        // 즉 점프한 상태에서 모자를 먹었을 때에만 아래의 함수가 실행이 안됨.
+        if (!GameManager.Instance.kJumpWithNoHat && !hat.IsDestroyed()) 
         {
-            currentHatPosition.transform.position = hat.transform.position; 
-            currentHatPosition.transform.rotation = hat.transform.rotation;
+            // 점프하기 직전까지 currentHatPosition에 모자의 위치를 로컬(동물기준)로 저장
+            if (isGround)
+            {
+                currentHatPosition.transform.position = hat.transform.position;
+                currentHatPosition.transform.rotation = hat.transform.rotation;
+            }
+            // 모자를 동물 머리 위에 부착(동물 기준으로)
+            if (GameManager.Instance.hatOn && !isGround)
+            {
+                hat.transform.position = currentHatPosition.transform.position;
+                hat.transform.rotation = currentHatPosition.transform.rotation;
+            }
         }
-        // 모자를 동물 머리 위에 부착(동물 기준으로)
-        if (GameManager.Instance.hatOn && !isGround)
-        {
-            hat.transform.position = currentHatPosition.transform.position;
-            hat.transform.rotation = currentHatPosition.transform.rotation;
-        }
+        Debug.Log(GameManager.Instance.kJumpWithNoHat);
     }
 
     // 바닥에 닿았을때만 점프할 수 있게
