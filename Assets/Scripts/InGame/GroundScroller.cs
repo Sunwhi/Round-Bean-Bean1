@@ -149,11 +149,12 @@ public class GroundScroller : MonoBehaviour
                                     Debug.Log("rock selected");
                                 }
                                 hatCount = 0;
-                                break;
                             }
-                            else SetTile(tiles[i], false); // hide tile
-                            hatCount = 0;
-                            break;
+                            else
+                            {
+                                SetTile(tiles[i], false); // hide tile
+                                hatCount = 0;
+                            }
                         }
                         else if (!cliffJudge && rockJudge) // cliffJudge가 false고 rockjudge가 true인 경우를 처리 안했어서 추가함.
                         {
@@ -161,10 +162,9 @@ public class GroundScroller : MonoBehaviour
                             rock.transform.position = new Vector2(tiles[i].transform.position.x + 0.5f, -0.5f); // spawn rock
                             Debug.Log("rock selected");
                             hatCount = 0;
-                            break;
                         }
                         obstacleCount = obstacleDelay + 1; // 성공하든 실패하든 8m(4칸)마다 판정하므로 딜레이 적용.
-                        if (!GameManager.Instance.hatOn) hatCount++; // 장애물 생성에 실패한 경우, 모자를 안 쓰고 있으면 hat count 증가.
+                        if (!(cliffJudge || rockJudge || GameManager.Instance.hatOn)) hatCount++; // 장애물 생성에 실패한 경우, 모자를 안 쓰고 있으면 hat count 증가.
                         Debug.Log("hatCount: " + hatCount);
                         break;
                     }
