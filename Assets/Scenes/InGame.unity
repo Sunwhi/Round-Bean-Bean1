@@ -17829,7 +17829,7 @@ PrefabInstance:
     - target: {fileID: 1073881661045366352, guid: 36fb0049e0382da48ab42dd81b6bb182, type: 3}
       propertyPath: player
       value: 
-      objectReference: {fileID: 654881457}
+      objectReference: {fileID: 256649931}
     - target: {fileID: 7278826764101231972, guid: 36fb0049e0382da48ab42dd81b6bb182, type: 3}
       propertyPath: m_Name
       value: Rock
