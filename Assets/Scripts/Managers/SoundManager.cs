@@ -80,7 +80,15 @@ public class SoundManager : MonoBehaviour
         if (clipIndex != lastPlayedClipIndex)
         {
             lastPlayedClipIndex = clipIndex;
-            StartCoroutine(FadeInBGM(bglist[clipIndex]));
+
+            if (clipIndex == 0 && SceneManager.GetActiveScene().name == "InGame") // 봄노래 조건
+            {
+                PlayBGMImmediately(bglist[clipIndex]);
+            }
+            else
+            {
+                StartCoroutine(FadeInBGM(bglist[clipIndex]));
+            }
         }
     }
 
@@ -90,7 +98,7 @@ public class SoundManager : MonoBehaviour
         else if (distance < 20) return 1; // summer
         else if (distance < 30) return 2; // fall
         else if (distance < 42) return 3; // winter
-        else return 0; // spring2
+        else return 4; // spring2
     }
 
     private IEnumerator FadeOutBGM()
@@ -130,4 +138,13 @@ public class SoundManager : MonoBehaviour
         audiosource.Play();
         Destroy(go, clip.length);
     }
+
+    private void PlayBGMImmediately(AudioClip newClip)
+    {
+        bgSound.Stop();           // 기존 음악 정지
+        bgSound.clip = newClip;   // 새 클립 설정
+        bgSound.volume = 0.5f;    // 기본 볼륨
+        bgSound.Play();           // 즉시 재생
+    }
+
 }
