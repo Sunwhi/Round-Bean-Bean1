@@ -2365,7 +2365,6 @@ MonoBehaviour:
   moveSpeed: 300
   jumpForce: 8
   isGround: 0
-  hat: {fileID: 1784260656}
   currentHatPosition: {fileID: 1547342636}
 --- !u!114 &256649939
 MonoBehaviour:
@@ -5493,6 +5492,7 @@ MonoBehaviour:
   ConfirmPanel: {fileID: 920354524}
   achieveBtn: {fileID: 262311598}
   optionExitBtn: {fileID: 86862256}
+  soundBtn: {fileID: 450055116}
 --- !u!1 &553603836
 GameObject:
   m_ObjectHideFlags: 0
@@ -10978,6 +10978,7 @@ MonoBehaviour:
   ConfirmPanel: {fileID: 920354524}
   achieveBtn: {fileID: 436987706}
   optionExitBtn: {fileID: 86862256}
+  soundBtn: {fileID: 450055116}
 --- !u!1 &1629250473
 GameObject:
   m_ObjectHideFlags: 0
@@ -16911,7 +16912,7 @@ GameObject:
   - component: {fileID: 1784260657}
   - component: {fileID: 1784260661}
   - component: {fileID: 1784260662}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Hat
   m_TagString: Untagged
   m_Icon: {fileID: 0}
