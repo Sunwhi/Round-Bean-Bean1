@@ -16762,7 +16762,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ded18f0d1fabc3438e2d1e970664e25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  finish: 225
+  finish: 240
 --- !u!1 &1767274486
 GameObject:
   m_ObjectHideFlags: 0
@@ -18857,7 +18857,7 @@ PrefabInstance:
     - target: {fileID: 1073881661045366352, guid: 36fb0049e0382da48ab42dd81b6bb182, type: 3}
       propertyPath: player
       value: 
-      objectReference: {fileID: 654881457}
+      objectReference: {fileID: 256649931}
     - target: {fileID: 7278826764101231972, guid: 36fb0049e0382da48ab42dd81b6bb182, type: 3}
       propertyPath: m_Name
       value: Rock
