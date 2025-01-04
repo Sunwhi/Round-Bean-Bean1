@@ -18285,6 +18285,7 @@ MonoBehaviour:
   textTime: {fileID: 398313451}
   textGameOver: {fileID: 406604425}
   textGameClear: {fileID: 1767274486}
+  playAgainBtn: {fileID: 505427752}
   particles1: {fileID: 1469430329}
   particles2: {fileID: 1861487789}
   animal: {fileID: 888336131}

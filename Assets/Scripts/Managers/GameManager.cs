@@ -32,6 +32,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI textTime;  // 시간을 나타내는 텍스트
     [SerializeField] GameObject textGameOver; // 게임오버 텍스트, setActive() 호출 위해서 GameObject로 
     [SerializeField] GameObject textGameClear; // 게임 클리어 텍스트
+    [SerializeField] GameObject playAgainBtn;
     [SerializeField] GameObject particles1, particles2;
 
     [SerializeField] GameObject animal;
@@ -176,8 +177,6 @@ public class GameManager : MonoBehaviour
             callFinalScoreOnce = 1;
         }
 
-        
-        Time.timeScale = 1f; // 시간 약간 느리게 -> 아님
         textGameOver.SetActive(true); // 게임오버 텍스트
 
         /* 동물 자전거에서 분리시키고, 이동방향으로 데굴데굴 구르게 */
@@ -201,16 +200,15 @@ public class GameManager : MonoBehaviour
         playerDragMovement.enabled = false;
         unicycleController.enabled = false;
 
-
-        //Debug.Log("몇번실행");
-        // 지금 이게 Update문 안에 있으니까 계속 실행됨. 그래서 pp 기록이 다 같아지는거임
-        //ScoreSorting(finalScore); // 기록 PlayerPrefs에 저장
-
-
+        
         // 'R' 눌러 게임 재시작 -> 현재 씬을 다시 로드한다.
         if(Input.GetKeyDown(KeyCode.R))
         {
             SceneManager.LoadScene(inGameScene.name);
+        }
+        if(!playAgainBtn.activeSelf)
+        {
+            playAgainBtn.SetActive(true);
         }
     }
 
