@@ -30,7 +30,7 @@ public class PlayerDragMovement : MonoBehaviour
     {
         screenHalfWidth = Screen.width / 2;
     }
-
+    private bool initializeHatOnce = true;
     // Update is called once per frame
     void Update()
     {
@@ -42,6 +42,12 @@ public class PlayerDragMovement : MonoBehaviour
                 Touch touch = Input.GetTouch(i);
                 TouchControl(touch);
             }
+        }
+
+        if (GameManager.Instance.hatOn && initializeHatOnce)
+        {
+            hat = GameObject.Find("Hat(Clone)");
+            initializeHatOnce = false;
         }
         // 점프 한 상태에서 모자를 썼을 때 바닥의 위치로 모자가 이동하는 오류를 고치기 위해
         // 모자가 있이 점프한 상태에서만 모자가 머리에 붙어있도록 바꿈

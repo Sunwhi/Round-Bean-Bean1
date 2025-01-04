@@ -42,14 +42,17 @@ public class GameManager : MonoBehaviour
     private PlayerDragMovement playerDragMovement;
     int jumpTwice = 0;
 
+    public bool newHatGenerated = false;
     // 모자 떨어트렸을 때
     [SerializeField] GameObject hat;
     SpriteRenderer hatSP;
-    //Collision2D hatColl;
-    public float fadeDuration = 10f;
+    public float fadeDuration = 5f;
     public bool hatFall = false;
     public bool hatOn = false;
+    public bool initializeHatOnce = true;
+
     // k->keyboard(UnicycleController.cs), t->touch(PlayerDragMovement.cs)
+    // UnicycleController에 넣어도 될듯?
     public bool kJumpWithNoHat = false; // 모자가 없는 상태에서 점프해서 모자를 먹었을 때 오류를 막기 위한 변수. 자세한 설명 -> UnicycleController.cs
     public bool tJumpWithNoHat = false;
     private float timer;
@@ -70,7 +73,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-
     void Start()
     {
         inGameScene = SceneManager.GetActiveScene(); // 현재 작동되고 있는 InGame씬을 저장함
@@ -80,7 +82,6 @@ public class GameManager : MonoBehaviour
         time = 0; // 매 판마다 시간 0으로 초기화
         callFinalScoreOnce = 0; // 매 판마다 0으로 초기화
 
-        //hatColl = hat.GetComponent<Collision2D>();
     }
 
     void Update()
@@ -111,26 +112,42 @@ public class GameManager : MonoBehaviour
             SceneManager.LoadScene(inGameScene.name);
         }
 
-        if(hatFall && !hat.IsDestroyed()) HatFall();
+        //Find와 GetComponent를 한번만 호출하기 위해(오브젝트 할당) initializeHatOnce 변수를 사용하여 Upadte함수 내에서 호출
+        if (hatFall && initializeHatOnce)
+        {
+            hat = GameObject.Find("Hat(Clone)");
+            hatSP = hat.GetComponent<SpriteRenderer>(); // HatFall()에 사용되는 스프라이트 렌더러 초기화
+            initializeHatOnce = false;
+        }
+        if (hatFall && !hat.IsDestroyed())
+        {
+            HatFall();
+        }
     }
 
     private void HatFall()
     {
-        //모자가 머리에서 떨어졌을 때
-        //투명도를 서서히 낮추고 해당 모자를 없앤다.
-        hatSP = hat.GetComponent<SpriteRenderer>();
+        //모자와 캐릭터 충돌막기
         BoxCollider2D hatCollider = hat.GetComponent <BoxCollider2D>();
         CircleCollider2D wheelCollider = wheel.GetComponent<CircleCollider2D>();
-        Physics2D.IgnoreCollision(hatCollider, wheelCollider);
+        Physics2D.IgnoreCollision(hatCollider, wheelCollider); // 
         hat.layer = 3; // 더이상 캐릭터와 부딪히지 않게 레이어를 바꾼다.
-        //hatCollider.enabled = false;
 
+        //모자가 머리에서 떨어졌을 때
+        //투명도를 서서히 낮추고 해당 모자를 없앤다.
         timer += Time.deltaTime;
         Color color = hatSP.color;
         color.a = Mathf.Lerp(color.a, 0, timer / fadeDuration);
         hatSP.color = color;
 
-        if (color.a < 0.01) Destroy(hat);
+        if (color.a < 0.01) // 모자 사라질시
+        {
+            // 다음 모자 생성되었을 때를 생각해 변수 초기화
+            initializeHatOnce = true; 
+            hatFall = false;
+
+            Destroy(hat);
+        }
     }
 
     /* 초 단위의 time을 분과 초로 나누어서 표기함

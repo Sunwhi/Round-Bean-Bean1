@@ -29,6 +29,11 @@ public class Rock : MonoBehaviour
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        // 모자는 돌과 부딪혀도 게임오버되면 안되므로 예외처리함.
+        if(!collision.gameObject.CompareTag("Hat"))
+        {
             GameManager.Instance.gameOver = true;
+
+        }
     }
 }

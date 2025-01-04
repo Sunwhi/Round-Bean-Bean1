@@ -15,15 +15,20 @@ public class Hat : MonoBehaviour
     private UnicycleController unicycleController;
     private PlayerDragMovement playerDragMovement;
     private Rigidbody2D rigidBody;
-    private bool hatOn;
-    private bool hatFall;
+    private bool hatOn; // 모자를 착용하고 있는 상태
+    private bool hatFall; // 모자를 착용하다 떨어진 상태
     Vector3 hatTargetRotation;
 
     int one = 1; // 한번만 실행
     // Start is called before the first frame update
     void Start()
     {
-        //sequence = DOTween.Sequence();
+        hatTargetPosition = GameObject.Find("HatPosition").transform;
+        frame = GameObject.Find("Frame");
+        wheel = GameObject.Find("Wheel");
+        frameRigidBody = frame.GetComponent<Rigidbody2D>();
+        wheelRigidBody = wheel.GetComponent<Rigidbody2D>();
+
         unicycleController = wheel.GetComponent<UnicycleController>();
         playerDragMovement = wheel.GetComponent<PlayerDragMovement>();
         rigidBody = transform.GetComponent<Rigidbody2D>();
@@ -65,27 +70,16 @@ public class Hat : MonoBehaviour
             }
             */
             //모자가 타겟 포지션보다 y축으로 아래로 1만큼 떨어지면 hatFall판정
+            //HatFall!
             if (hatTargetPosition.position.y - transform.position.y > 1)
             {
                 hatOn = false;
                 hatFall = true;
                 GameManager.Instance.hatFall = true;
                 GameManager.Instance.hatOn = false;
+                GameManager.Instance.newHatGenerated = false;
             }
-        }
-        if(hatFall)
-        {
-            //rigidBody.simulated = true;
-            // 한번만 실행, 
-            if(one == 1)
-            {
-                //rigidBody.velocity = Vector3.zero;
-                //rigidBody.angularVelocity = 0f;
-                one++;
-            }
-            
-        }
-        
+        }  
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {

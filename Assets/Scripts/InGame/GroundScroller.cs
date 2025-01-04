@@ -114,6 +114,7 @@ public class GroundScroller : MonoBehaviour
                     if (hatJudge)
                     {
                         var newHat = Instantiate(hat, new Vector2(tiles[i].transform.position.x + 0.5f, -0.5f), new Quaternion(0, 0, 0, 0));
+                        GameManager.Instance.newHatGenerated = true; // 모자 새로 생성되면 newHatGenerated 참으로 설정
                         obstacleCount = obstacleDelay + 1; // 딜레이 적용
                         hatCount = 0;
                         Debug.Log("hat spawned");
