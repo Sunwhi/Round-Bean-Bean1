@@ -6,13 +6,6 @@ public class Rock : MonoBehaviour
 {
     public GameObject player;
     float cameraHalfWidth;
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.CompareTag("Player"))
-        {
-            // Game over
-        }
-    }
     private void Start()
     {
         cameraHalfWidth = Camera.main.aspect * Camera.main.orthographicSize;
