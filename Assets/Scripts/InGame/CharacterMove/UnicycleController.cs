@@ -9,6 +9,7 @@ using UnityEngine;
  */
 public class UnicycleController : MonoBehaviour
 {
+    public bool enableScript = true;
     [SerializeField] Rigidbody2D frameRigidbody;
     [SerializeField] Rigidbody2D wheelRigidbody;
     [SerializeField] private float balanceForce = 100f;
@@ -21,7 +22,7 @@ public class UnicycleController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        if(!enableScript) GetComponent<UnicycleController>().enabled = false;
     }
 
     // Update is called once per frame
@@ -69,9 +70,11 @@ public class UnicycleController : MonoBehaviour
         if(isGround) GameManager.Instance.kJumpWithNoHat = false; // 땅에 닿아있을 때는 항상 false로 
         // jumpWithNoHat은 모자가 없고 점프했을 때에만 true가 된다. 그리고 딱 이 순간에만 모자를 먹었을 때 예외처리를 한다.
     }
+
     private bool initializeHatOnce = true;
     private void Update()
     {
+        // Update코드 전체 주석처리하면 PlayerDragMovement에서 점프시 모자 붙어있음
         if (GameManager.Instance.newHatGenerated) initializeHatOnce = true;
 
         if (GameManager.Instance.hatOn && initializeHatOnce)
@@ -82,7 +85,7 @@ public class UnicycleController : MonoBehaviour
         // 점프 한 상태에서 모자를 썼을 때 바닥의 위치로 모자가 이동하는 오류를 고치기 위해
         // 모자가 있이 점프한 상태에서만 모자가 머리에 붙어있도록 바꿈.
         // 즉 점프한 상태에서 모자를 먹었을 때에만 아래의 함수가 실행이 안됨.
-        if (!GameManager.Instance.kJumpWithNoHat && !hat.IsDestroyed()) // && !hat.IsDestroyed()
+        if (!GameManager.Instance.kJumpWithNoHat && !hat.IsDestroyed())
         {
             // 점프하기 직전까지 currentHatPosition에 모자의 위치를 로컬(동물기준)로 저장
             if (GameManager.Instance.hatOn && isGround)
