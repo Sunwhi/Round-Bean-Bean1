@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditorInternal;
 using UnityEngine;
 
 public class CanvasDragImage : MonoBehaviour
@@ -25,12 +26,20 @@ public class CanvasDragImage : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.touchCount > 0)
+        if (GameManager.Instance.gameOver || GameManager.Instance.gameClear)
         {
-            for (int i = 0; i < Input.touchCount; i++)
+            Protracter.SetActive(false);
+            Speedometer.SetActive(false);
+        }
+        if (!GameManager.Instance.gameOver && !GameManager.Instance.gameClear)
+        {
+            if (Input.touchCount > 0)
             {
-                Touch touch = Input.GetTouch(i);
-                DragImage(touch);
+                for (int i = 0; i < Input.touchCount; i++)
+                {
+                    Touch touch = Input.GetTouch(i);
+                    DragImage(touch);
+                }
             }
         }
     }
@@ -40,10 +49,10 @@ public class CanvasDragImage : MonoBehaviour
 
         if (touch1.phase == TouchPhase.Began || touch1.phase == TouchPhase.Moved || touch1.phase == TouchPhase.Stationary)
         {
-            Debug.Log("1");
             // 스크린 좌표를 UI 요소에 맞게 변환
             Vector2 uiPosition = touch1Position;
-
+            Debug.Log(uiPosition);
+            
             if (touch1Position.x < screenWidthHalf) // 왼쪽 터치: Protracter
             {
                 protracterRect.position = uiPosition;
@@ -51,8 +60,16 @@ public class CanvasDragImage : MonoBehaviour
             }
             else // 오른쪽 터치: Speedometer
             {
-                speedometerRect.position = uiPosition;
-                Speedometer.SetActive(true);
+                // 옵션창 부근은 Speedometer터치가 되지 않도록.
+                if (!(uiPosition.x > 2200 && uiPosition.y >1000))
+                {
+                    speedometerRect.position = uiPosition;
+                    Speedometer.SetActive(true);
+                }
+                else
+                {
+                    Speedometer.SetActive(false);
+                }
             }
         }
 

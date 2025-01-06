@@ -29,6 +29,7 @@ public class PlayerDragMovement : MonoBehaviour
     void Start()
     {
         screenHalfWidth = Screen.width / 2;
+        //Instantiate(hat);
     }
     private bool initializeHatOnce = true;
     // Update is called once per frame
@@ -43,6 +44,10 @@ public class PlayerDragMovement : MonoBehaviour
                 TouchControl(touch);
             }
         }
+        // 모자 파트
+        // 점프한 상태에서 모자 먹었을 시 정상적으로 머리 위로 착용되도록 함.
+        // 모자 쓴 상태에서 점프 했을 시 머리에 붙어있게 함.
+        if (GameManager.Instance.newHatGenerated) initializeHatOnce = true;
 
         if (GameManager.Instance.hatOn && initializeHatOnce)
         {
@@ -54,7 +59,7 @@ public class PlayerDragMovement : MonoBehaviour
         if (!GameManager.Instance.tJumpWithNoHat && !hat.IsDestroyed())
         {
             // 점프하기 직전까지 currentHatPosition에 모자의 위치를 로컬(동물기준)로 저장
-            if (isGround)
+            if (GameManager.Instance.hatOn && isGround)
             {
                 currentHatPosition.transform.position = hat.transform.position;
                 currentHatPosition.transform.rotation = hat.transform.rotation;
@@ -68,6 +73,8 @@ public class PlayerDragMovement : MonoBehaviour
         }
         if (isGround) GameManager.Instance.tJumpWithNoHat = false; // 땅에 닿아있을 때는 항상 false로
     }
+
+
     private void TouchControl(Touch touch)
     {
         // 터치에 고유한 fingerId 할당
@@ -131,22 +138,24 @@ public class PlayerDragMovement : MonoBehaviour
             Vector2 currentTouchPosition = touch.position; // 드래그한 후 위치를 계속 새로 받는다.
             Vector2 dragDirection = currentTouchPosition - rightInitialTouchPosition; // 드래그방향
 
-            //Debug.Log("화면 오른쪽");
             if (dragDirection.x < 0)
             {
                 // 왼쪽으로 굴러감
                 wheelRigidbody.AddTorque(moveSpeed * Time.deltaTime);
 
-                if (dragDirection.y < 0 && isGround)
+                // 아래로 내렸다 떼면 점프
+                /*if (dragDirection.y < 0 && isGround)
                 {
                     if (touch.phase == TouchPhase.Ended)
                     {
                         wheelRigidbody.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
                         isGround = false;
-                    }
-                }
+                        if (!GameManager.Instance.hatOn) GameManager.Instance.tJumpWithNoHat = true;
 
-                //오른쪽으로 가다가 왼쪽으로 확 꺾을 때 관성을 줄이기 위한 조건문
+                    }
+                }*/
+
+                // 오른쪽으로 가다가 왼쪽으로 확 꺾을 때 관성을 줄이기 위한 조건문
                 if (frameRigidbody.angularVelocity < 0 && Mathf.Abs(frameRigidbody.angularVelocity) > 150f)
                     frameRigidbody.AddTorque(700f * Time.deltaTime);
             }
@@ -158,17 +167,21 @@ public class PlayerDragMovement : MonoBehaviour
                     Time.timeScale = 1; // 일시정지 해제
                     textGoForward.SetActive(false); // 안내 텍스트 숨김
                 }
+
                 // 오른쪽으로 굴러감
                 wheelRigidbody.AddTorque(-moveSpeed * Time.deltaTime);
 
-                if (dragDirection.y < 0 && isGround)
+                // 아래로 내렸다 떼면 점프
+                /*if (dragDirection.y < 0 && isGround)
                 {
                     if (touch.phase == TouchPhase.Ended)
                     {
                         wheelRigidbody.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
                         isGround = false;
+                        if (!GameManager.Instance.hatOn) GameManager.Instance.tJumpWithNoHat = true;
+
                     }
-                }
+                }*/
 
                 //왼쪽으로 가다가 오른쪽으로 확 꺾을 때 관성을 줄이기 위한 조건문
                 if (frameRigidbody.angularVelocity > 0 && Mathf.Abs(frameRigidbody.angularVelocity) > 150f)
