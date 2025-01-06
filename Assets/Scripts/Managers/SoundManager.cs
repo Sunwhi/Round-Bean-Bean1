@@ -25,6 +25,8 @@ public class SoundManager : MonoBehaviour
         {
             instance = this;
             DontDestroyOnLoad(this.gameObject);
+
+            EnsureAudioSourceExists();
             SceneManager.sceneLoaded += OnSceneLoaded;
         }
         else
@@ -33,8 +35,62 @@ public class SoundManager : MonoBehaviour
         }
     }
 
+    private void EnsureAudioSourceExists()
+    {
+        if (bgSound == null)
+        {
+            GameObject bgSoundObject = new GameObject("BgSound");
+            bgSound = bgSoundObject.AddComponent<AudioSource>();
+            bgSound.volume = 0.5f;
+            bgSound.loop = true;
+            DontDestroyOnLoad(bgSoundObject);
+        }
+    }
+
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        // 버튼을 씬에서 찾아서 button 변수에 할당
+        button = GameObject.Find("SoundBtn")?.GetComponent<Button>();
+        if (button != null)
+        {
+            soundOnImage = button.image.sprite;
+            button.onClick.AddListener(ButtonClicked);  // 버튼 클릭 이벤트 연결
+        }
+        else
+        {
+            Transform canvasTransform = GameObject.Find("Canvas").transform;
+
+            if (canvasTransform != null)
+            {
+                // OptionalPanel은 Canvas의 첫 번째 자식 (예시: 인덱스 0)
+                Transform optionalPanel = canvasTransform.GetChild(15);
+
+                if (optionalPanel != null)
+                {
+                    // SoundBtn은 OptionalPanel의 첫 번째 자식 (예시: 인덱스 0)
+                    Transform soundBtnTransform = optionalPanel.GetChild(5);
+
+                    if (soundBtnTransform != null)
+                    {
+                        button = soundBtnTransform.GetComponent<Button>();
+                        soundOnImage = button.image.sprite;
+                        button.onClick.AddListener(ButtonClicked);
+
+                    }
+                }
+            }
+
+            if (button != null)
+            {
+                Debug.Log("Sound Button successfully assigned using GetChild!");
+                
+            }
+            else
+            {
+                Debug.LogError("Sound Button not found!");
+            }
+        }
+        EnsureAudioSourceExists();
         if (scene.name == "MainScene")
         {
             StartCoroutine(FadeInBGM(bglist[0]));
@@ -55,14 +111,21 @@ public class SoundManager : MonoBehaviour
 
     void Start()
     {
-        soundOnImage = button.image.sprite;
+        // 초기화 과정에서 button이 할당되었는지 확인하고 이벤트를 연결합니다.
+        if (button != null)
+        {
+            button.onClick.AddListener(ButtonClicked);  // 버튼 클릭 이벤트 연결
+        }
     }
 
     public void ButtonClicked()
     {
-        isOn = !isOn;
-        button.image.sprite = isOn ? soundOnImage : soundOffImage;
-        bgSound.mute = !isOn;
+        if (button != null)  // 버튼이 null인 경우를 방지
+        {
+            isOn = !isOn;
+            button.image.sprite = isOn ? soundOnImage : soundOffImage;
+            bgSound.mute = !isOn;
+        }
     }
 
     void Update()
@@ -73,7 +136,6 @@ public class SoundManager : MonoBehaviour
             PlaySoundWithDistance(distance);
         }
     }
-
     public void PlaySoundWithDistance(float distance)
     {
         int clipIndex = GetClipIndexByDistance(distance);
@@ -81,7 +143,7 @@ public class SoundManager : MonoBehaviour
         {
             lastPlayedClipIndex = clipIndex;
 
-            if (clipIndex == 0 && SceneManager.GetActiveScene().name == "InGame") // 봄노래 조건
+            if (clipIndex == 0 && SceneManager.GetActiveScene().name == "InGame") 
             {
                 PlayBGMImmediately(bglist[clipIndex]);
             }
@@ -94,22 +156,22 @@ public class SoundManager : MonoBehaviour
 
     private int GetClipIndexByDistance(float distance)
     {
-        if (distance < 4) return 0; // spring
-        else if (distance < 20) return 1; // summer
-        else if (distance < 30) return 2; // fall
-        else if (distance < 42) return 3; // winter
-        else return 4; // spring2
+        if (distance < 4) return 1; // spring
+        else if (distance < 20) return 2; // summer
+        else if (distance < 30) return 3; // fall
+        else if (distance < 42) return 4; // winter
+        else return 5; // spring2
     }
 
     private IEnumerator FadeOutBGM()
     {
         while (bgSound.volume > 0)
         {
-            bgSound.volume -= Time.deltaTime / 1.0f; // FadeOut 시간 1초
+            bgSound.volume -= Time.deltaTime / 1.0f; // FadeOut
             yield return null;
         }
         bgSound.Stop();
-        bgSound.volume = 0.5f; // 기본 볼륨 복원
+        bgSound.volume = 0.5f; 
     }
 
     private IEnumerator FadeInBGM(AudioClip newClip)
@@ -120,7 +182,7 @@ public class SoundManager : MonoBehaviour
         bgSound.volume = 0;
         while (bgSound.volume < 0.5f)
         {
-            bgSound.volume += Time.deltaTime / 1.0f; // FadeIn 시간 1초
+            bgSound.volume += Time.deltaTime / 1.0f; // FadeIn 
             yield return null;
         }
     }
@@ -141,10 +203,10 @@ public class SoundManager : MonoBehaviour
 
     private void PlayBGMImmediately(AudioClip newClip)
     {
-        bgSound.Stop();           // 기존 음악 정지
-        bgSound.clip = newClip;   // 새 클립 설정
-        bgSound.volume = 0.5f;    // 기본 볼륨
-        bgSound.Play();           // 즉시 재생
+        bgSound.Stop();           
+        bgSound.clip = newClip;   
+        bgSound.volume = 0.5f;    
+        bgSound.Play();          
     }
 
 }
