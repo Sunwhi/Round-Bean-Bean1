@@ -12,8 +12,7 @@ public class Rock : MonoBehaviour
     }
     void Update()
     {
-        if (transform.position.x < player.transform.position.x - cameraHalfWidth - 19) 
-            // player.transform.position.x - cameraHalfWidth - 19는 타일이 사라지는 위치. 여기서 돌도 소멸시킴
+        if (transform.position.x < player.transform.position.x) // 조건문 문제인지 return이 아직 제대로 되지 않음. 생성은 잘 되고 있으므로 천천히 원인 찾아볼 것
         {
             ObjectPool.ReturnObject(this);
             Debug.Log("returned object");

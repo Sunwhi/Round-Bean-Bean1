@@ -9,6 +9,7 @@ public class SoundManager : MonoBehaviour
     private Sprite soundOnImage;
     public Sprite soundOffImage;
     public Button button;
+    public Button offbutton;
     private bool isOn = true;
 
     public AudioSource bgSound;
@@ -53,6 +54,17 @@ public class SoundManager : MonoBehaviour
         button = GameObject.Find("SoundBtn")?.GetComponent<Button>();
         if (button != null)
         {
+            Transform canvasTransform = GameObject.Find("MainCanvas").transform;
+            if (canvasTransform != null)
+            {
+                // OptionalPanel은 Canvas의 첫 번째 자식 (예시: 인덱스 0)
+                Transform optionalPanel = canvasTransform.GetChild(5);
+                if (optionalPanel != null)
+                {
+                    offbutton = optionalPanel.GetComponent<Button>();
+                    soundOffImage = offbutton.image.sprite;
+                }
+            }
             soundOnImage = button.image.sprite;
             button.onClick.AddListener(ButtonClicked);  // 버튼 클릭 이벤트 연결
         }
@@ -68,11 +80,14 @@ public class SoundManager : MonoBehaviour
                 if (optionalPanel != null)
                 {
                     // SoundBtn은 OptionalPanel의 첫 번째 자식 (예시: 인덱스 0)
-                    Transform soundBtnTransform = optionalPanel.GetChild(5);
+                    Transform soundBtnTransform = optionalPanel.GetChild(4);
+                    Transform soundBtnTransform2 = optionalPanel.GetChild(5);
 
                     if (soundBtnTransform != null)
                     {
+                        offbutton= soundBtnTransform2.GetComponent<Button>();
                         button = soundBtnTransform.GetComponent<Button>();
+                        soundOffImage = offbutton.image.sprite;
                         soundOnImage = button.image.sprite;
                         button.onClick.AddListener(ButtonClicked);
 
@@ -167,7 +182,7 @@ public class SoundManager : MonoBehaviour
     {
         while (bgSound.volume > 0)
         {
-            bgSound.volume -= Time.deltaTime / 1.0f; // FadeOut
+            bgSound.volume -= Time.deltaTime / 2.0f; // FadeOut
             yield return null;
         }
         bgSound.Stop();
@@ -182,7 +197,7 @@ public class SoundManager : MonoBehaviour
         bgSound.volume = 0;
         while (bgSound.volume < 0.5f)
         {
-            bgSound.volume += Time.deltaTime / 1.0f; // FadeIn 
+            bgSound.volume += Time.deltaTime / 2.0f; // FadeIn 
             yield return null;
         }
     }

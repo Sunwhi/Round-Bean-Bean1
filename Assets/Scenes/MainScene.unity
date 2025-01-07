@@ -553,8 +553,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 812cac0146dcf1544871ffd7db90c2ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  soundOffImage: {fileID: 21300000, guid: e83b0a3e6c42b05449427c8b00d982e3, type: 3}
+  soundOffImage: {fileID: 0}
   button: {fileID: 0}
+  offbutton: {fileID: 0}
   bgSound: {fileID: 632961707}
   bglist:
   - {fileID: 8300000, guid: e72811621eb53b14eb82b207a5057b67, type: 3}
@@ -1005,7 +1006,7 @@ GameObject:
   - component: {fileID: 444112914}
   - component: {fileID: 444112913}
   m_Layer: 5
-  m_Name: Canvas
+  m_Name: Demo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2880,7 +2881,7 @@ GameObject:
   - component: {fileID: 973032009}
   - component: {fileID: 973032013}
   m_Layer: 5
-  m_Name: Canvas
+  m_Name: MainCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
