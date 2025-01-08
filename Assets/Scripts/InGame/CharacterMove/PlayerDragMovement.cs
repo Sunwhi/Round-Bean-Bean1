@@ -29,7 +29,7 @@ public class PlayerDragMovement : MonoBehaviour
     void Start()
     {
         screenHalfWidth = Screen.width / 2;
-        //Instantiate(hat);
+        //Instantiate(hat); // 모자 테스트 위해
     }
     private bool initializeHatOnce = true;
     // Update is called once per frame
@@ -44,6 +44,7 @@ public class PlayerDragMovement : MonoBehaviour
                 TouchControl(touch);
             }
         }
+
         // 모자 파트
         // 점프한 상태에서 모자 먹었을 시 정상적으로 머리 위로 착용되도록 함.
         // 모자 쓴 상태에서 점프 했을 시 머리에 붙어있게 함.
@@ -53,6 +54,9 @@ public class PlayerDragMovement : MonoBehaviour
         {
             hat = GameObject.Find("Hat(Clone)");
             initializeHatOnce = false;
+            // 모자 먹었을 때 터치 딕셔너리 초기화.
+            // 안하면 오른쪽 터치한채로(이동하면서) 모자 먹고, 오른쪽 떼고 왼쪽 터치하면 오른쪽 터치작용이 일어남.
+            initialTouchPositions.Clear();
         }
         // 점프 한 상태에서 모자를 썼을 때 바닥의 위치로 모자가 이동하는 오류를 고치기 위해
         // 모자가 있이 점프한 상태에서만 모자가 머리에 붙어있도록 바꿈
@@ -111,7 +115,6 @@ public class PlayerDragMovement : MonoBehaviour
 
     private void LeftTouchControl(Touch touch, Vector2 leftInitialTouchPosition)
     {
-        //Debug.Log(touch.fingerId);
         // 터치한 상태로 움직일 때(드래그)
         if ((touch.phase == TouchPhase.Moved || touch.phase == TouchPhase.Stationary) && isTouched)
         {
@@ -131,7 +134,7 @@ public class PlayerDragMovement : MonoBehaviour
     }
     private void RightTouchControl(Touch touch, Vector2 rightInitialTouchPosition)
     {
-        //Debug.Log(touch.fingerId);
+        Debug.Log("righttouch");
         // 터치한 상태로 움직일 때(드래그)
         if ((touch.phase == TouchPhase.Moved || touch.phase == TouchPhase.Stationary) && isTouched)
         {

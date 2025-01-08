@@ -51,7 +51,6 @@ public class CanvasDragImage : MonoBehaviour
         {
             // 스크린 좌표를 UI 요소에 맞게 변환
             Vector2 uiPosition = touch1Position;
-            Debug.Log(uiPosition);
             
             if (touch1Position.x < screenWidthHalf) // 왼쪽 터치: Protracter
             {
