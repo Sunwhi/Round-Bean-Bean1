@@ -134,7 +134,7 @@ public class PlayerDragMovement : MonoBehaviour
     }
     private void RightTouchControl(Touch touch, Vector2 rightInitialTouchPosition)
     {
-        Debug.Log("righttouch");
+        //Debug.Log("righttouch");
         // 터치한 상태로 움직일 때(드래그)
         if ((touch.phase == TouchPhase.Moved || touch.phase == TouchPhase.Stationary) && isTouched)
         {
