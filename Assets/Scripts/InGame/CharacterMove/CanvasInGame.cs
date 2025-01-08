@@ -8,6 +8,7 @@ public class CanvasDragImage : MonoBehaviour
     private float screenWidthHalf;
     [SerializeField] GameObject Protracter;
     [SerializeField] GameObject Speedometer;
+    private GameObject optionBtn; 
     private RectTransform protracterRect;
     private RectTransform speedometerRect;
 
@@ -21,6 +22,8 @@ public class CanvasDragImage : MonoBehaviour
         Protracter.SetActive(false);
         Speedometer.SetActive(false);
         screenWidthHalf = Screen.width / 2;
+
+        optionBtn = GameObject.Find("OptionBtn");
     }
 
     // Update is called once per frame
@@ -46,11 +49,13 @@ public class CanvasDragImage : MonoBehaviour
     private void DragImage(Touch touch1)
     {
         Vector2 touch1Position = touch1.position;
+        Vector2 optionBtnPosition = optionBtn.transform.position;
 
         if (touch1.phase == TouchPhase.Began || touch1.phase == TouchPhase.Moved || touch1.phase == TouchPhase.Stationary)
         {
             // 스크린 좌표를 UI 요소에 맞게 변환
             Vector2 uiPosition = touch1Position;
+            //Debug.Log(uiPosition);
             
             if (touch1Position.x < screenWidthHalf) // 왼쪽 터치: Protracter
             {
@@ -60,7 +65,7 @@ public class CanvasDragImage : MonoBehaviour
             else // 오른쪽 터치: Speedometer
             {
                 // 옵션창 부근은 Speedometer터치가 되지 않도록.
-                if (!(uiPosition.x > 2200 && uiPosition.y >1000))
+                if (!(uiPosition.x > optionBtnPosition.x - 50 && uiPosition.y >optionBtnPosition.y - 50))
                 {
                     speedometerRect.position = uiPosition;
                     Speedometer.SetActive(true);
