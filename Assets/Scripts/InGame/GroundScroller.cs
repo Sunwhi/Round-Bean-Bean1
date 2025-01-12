@@ -6,8 +6,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.PackageManager;
-using UnityEditor.U2D.Aseprite;
+//using UnityEditor.PackageManager;
+//using UnityEditor.U2D.Aseprite;
 using UnityEngine;
 
 public class GroundScroller : MonoBehaviour
