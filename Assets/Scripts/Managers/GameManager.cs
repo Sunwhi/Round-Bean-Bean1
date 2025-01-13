@@ -169,13 +169,14 @@ public class GameManager : MonoBehaviour
     {
         // 게임이 딱 끝났을 때 한번만 finalScore에 저장 / 딱 한번만 PlayerPrefs 기록 새롭게 쓰기
         // 이거 안하면 Update문 계속 호출되어 모든 기록들이 같아짐.
-        if(callFinalScoreOnce == 0)
+        // 게임오버 기록은 단순 테스트 용임. 실제 출시땐 필요없음.
+        /*if(callFinalScoreOnce == 0)
         {
             finalScore = time;
             RecordNewScore(finalScore);
 
             callFinalScoreOnce = 1;
-        }
+        }*/
 
         textGameOver.SetActive(true); // 게임오버 텍스트
 
