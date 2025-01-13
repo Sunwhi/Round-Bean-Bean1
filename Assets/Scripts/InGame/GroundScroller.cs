@@ -6,8 +6,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-//using UnityEditor.PackageManager;
-//using UnityEditor.U2D.Aseprite;
 using UnityEngine;
 
 public class GroundScroller : MonoBehaviour
@@ -25,13 +23,13 @@ public class GroundScroller : MonoBehaviour
     public float distance;
 
     private int currentSeason = 0; // 계절 기록용 변수, 장애물 생성 가능여부 판정에 사용함. 0: spring, 1: summer, 2: autumn, 3: winter
-    private int springTilesIndex = 0; // 나중에 계절당 타일 여러 개 생길 거 대비.. 지만 좋은 방법은 아닐지도. 더 나은 방식 고민해볼것
-    private int summerTilesIndex = 1;
-    private int autumnTilesIndex = 2;
-    private int winterTilesIndex = 3;
+    [SerializeField] int springTilesIndex; // 각 계절별 타일이 시작하는 위치. 타일이 하나씩인 경우 각각 0, 1, 2, 3.
+    [SerializeField] int summerTilesIndex;
+    [SerializeField] int autumnTilesIndex;
+    [SerializeField] int winterTilesIndex;
 
-    private int tilesStart = 0;
-    private int tilesEnd = 1;
+    private int tilesStart;
+    private int tilesEnd;
 
     private int obstacleCount = 0;
     private int hatCount = 0;
@@ -39,15 +37,27 @@ public class GroundScroller : MonoBehaviour
     private bool cliffJudge = false;
     private int obstacleDelay = 0;
     private float obstacleChance = 0;
-    private bool[] obstacleFlag = new bool[21]; // false: judgeable, true: already judged. set to false when declared
+    private bool[] obstacleFlag = new bool[26]; // false: judgeable, true: already judged. set to false when declared
 
     [SerializeField] GameObject textGoForward; // 역행 금지 안내 텍스트
+
+    // SFX
+    public AudioClip rockSpawnClip;
+    public AudioClip cliffSpawnClip;
+    public AudioClip hatSpawnClip;
 
     void Start()
     {
         temp = tiles[0];
         cameraHalfWidth = Camera.main.aspect * Camera.main.orthographicSize;
         startPos = player.transform.position.x;
+
+
+        tilesStart = springTilesIndex;
+        tilesEnd = summerTilesIndex; // 시작 계절 set, SetSeason() 사용 시 불필요한 동작이 있음
+        for (int i = 0; i < tiles.Length; i++) // 게임 시작과 동시에 타일 이미지 set
+            tiles[i].sprite = groundImg[UnityEngine.Random.Range(tilesStart, tilesEnd)];
+        // TODO: ground들의 기존 임시 이미지(ground뭐시기) 전부 교체할 것
     }
 
     // Update is called once per frame
@@ -96,7 +106,7 @@ public class GroundScroller : MonoBehaviour
                 tiles[i].sprite = groundImg[UnityEngine.Random.Range(tilesStart, tilesEnd)];
             }
 
-            if (tiles[i].sprite == groundImg[0]) obstacleFlag[i] = true; // 봄인 경우 판정 불필요, 여름 진입하자마자 바로 역행 시 봄에서 판정을 시도하는 문제 방지
+            if (currentSeason == 0) obstacleFlag[i] = true; // 봄인 경우 판정 불필요, 여름 진입하자마자 바로 역행 시 봄에서 판정을 시도하는 문제 방지
 
             // spawning obstacles. is seperation to another file needed? and possible?
             if (player.transform.position.x + cameraHalfWidth * 0.59 <= tiles[i].transform.position.x
@@ -107,15 +117,16 @@ public class GroundScroller : MonoBehaviour
 
                 if (hatCount >= 3 && !GameManager.Instance.hatOn && obstacleCount > 0)
                 // 장애물이 3번 이상 나타나지 않은 경우, 또한 현재 모자를 쓰고 있지 않은 경우. 장애물이 생길 칸에 모자 생성
-                // TODO: hatCount의 증가는 모자를 쓴 상태에서도 적용되는가?
-                // 적용 시 모자를 떨구자마자 모자가 나오는 상황이 발생. 우선은 미적용으로 둠. 적용해야 하는 경우 아래의 if (!GameManager.Instance.hatOn) 들을 지울 것.
+                // 모자를 쓴 동안에는 hatCount = 0
                 {
                     bool hatJudge = ProbabilityRandom(0.8f);
                     if (hatJudge)
                     {
                         var newHat = Instantiate(hat, new Vector2(tiles[i].transform.position.x + 0.5f, -0.5f), new Quaternion(0, 0, 0, 0));
                         GameManager.Instance.newHatGenerated = true; // 모자 새로 생성되면 newHatGenerated 참으로 설정
-                        obstacleCount = obstacleDelay + 1; // 딜레이 적용
+                        SoundManager.instance.SFXPlay("HatGenerated", hatSpawnClip);
+
+                        obstacleCount = obstacleDelay + 1; // 장애물 딜레이 적용
                         hatCount = 0;
                         Debug.Log("hat spawned");
                         break; // 모자 생성 시 이후 장애물 판정은 필요없음
@@ -141,31 +152,31 @@ public class GroundScroller : MonoBehaviour
                                 if (cliffOrRock)
                                 {
                                     SetTile(tiles[i], false); // hide tile = spawn cliff
+                                    SoundManager.instance.SFXPlay("BluffSpawned", cliffSpawnClip);
                                     Debug.Log("cliff selected");
                                 }
                                 else
                                 {
                                     var rock = ObjectPool.GetObject();
                                     rock.transform.position = new Vector2(tiles[i].transform.position.x + 0.5f, -0.5f); // spawn rock
+                                    SoundManager.instance.SFXPlay("StoneSpawned", rockSpawnClip);
                                     Debug.Log("rock selected");
                                 }
                                 hatCount = 0;
-                                break;
                             }
                             else SetTile(tiles[i], false); // hide tile
                             hatCount = 0;
-                            break;
                         }
-                        else if (!cliffJudge && rockJudge) // cliffJudge가 false고 rockjudge가 true인 경우를 처리 안했어서 추가함.
+                        else if (!cliffJudge && rockJudge) // cliffJudge가 false고 rockjudge가 true인 경우에 대한 추가 처리
                         {
                             var rock = ObjectPool.GetObject();
                             rock.transform.position = new Vector2(tiles[i].transform.position.x + 0.5f, -0.5f); // spawn rock
+                            SoundManager.instance.SFXPlay("StoneSpawned", rockSpawnClip);
                             Debug.Log("rock selected");
                             hatCount = 0;
-                            break;
                         }
                         obstacleCount = obstacleDelay + 1; // 성공하든 실패하든 8m(4칸)마다 판정하므로 딜레이 적용.
-                        if (!GameManager.Instance.hatOn) hatCount++; // 장애물 생성에 실패한 경우, 모자를 안 쓰고 있으면 hat count 증가.
+                        if (!(cliffJudge || rockJudge || GameManager.Instance.hatOn)) hatCount++; // 장애물 생성에 실패한 경우, 모자를 안 쓰고 있으면 hat count 증가.
                         Debug.Log("hatCount: " + hatCount);
                         break;
                     }
@@ -186,6 +197,7 @@ public class GroundScroller : MonoBehaviour
                     {
                         var rock = ObjectPool.GetObject();
                         rock.transform.position = new Vector2(tiles[i].transform.position.x + 0.5f, -0.5f); // spawn rock
+                        SoundManager.instance.SFXPlay("StoneSpawned", rockSpawnClip);
                         hatCount = 0;
                     }
                     else
@@ -245,14 +257,14 @@ public class GroundScroller : MonoBehaviour
                 tilesStart = springTilesIndex;
                 tilesEnd = summerTilesIndex;
                 currentSeason = 0;
-                obstacleChance = 0f; // 계절별 생성 확률 변경은 여기서 각 obstacleChance 값 변경 (0 이상 1 이하)
+                obstacleChance = 0f; 
                 break;
             case 1:
                 tilesStart = summerTilesIndex;
                 tilesEnd = autumnTilesIndex;
                 currentSeason = 1;
                 obstacleDelay = -4; // 장애물이 생성된 경우 다음 4칸 동안은 등장하지 않음. 
-                obstacleChance = 0.2f;
+                obstacleChance = 0.2f; // 계절별 생성 확률 변경은 여기서 각 obstacleChance 값 변경 (0 이상 1 이하)
                 break;
             case 2:
                 tilesStart = autumnTilesIndex;
@@ -269,7 +281,7 @@ public class GroundScroller : MonoBehaviour
                 obstacleChance = 0.3f;
                 break;
             default:
-                throw new Exception("Season name not valid");
+                throw new Exception("Season index not valid");
         }
     }
 
@@ -294,6 +306,7 @@ public class GroundScroller : MonoBehaviour
         if (newSeason != currentSeason)
         {
             currentSeason = newSeason;
+            //float tempdist = distance;
             SetSeason(currentSeason);
         }
     }
@@ -305,7 +318,7 @@ public class GroundScroller : MonoBehaviour
     /// <param name="season">계절에 해당하는 표지판을 세우기 위함</param>
     private void CreateSeasonSign(int season, float distance)
     {
-        seasonSign[season].transform.position = new Vector3(distance+11, 1f, 0.5f); // z 값이 클수록 뒤로. groundImg는 1f, 나머지는 0f이다.
+        seasonSign[season].transform.position = new Vector3(distance+21, 1f, 0.5f); // z 값이 클수록 뒤로. groundImg는 1f, 나머지는 0f이다.
         seasonSign[season].gameObject.SetActive(true);
     }
 }
