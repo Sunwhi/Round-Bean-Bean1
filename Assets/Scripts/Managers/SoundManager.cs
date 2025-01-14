@@ -6,105 +6,86 @@ using UnityEngine.SceneManagement;
 
 public class SoundManager : MonoBehaviour
 {
-    private Sprite soundOnImage;
-    public Sprite soundOffImage;
-    public Button button;
-    public Button offbutton;
-    private bool isOn = true;
+    //public Sprite soundOnImage;
+    //public Sprite soundOffImage;
+    //public Button button;
+    //public Button offbutton;
+    //private bool isOn = true;
 
     public AudioSource bgSound;
     public AudioClip[] bglist;
     public GroundScroller groundScroller;
     public AudioSource audioSource;
     public static SoundManager instance;
+    private List<AudioSource> audioSources = new List<AudioSource>(); 
 
     private int lastPlayedClipIndex = -1;
 
     private void Awake()
     {
-        if (instance == null)
-        {
-            instance = this;
-            DontDestroyOnLoad(this.gameObject);
-
-            EnsureAudioSourceExists();
-            SceneManager.sceneLoaded += OnSceneLoaded;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        EnsureAudioSourceExists();
+        SceneManager.sceneLoaded += OnSceneLoaded; // 씬이 로드될 때만 이벤트 처리
     }
-
+    private void OnDestroy()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded; // 씬 전환 시 이벤트 제거
+    }
     private void EnsureAudioSourceExists()
     {
         if (bgSound == null)
         {
-            GameObject bgSoundObject = new GameObject("BgSound");
-            bgSound = bgSoundObject.AddComponent<AudioSource>();
+            bgSound = gameObject.AddComponent<AudioSource>();
             bgSound.volume = 0.5f;
             bgSound.loop = true;
-            DontDestroyOnLoad(bgSoundObject);
         }
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         // 버튼을 씬에서 찾아서 button 변수에 할당
-        button = GameObject.Find("SoundBtn")?.GetComponent<Button>();
-        if (button != null)
-        {
-            Transform canvasTransform = GameObject.Find("MainCanvas").transform;
-            if (canvasTransform != null)
-            {
-                // OptionalPanel은 Canvas의 첫 번째 자식 (예시: 인덱스 0)
-                Transform optionalPanel = canvasTransform.GetChild(5);
-                if (optionalPanel != null)
-                {
-                    offbutton = optionalPanel.GetComponent<Button>();
-                    soundOffImage = offbutton.image.sprite;
-                }
-            }
-            soundOnImage = button.image.sprite;
-            button.onClick.AddListener(ButtonClicked);  // 버튼 클릭 이벤트 연결
-        }
-        else
-        {
-            Transform canvasTransform = GameObject.Find("Canvas").transform;
-
-            if (canvasTransform != null)
-            {
-                // OptionalPanel은 Canvas의 첫 번째 자식 (예시: 인덱스 0)
-                Transform optionalPanel = canvasTransform.GetChild(15);
-
-                if (optionalPanel != null)
-                {
-                    // SoundBtn은 OptionalPanel의 첫 번째 자식 (예시: 인덱스 0)
-                    Transform soundBtnTransform = optionalPanel.GetChild(4);
-                    Transform soundBtnTransform2 = optionalPanel.GetChild(5);
-
-                    if (soundBtnTransform != null)
-                    {
-                        offbutton= soundBtnTransform2.GetComponent<Button>();
-                        button = soundBtnTransform.GetComponent<Button>();
-                        soundOffImage = offbutton.image.sprite;
-                        soundOnImage = button.image.sprite;
-                        button.onClick.AddListener(ButtonClicked);
-
-                    }
-                }
-            }
-
-            if (button != null)
-            {
-                Debug.Log("Sound Button successfully assigned using GetChild!");
-                
-            }
-            else
-            {
-                Debug.LogError("Sound Button not found!");
-            }
-        }
+        //button = GameObject.Find("SoundBtn")?.GetComponent<Button>();
+        //if (button != null)
+        //{
+        //    Transform canvasTransform = GameObject.Find("MainCanvas").transform;
+        //    if (canvasTransform != null)
+        //    {
+        //        // OptionalPanel은 Canvas의 첫 번째 자식 (예시: 인덱스 0)
+        //        Transform optionalPanel = canvasTransform.GetChild(5);
+        //        if (optionalPanel != null)
+        //        {
+        //            offbutton = optionalPanel.GetComponent<Button>();
+        //            soundOffImage = offbutton.image.sprite;
+        //        }
+        //    }
+        //    soundOnImage = button.image.sprite;
+        //    button.onClick.AddListener(ButtonClicked);  // 버튼 클릭 이벤트 연결
+        //}
+        //else
+        //{
+        //    Transform canvasTransform = GameObject.Find("Canvas").transform;
+        //
+        //    if (canvasTransform != null)
+        //    {
+        //        // OptionalPanel은 Canvas의 첫 번째 자식 (예시: 인덱스 0)
+        //        Transform optionalPanel = canvasTransform.GetChild(15);
+        //
+        //        if (optionalPanel != null)
+        //        {
+        //            // SoundBtn은 OptionalPanel의 첫 번째 자식 (예시: 인덱스 0)
+        //            Transform soundBtnTransform = optionalPanel.GetChild(4);
+        //            Transform soundBtnTransform2 = optionalPanel.GetChild(5);
+        //
+        //            if (soundBtnTransform != null)
+        //            {
+        //                offbutton= soundBtnTransform2.GetComponent<Button>();
+        //                button = soundBtnTransform.GetComponent<Button>();
+        //                soundOffImage = offbutton.image.sprite;
+        //                soundOnImage = button.image.sprite;
+        //                button.onClick.AddListener(ButtonClicked);
+        //            }
+        //        }
+        //    }
+        //}
         EnsureAudioSourceExists();
         if (scene.name == "MainScene")
         {
@@ -127,21 +108,21 @@ public class SoundManager : MonoBehaviour
     void Start()
     {
         // 초기화 과정에서 button이 할당되었는지 확인하고 이벤트를 연결합니다.
-        if (button != null)
-        {
-            button.onClick.AddListener(ButtonClicked);  // 버튼 클릭 이벤트 연결
-        }
+        //if (button != null)
+        //{
+        //    button.onClick.AddListener(ButtonClicked);  // 버튼 클릭 이벤트 연결
+        //}
     }
 
-    public void ButtonClicked()
-    {
-        if (button != null)  // 버튼이 null인 경우를 방지
-        {
-            isOn = !isOn;
-            button.image.sprite = isOn ? soundOnImage : soundOffImage;
-            bgSound.mute = !isOn;
-        }
-    }
+   //public void ButtonClicked()
+   //{
+   //    if (button != null)  // 버튼이 null인 경우를 방지
+   //    {
+   //        isOn = !isOn;
+   //        button.image.sprite = isOn ? soundOnImage : soundOffImage;
+   //        bgSound.mute = !isOn;
+   //    }
+   //}
 
     void Update()
     {
@@ -171,10 +152,10 @@ public class SoundManager : MonoBehaviour
 
     private int GetClipIndexByDistance(float distance)
     {
-        if (distance < 4) return 1; // spring
-        else if (distance < 20) return 2; // summer
-        else if (distance < 30) return 3; // fall
-        else if (distance < 42) return 4; // winter
+        if (distance < 15) return 1; // spring
+        else if (distance < 30) return 2; // summer
+        else if (distance < 40) return 3; // fall
+        else if (distance < 55) return 4; // winter
         else return 5; // spring2
     }
 
@@ -182,7 +163,7 @@ public class SoundManager : MonoBehaviour
     {
         while (bgSound.volume > 0)
         {
-            bgSound.volume -= Time.deltaTime / 2.0f; // FadeOut
+            bgSound.volume -= Time.deltaTime / 2.5f; // FadeOut
             yield return null;
         }
         bgSound.Stop();
@@ -197,7 +178,7 @@ public class SoundManager : MonoBehaviour
         bgSound.volume = 0;
         while (bgSound.volume < 0.5f)
         {
-            bgSound.volume += Time.deltaTime / 2.0f; // FadeIn 
+            bgSound.volume += Time.deltaTime / 2.5f; // FadeIn 
             yield return null;
         }
     }
@@ -222,6 +203,35 @@ public class SoundManager : MonoBehaviour
         bgSound.clip = newClip;   
         bgSound.volume = 0.5f;    
         bgSound.Play();          
+    }
+    public void RegisterAudioSource(AudioSource audioSource)
+    {
+        if (!audioSources.Contains(audioSource))
+        {
+            audioSources.Add(audioSource);
+        }
+    }
+
+    public void StopAllSounds()
+    {
+        foreach (var audioSource in audioSources)
+        {
+            if (audioSource.isPlaying)
+            {
+                audioSource.Pause();
+            }
+        }
+    }
+
+    public void ResumeAllSounds()
+    {
+        foreach (var audioSource in audioSources)
+        {
+            if (!audioSource.isPlaying)
+            {
+                audioSource.Play();
+            }
+        }
     }
 
 }
