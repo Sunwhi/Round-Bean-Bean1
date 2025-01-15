@@ -19,7 +19,7 @@ public class Hat : MonoBehaviour
     private bool hatFall; // 모자를 착용하다 떨어진 상태
     Vector3 hatTargetRotation;
 
-    int one = 1; // 한번만 실행
+    // int one = 1; // 한번만 실행
     // Start is called before the first frame update
     void Start()
     {
