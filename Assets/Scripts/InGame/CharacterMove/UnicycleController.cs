@@ -65,7 +65,7 @@ public class UnicycleController : MonoBehaviour
         // 스페이스바 점프
         if (Input.GetKey(KeyCode.Space) && isGround)
         {
-            SoundManager.instance.SFXPlay("Jump", jumpClip);
+            //SoundManager.instance.SFXPlay("Jump", jumpClip);
 
             wheelRigidbody.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
             isGround = false;

@@ -2435,7 +2435,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   frameRigidbody: {fileID: 635412800}
   wheelRigidbody: {fileID: 256649934}
-  balanceForce: 300
+  balanceForce: 400
   moveSpeed: 300
   jumpForce: 8
   isGround: 0
@@ -6281,7 +6281,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 0.25
+  m_Mass: 0.35
   m_LinearDrag: 0
   m_AngularDrag: 10
   m_GravityScale: 1

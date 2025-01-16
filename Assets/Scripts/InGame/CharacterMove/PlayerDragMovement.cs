@@ -40,7 +40,6 @@ public class PlayerDragMovement : MonoBehaviour
         //for문 안 쓰면 터치 개수가 한 개일 때 문제 발생
         if (Input.touchCount > 0)
         {
-            Debug.Log(Input.touchCount);
             for (int i = 0; i < Input.touchCount; i++)
             {
                 Touch touch = Input.GetTouch(i);
@@ -200,7 +199,7 @@ public class PlayerDragMovement : MonoBehaviour
 
             if (dragDirection.y < 0 && isGround && (rightInitialTouchPosition.x > screenHalfWidth))
             {
-                //SoundManager.instance.SFXPlay("Jumpp", jumpClip);
+                //SoundManager.instance.SFXPlay("Jumpp", jumpClip); 모자랑 연결돼서 버그가 일어남.
 
                 wheelRigidbody.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
                 isGround = false;
