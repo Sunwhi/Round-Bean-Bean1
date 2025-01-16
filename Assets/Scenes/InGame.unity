@@ -282,7 +282,7 @@ Transform:
   m_GameObject: {fileID: 15175109}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.8, z: 0}
+  m_LocalPosition: {x: 0.066, y: 0.8, z: 0}
   m_LocalScale: {x: 0.27771568, y: 0.9020074, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2420,6 +2420,7 @@ MonoBehaviour:
   isGround: 0
   hat: {fileID: 8157757056450085946, guid: 7815b06a15c223747aaf4ca0becd815e, type: 3}
   currentHatPosition: {fileID: 94358173}
+  jumpClip: {fileID: 0}
 --- !u!114 &256649939
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2441,6 +2442,7 @@ MonoBehaviour:
   hat: {fileID: 8157757056450085946, guid: 7815b06a15c223747aaf4ca0becd815e, type: 3}
   currentHatPosition: {fileID: 94358173}
   textGoForward: {fileID: 1014711397}
+  jumpClip: {fileID: 0}
 --- !u!114 &256649940
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7845,7 +7847,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.034380198, y: -0.19410533}
+  m_Offset: {x: 0.034380198, y: -0.21972269}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -7856,7 +7858,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1.1439278, y: 1.6846613}
+  m_Size: {x: 1.1439278, y: 1.6334265}
   m_EdgeRadius: 0
 --- !u!58 &888336137
 CircleCollider2D:

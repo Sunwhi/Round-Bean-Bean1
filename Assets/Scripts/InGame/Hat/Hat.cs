@@ -99,8 +99,8 @@ public class Hat : MonoBehaviour
     {
         GameManager.Instance.gamePaused = true;
         // 조작 불가
-        unicycleController.enabled = false;
-        playerDragMovement.enabled = false;
+        //unicycleController.enabled = false;
+        //playerDragMovement.enabled = false;
         frameRigidBody.freezeRotation = true;
         // 자전거 움직임 멈춤
         frameRigidBody.velocity = Vector3.zero;
@@ -118,8 +118,8 @@ public class Hat : MonoBehaviour
             .SetEase(Ease.InOutCubic)
             .OnComplete(() => // 애니메이션이 끝났으면(모자가 원하는 위치에 도달했으면)
             {
-                unicycleController.enabled = true;
-                playerDragMovement.enabled = true;
+                //unicycleController.enabled = true;
+                //playerDragMovement.enabled = true;
 
                 frameRigidBody.freezeRotation = false;
 

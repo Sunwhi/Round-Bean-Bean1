@@ -19,6 +19,10 @@ public class UnicycleController : MonoBehaviour
     [SerializeField] GameObject hat;
     
     [SerializeField] GameObject currentHatPosition; // 동물의 child로 놓음으로써 점프했을 때 동물의 위치를 따라가게
+
+    //효과음들
+    public AudioClip jumpClip;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -61,6 +65,8 @@ public class UnicycleController : MonoBehaviour
         // 스페이스바 점프
         if (Input.GetKey(KeyCode.Space) && isGround)
         {
+            SoundManager.instance.SFXPlay("Jump", jumpClip);
+
             wheelRigidbody.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
             isGround = false;
             // 점프 한 상태, 모자가 머리에 없다 -> jumpWithNoHat:true 
@@ -74,6 +80,7 @@ public class UnicycleController : MonoBehaviour
     private bool initializeHatOnce = true;
     private void Update()
     {
+        
         // Update코드 전체 주석처리하면 PlayerDragMovement에서 점프시 모자 붙어있음
         if (GameManager.Instance.newHatGenerated) initializeHatOnce = true;
 
