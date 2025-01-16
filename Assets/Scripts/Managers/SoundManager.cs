@@ -16,16 +16,29 @@ public class SoundManager : MonoBehaviour
     public AudioClip[] bglist;
     public GroundScroller groundScroller;
     public AudioSource audioSource;
-    public static SoundManager instance;
     private List<AudioSource> audioSources = new List<AudioSource>(); 
 
     private int lastPlayedClipIndex = -1;
 
+
+    public static SoundManager Instance { get; private set; } // 싱글톤 인스턴스
     private void Awake()
     {
         EnsureAudioSourceExists();
         SceneManager.sceneLoaded += OnSceneLoaded; // 씬이 로드될 때만 이벤트 처리
+
+        // 싱글톤 패턴 구현
+        if (Instance == null)
+        {
+            Instance = this;
+            //DontDestroyOnLoad(gameObject); // 씬이 바뀌어도 유지 -> 씬 재시작(게임 재시작)시에 변수들이 초기화되지 않는 문제가 발생! DontDestroyOnLoad는 잠시 끄는걸로
+        }
+        else
+        {
+            Destroy(gameObject); // 이미 GameManager가 존재하면 새로 생성된 오브젝트는 삭제
+        }
     }
+
     private void OnDestroy()
     {
         SceneManager.sceneLoaded -= OnSceneLoaded; // 씬 전환 시 이벤트 제거

@@ -124,7 +124,7 @@ public class GroundScroller : MonoBehaviour
                     {
                         var newHat = Instantiate(hat, new Vector2(tiles[i].transform.position.x + 0.5f, -0.5f), new Quaternion(0, 0, 0, 0));
                         GameManager.Instance.newHatGenerated = true; // 모자 새로 생성되면 newHatGenerated 참으로 설정
-                        SoundManager.instance.SFXPlay("HatGenerated", hatSpawnClip);
+                        SoundManager.Instance.SFXPlay("HatGenerated", hatSpawnClip);
 
                         obstacleCount = obstacleDelay + 1; // 장애물 딜레이 적용
                         hatCount = 0;
@@ -152,14 +152,14 @@ public class GroundScroller : MonoBehaviour
                                 if (cliffOrRock)
                                 {
                                     SetTile(tiles[i], false); // hide tile = spawn cliff
-                                    SoundManager.instance.SFXPlay("BluffSpawned", cliffSpawnClip);
+                                    SoundManager.Instance.SFXPlay("BluffSpawned", cliffSpawnClip);
                                     Debug.Log("cliff selected");
                                 }
                                 else
                                 {
                                     var rock = ObjectPool.GetObject();
                                     rock.transform.position = new Vector2(tiles[i].transform.position.x + 0.5f, -0.5f); // spawn rock
-                                    SoundManager.instance.SFXPlay("StoneSpawned", rockSpawnClip);
+                                    SoundManager.Instance.SFXPlay("StoneSpawned", rockSpawnClip);
                                     Debug.Log("rock selected");
                                 }
                                 hatCount = 0;
@@ -171,7 +171,7 @@ public class GroundScroller : MonoBehaviour
                         {
                             var rock = ObjectPool.GetObject();
                             rock.transform.position = new Vector2(tiles[i].transform.position.x + 0.5f, -0.5f); // spawn rock
-                            SoundManager.instance.SFXPlay("StoneSpawned", rockSpawnClip);
+                            SoundManager.Instance.SFXPlay("StoneSpawned", rockSpawnClip);
                             Debug.Log("rock selected");
                             hatCount = 0;
                         }
@@ -197,7 +197,7 @@ public class GroundScroller : MonoBehaviour
                     {
                         var rock = ObjectPool.GetObject();
                         rock.transform.position = new Vector2(tiles[i].transform.position.x + 0.5f, -0.5f); // spawn rock
-                        SoundManager.instance.SFXPlay("StoneSpawned", rockSpawnClip);
+                        SoundManager.Instance.SFXPlay("StoneSpawned", rockSpawnClip);
                         hatCount = 0;
                     }
                     else
