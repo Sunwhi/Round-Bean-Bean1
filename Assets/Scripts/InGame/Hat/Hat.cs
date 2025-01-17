@@ -19,7 +19,9 @@ public class Hat : MonoBehaviour
     private bool hatFall; // 모자를 착용하다 떨어진 상태
     Vector3 hatTargetRotation;
 
-    // int one = 1; // 한번만 실행
+    public AudioClip hatToHeadClip;
+    public AudioClip hatFallClip;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -34,6 +36,10 @@ public class Hat : MonoBehaviour
         rigidBody = transform.GetComponent<Rigidbody2D>();
 
         hatTargetRotation = hatTargetPosition.rotation.eulerAngles;
+
+        hatToHeadClip = Resources.Load<AudioClip>("Audio/InGame/Effect/HatEvent/HatVanish");
+        hatFallClip = Resources.Load<AudioClip>("Audio/InGame/Effect/HatEvent/HatToHead");
+        Debug.Log(hatToHeadClip);
     }
 
     // Update is called once per frame
@@ -78,6 +84,8 @@ public class Hat : MonoBehaviour
                 GameManager.Instance.hatFall = true;
                 GameManager.Instance.hatOn = false;
                 GameManager.Instance.newHatGenerated = false;
+
+                SoundManager.Instance.SFXPlay("hatFall",hatFallClip);
             }
         }  
     }
@@ -85,7 +93,11 @@ public class Hat : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            if(!hatFall) HatAnimation();
+            if (!hatFall)
+            {
+                SoundManager.Instance.SFXPlay("hatToHead", hatToHeadClip);
+                HatAnimation();
+            }
         }
         /*if (collision.gameObject.CompareTag("GGround") && hatOn)
         {
@@ -130,6 +142,7 @@ public class Hat : MonoBehaviour
                 hatOn = true;
                 GameManager.Instance.hatOn = true;
                 GameManager.Instance.gamePaused = false;
+
             });
     }
 

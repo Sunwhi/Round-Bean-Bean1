@@ -16,6 +16,8 @@ public class CleasRecordBtn : MonoBehaviour
     [SerializeField] GameObject optionExitBtn;
     [SerializeField] GameObject soundBtn;
 
+    //È¿°úÀ½
+    public AudioClip optionClickClip;
     public void StartGame()
     {
         SceneManager.LoadScene("InGame");
@@ -58,6 +60,8 @@ public class CleasRecordBtn : MonoBehaviour
     }
     public void OptionBtn()
     {
+        SoundManager.Instance.SFXPlay("OptionClick", optionClickClip);
+
         OptionPanel.SetActive(true);
         BackgroundPanel.SetActive(true);
         Time.timeScale = 0;

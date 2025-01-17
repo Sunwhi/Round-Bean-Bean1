@@ -5698,6 +5698,7 @@ MonoBehaviour:
   achieveBtn: {fileID: 262311598}
   optionExitBtn: {fileID: 86862256}
   soundBtn: {fileID: 450055116}
+  optionClickClip: {fileID: 8300000, guid: c600d5086a9c3244b9bc620fcbacb92d, type: 3}
 --- !u!1 &554165339
 GameObject:
   m_ObjectHideFlags: 0
@@ -11477,6 +11478,7 @@ MonoBehaviour:
   achieveBtn: {fileID: 436987706}
   optionExitBtn: {fileID: 86862256}
   soundBtn: {fileID: 450055116}
+  optionClickClip: {fileID: 0}
 --- !u!1 &1629250473
 GameObject:
   m_ObjectHideFlags: 0
@@ -18407,6 +18409,9 @@ MonoBehaviour:
   initializeHatOnce: 1
   kJumpWithNoHat: 0
   tJumpWithNoHat: 0
+  gameOverClip: {fileID: 8300000, guid: 8a98817058f1d244d96b687dc0345cea, type: 3}
+  gameClearClip: {fileID: 8300000, guid: 70ae04ecc6fcc0042b1e5db246d3407e, type: 3}
+  clearCheersClip: {fileID: 8300000, guid: fdc0e9f316971f44aa4333c52a2c4619, type: 3}
 --- !u!1 &2044792671
 GameObject:
   m_ObjectHideFlags: 0
