@@ -418,6 +418,7 @@ MonoBehaviour:
   achieveBtn: {fileID: 237791444}
   optionExitBtn: {fileID: 0}
   soundBtn: {fileID: 0}
+  optionClickClip: {fileID: 0}
 --- !u!114 &237791444
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -479,7 +480,7 @@ MonoBehaviour:
         m_MethodName: PlayOneShot
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 8300000, guid: d923860589a0748e981a2145fbc32489, type: 3}
+          m_ObjectArgument: {fileID: 8300000, guid: 6afdc8c2f4b821c40bd2a3b1cbcd4fea, type: 3}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
@@ -3142,6 +3143,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 783337d3a2571f84a8105fcccea45f7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  startBtnClickClip: {fileID: 8300000, guid: d6407a9a0e3a5d74f842268e0b3c5da6, type: 3}
 --- !u!114 &1155365091
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4227,6 +4229,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 783337d3a2571f84a8105fcccea45f7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  startBtnClickClip: {fileID: 0}
 --- !u!114 &1333975755
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4720,6 +4723,7 @@ MonoBehaviour:
   achieveBtn: {fileID: 1397552774}
   optionExitBtn: {fileID: 0}
   soundBtn: {fileID: 0}
+  optionClickClip: {fileID: 0}
 --- !u!1 &1398299058
 GameObject:
   m_ObjectHideFlags: 0
