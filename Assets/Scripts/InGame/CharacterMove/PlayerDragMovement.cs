@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
@@ -21,6 +22,8 @@ public class PlayerDragMovement : MonoBehaviour
     [SerializeField] private bool isGround = false;
     [SerializeField] GameObject hat;
     [SerializeField] GameObject currentHatPosition;
+
+    Vector3 currentRotation;
 
     [SerializeField] GameObject textGoForward; // 역행 금지 안내 텍스트.
     // groundscroller에서 함수를 가져오려 했으나 키보드 기반 조작 코드를 삭제하게 될 경우를 고려해 분리 작성하였음.
@@ -65,18 +68,37 @@ public class PlayerDragMovement : MonoBehaviour
         // 모자가 있이 점프한 상태에서만 모자가 머리에 붙어있도록 바꿈
         if (!GameManager.Instance.tJumpWithNoHat && !hat.IsDestroyed())
         {
+
+            currentRotation = hat.transform.eulerAngles;
+
+            // Z값을 -180 ~ 180 범위로 변환 (Unity는 0 ~ 360으로 반환하기 때문에)
+            float zRotation = currentRotation.z;
+            if (zRotation > 180f)
+            {
+                zRotation -= 360f;  // 180° 이상이면 -360°을 더해줌
+            }
+
             // 점프하기 직전까지 currentHatPosition에 모자의 위치를 로컬(동물기준)로 저장
             if (GameManager.Instance.hatOn && isGround)
             {
                 currentHatPosition.transform.position = hat.transform.position;
                 currentHatPosition.transform.rotation = hat.transform.rotation;
             }
-            // 모자를 동물 머리 위에 부착(동물 기준으로)
+            // 점프 했을 때 모자를 동물 머리 위에 부착(동물 기준으로)
             if (GameManager.Instance.hatOn && !isGround)
             {
-                Debug.Log(currentHatPosition.transform.position);
-                hat.transform.position = currentHatPosition.transform.position;
-                hat.transform.rotation = currentHatPosition.transform.rotation;
+                // 모자가 어느정도 기울어지면 더이상 점프해도 머리에 붙어있지 않게
+                if (zRotation > -50 && zRotation < 50)
+                {
+                    // 모자가 x축 방향으로 어느정도 떨어지면 점프해도 머리에 붙어있지 않게
+                    if (currentHatPosition.transform.localPosition.x < 0.5 && currentHatPosition.transform.localPosition.x > -0.5)
+                    {
+                        hat.transform.position = currentHatPosition.transform.position;
+                        hat.transform.rotation = currentHatPosition.transform.rotation;
+                    }
+
+                }
+
             }
         }
         if (isGround) GameManager.Instance.tJumpWithNoHat = false; // 땅에 닿아있을 때는 항상 false로
