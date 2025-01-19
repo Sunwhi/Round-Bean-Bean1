@@ -2437,7 +2437,7 @@ MonoBehaviour:
   wheelRigidbody: {fileID: 256649934}
   balanceForce: 400
   moveSpeed: 300
-  jumpForce: 8
+  jumpForce: 9
   isGround: 0
   hat: {fileID: 8157757056450085946, guid: 7815b06a15c223747aaf4ca0becd815e, type: 3}
   currentHatPosition: {fileID: 94358173}
@@ -18435,7 +18435,7 @@ MonoBehaviour:
   frame: {fileID: 635412799}
   newHatGenerated: 0
   hat: {fileID: 8157757056450085946, guid: 7815b06a15c223747aaf4ca0becd815e, type: 3}
-  fadeDuration: 700
+  fadeDuration: 100
   hatFall: 0
   hatOn: 0
   initializeHatOnce: 1

@@ -47,7 +47,7 @@ public class GameManager : MonoBehaviour
     // ¸ğÀÚ ¶³¾îÆ®·ÈÀ» ¶§
     [SerializeField] GameObject hat;
     SpriteRenderer hatSP;
-    public float fadeDuration = 5f;
+    public float fadeDuration = 100f;
     public bool hatFall = false;
     public bool hatOn = false;
     public bool initializeHatOnce = true;

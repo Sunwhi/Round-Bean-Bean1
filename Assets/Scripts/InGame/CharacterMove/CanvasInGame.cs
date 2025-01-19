@@ -80,8 +80,14 @@ public class CanvasDragImage : MonoBehaviour
         // 화면에서 손을 떼었을 때 이미지 사라지게 함
         if (touch1.phase == TouchPhase.Ended)
         {
-            Protracter.SetActive(false);
-            Speedometer.SetActive(false);
+            if(touch1Position.x < screenWidthHalf)
+            {
+                Protracter.SetActive(false);
+            }
+            else
+            {
+                Speedometer.SetActive(false);
+            }
         }
     }
 }

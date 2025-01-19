@@ -221,7 +221,7 @@ public class PlayerDragMovement : MonoBehaviour
 
             if (dragDirection.y < 0 && isGround && (rightInitialTouchPosition.x > screenHalfWidth))
             {
-                //SoundManager.instance.SFXPlay("Jumpp", jumpClip); 모자랑 연결돼서 버그가 일어남.
+                SoundManager.Instance.SFXPlay("Jumpp", jumpClip); 
 
                 wheelRigidbody.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
                 isGround = false;
