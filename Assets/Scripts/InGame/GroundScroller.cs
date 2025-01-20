@@ -21,6 +21,8 @@ public class GroundScroller : MonoBehaviour
 
     private float startPos;
     public float distance;
+    float tempdist = 0; // 계절 타일 변화와 장애물 알고리즘 변화 사이에 유예를 두기 위해 사용되는 변수
+    bool isTempDistValid = false; // 계절 타일 변화와 장애물 알고리즘 변경 사이의 시점인 경우 True
 
     private int currentSeason = 0; // 계절 기록용 변수, 장애물 생성 가능여부 판정에 사용함. 0: spring, 1: summer, 2: autumn, 3: winter
     [SerializeField] int springTilesIndex; // 각 계절별 타일이 시작하는 위치. 타일이 하나씩인 경우 각각 0, 1, 2, 3.
@@ -124,7 +126,7 @@ public class GroundScroller : MonoBehaviour
                     {
                         var newHat = Instantiate(hat, new Vector2(tiles[i].transform.position.x + 0.5f, -0.5f), new Quaternion(0, 0, 0, 0));
                         GameManager.Instance.newHatGenerated = true; // 모자 새로 생성되면 newHatGenerated 참으로 설정
-                        SoundManager.instance.SFXPlay("HatGenerated", hatSpawnClip);
+                        SoundManager.Instance.SFXPlay("HatGenerated", hatSpawnClip);
 
                         obstacleCount = obstacleDelay + 1; // 장애물 딜레이 적용
                         hatCount = 0;
@@ -152,14 +154,14 @@ public class GroundScroller : MonoBehaviour
                                 if (cliffOrRock)
                                 {
                                     SetTile(tiles[i], false); // hide tile = spawn cliff
-                                    SoundManager.instance.SFXPlay("BluffSpawned", cliffSpawnClip);
+                                    SoundManager.Instance.SFXPlay("BluffSpawned", cliffSpawnClip);
                                     Debug.Log("cliff selected");
                                 }
                                 else
                                 {
                                     var rock = ObjectPool.GetObject();
                                     rock.transform.position = new Vector2(tiles[i].transform.position.x + 0.5f, -0.5f); // spawn rock
-                                    SoundManager.instance.SFXPlay("StoneSpawned", rockSpawnClip);
+                                    SoundManager.Instance.SFXPlay("StoneSpawned", rockSpawnClip);
                                     Debug.Log("rock selected");
                                 }
                                 hatCount = 0;
@@ -171,7 +173,7 @@ public class GroundScroller : MonoBehaviour
                         {
                             var rock = ObjectPool.GetObject();
                             rock.transform.position = new Vector2(tiles[i].transform.position.x + 0.5f, -0.5f); // spawn rock
-                            SoundManager.instance.SFXPlay("StoneSpawned", rockSpawnClip);
+                            SoundManager.Instance.SFXPlay("StoneSpawned", rockSpawnClip);
                             Debug.Log("rock selected");
                             hatCount = 0;
                         }
@@ -197,7 +199,7 @@ public class GroundScroller : MonoBehaviour
                     {
                         var rock = ObjectPool.GetObject();
                         rock.transform.position = new Vector2(tiles[i].transform.position.x + 0.5f, -0.5f); // spawn rock
-                        SoundManager.instance.SFXPlay("StoneSpawned", rockSpawnClip);
+                        SoundManager.Instance.SFXPlay("StoneSpawned", rockSpawnClip);
                         hatCount = 0;
                     }
                     else
@@ -241,43 +243,66 @@ public class GroundScroller : MonoBehaviour
     }
 
     /// <summary>
-    /// 계절 변경을 위한 함수. UpdateSeason에 의해 계절이 변경될 때만 호출됨.
+    /// 계절별 타일 변경을 위한 함수. UpdateSeason에 의해 계절이 변경될 때만 호출됨.
     /// </summary>
     /// <param name="season">0: spring, 1: summer, 2: autumn, 3: winter. other values are not accepted.</param>
     /// <exception cref="Exception"></exception>
-    private void SetSeason(int season) // change tile image range 
+    private void SetSeasonTiles(int season) // change tile image range 
     {
-        Debug.Log("season set to " + season);
+        Debug.Log("season tile set to " + season);
         CreateSeasonSign(season, distance); // 계절 변경 안내 표지판 생성
         switch (season)
         {
-
             // summer: 20%/4m, autumn: 25%/2m, winter: 30%/1m
             case 0:
                 tilesStart = springTilesIndex;
                 tilesEnd = summerTilesIndex;
-                currentSeason = 0;
-                obstacleChance = 0f; 
                 break;
             case 1:
                 tilesStart = summerTilesIndex;
                 tilesEnd = autumnTilesIndex;
                 currentSeason = 1;
-                obstacleDelay = -4; // 장애물이 생성된 경우 다음 4칸 동안은 등장하지 않음. 
-                obstacleChance = 0.2f; // 계절별 생성 확률 변경은 여기서 각 obstacleChance 값 변경 (0 이상 1 이하)
                 break;
             case 2:
                 tilesStart = autumnTilesIndex;
                 tilesEnd = winterTilesIndex;
                 currentSeason = 2;
-                obstacleDelay = -2; 
-                obstacleChance = 0.25f;
                 break;
             case 3:
                 tilesStart = winterTilesIndex;
                 tilesEnd = groundImg.Length;
                 currentSeason = 3;
-                obstacleDelay = -1; 
+                break;
+            default:
+                throw new Exception("Season index not valid");
+        }
+    }
+
+    /// <summary>
+    /// 계절별 장애물 조건 변경을 위한 함수. UpdateSeason에 의해 계절이 변경될 때만 호출되며, SetSeasonTiles 호출 이후에 호출됨.
+    /// 계절 타일셋 변경과 장애물 알고리즘 변경 사이에 유예를 두기 위하여 분리.
+    /// </summary>
+    /// <param name="season">0: spring, 1: summer, 2: autumn, 3: winter. other values are not accepted.</param>
+    /// <exception cref="Exception"></exception>
+    private void SetSeasonObs(int season) // change tile image range 
+    {
+        Debug.Log("season obs set to " + season);
+        switch (season)
+        {
+            // summer: 20%/4m, autumn: 25%/2m, winter: 30%/1m
+            case 0:
+                obstacleChance = 0f;
+                break;
+            case 1:
+                obstacleDelay = -4; // 장애물이 생성된 경우 다음 4칸 동안은 등장하지 않음. 
+                obstacleChance = 0.2f; // 계절별 생성 확률 변경은 여기서 각 obstacleChance 값 변경 (0 이상 1 이하)
+                break;
+            case 2:
+                obstacleDelay = -2;
+                obstacleChance = 0.25f;
+                break;
+            case 3:
+                obstacleDelay = -1;
                 obstacleChance = 0.3f;
                 break;
             default:
@@ -290,6 +315,7 @@ public class GroundScroller : MonoBehaviour
     /// 계절 변화를 함수로 분리. 또한 string을 이용하던 방식 대신 currentSeason 변수 하나로 통일.
     /// 매 프레임마다 거리에 따라 계절을 반복하여 set하는 대신
     /// 계절이 바뀌는 경우에만 새롭게 set하도록 함.
+    /// 매 프레임마다 호출.
     /// </summary>
     /// <param name="distance">현재 게임 플레이에서 최대 도달 거리</param>
     private void UpdateSeason(float distance)
@@ -305,9 +331,15 @@ public class GroundScroller : MonoBehaviour
 
         if (newSeason != currentSeason)
         {
+            SetSeasonTiles(newSeason);
+            tempdist = distance;
+            isTempDistValid = true;
+        }
+        if (isTempDistValid && distance > tempdist + 12)
+        {
+            SetSeasonObs(newSeason);
             currentSeason = newSeason;
-            //float tempdist = distance;
-            SetSeason(currentSeason);
+            isTempDistValid = false;
         }
     }
 

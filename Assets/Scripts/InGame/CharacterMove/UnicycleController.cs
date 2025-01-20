@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Xml;
 using Unity.VisualScripting;
 using UnityEngine;
+using static TMPro.SpriteAssetUtilities.TexturePacker_JsonArray;
 
 /*
  * 키보드로 조작하는 스크립트
@@ -17,8 +18,14 @@ public class UnicycleController : MonoBehaviour
     [SerializeField] private float jumpForce = 10.0f;
     [SerializeField] private bool isGround = false;
     [SerializeField] GameObject hat;
-    
+
+    Vector3 currentRotation; // 모자 z
+
     [SerializeField] GameObject currentHatPosition; // 동물의 child로 놓음으로써 점프했을 때 동물의 위치를 따라가게
+
+    //효과음들
+    public AudioClip jumpClip;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -61,6 +68,8 @@ public class UnicycleController : MonoBehaviour
         // 스페이스바 점프
         if (Input.GetKey(KeyCode.Space) && isGround)
         {
+            SoundManager.Instance.SFXPlay("Jump", jumpClip);
+
             wheelRigidbody.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
             isGround = false;
             // 점프 한 상태, 모자가 머리에 없다 -> jumpWithNoHat:true 
@@ -74,6 +83,7 @@ public class UnicycleController : MonoBehaviour
     private bool initializeHatOnce = true;
     private void Update()
     {
+        
         // Update코드 전체 주석처리하면 PlayerDragMovement에서 점프시 모자 붙어있음
         if (GameManager.Instance.newHatGenerated) initializeHatOnce = true;
 
@@ -87,6 +97,16 @@ public class UnicycleController : MonoBehaviour
         // 즉 점프한 상태에서 모자를 먹었을 때에만 아래의 함수가 실행이 안됨.
         if (!GameManager.Instance.kJumpWithNoHat && !hat.IsDestroyed())
         {
+
+            currentRotation = hat.transform.eulerAngles;
+
+            // Z값을 -180 ~ 180 범위로 변환 (Unity는 0 ~ 360으로 반환하기 때문에)
+            float zRotation = currentRotation.z;
+            if (zRotation > 180f)
+            {
+                zRotation -= 360f;  // 180° 이상이면 -360°을 더해줌
+            }
+
             // 점프하기 직전까지 currentHatPosition에 모자의 위치를 로컬(동물기준)로 저장
             if (GameManager.Instance.hatOn && isGround)
             {
@@ -96,8 +116,15 @@ public class UnicycleController : MonoBehaviour
             // 점프 했을 때 모자를 동물 머리 위에 부착(동물 기준으로)
             if (GameManager.Instance.hatOn && !isGround)
             {
-                hat.transform.position = currentHatPosition.transform.position;
-                hat.transform.rotation = currentHatPosition.transform.rotation;
+                if(zRotation > -50 && zRotation < 50)
+                {
+                    if (currentHatPosition.transform.localPosition.x < 0.5 && currentHatPosition.transform.localPosition.x > -0.5)
+                    {
+                        hat.transform.position = currentHatPosition.transform.position;
+                        hat.transform.rotation = currentHatPosition.transform.rotation;
+                    }
+                }
+
             }
         }
     }

@@ -47,7 +47,7 @@ public class GameManager : MonoBehaviour
     // 모자 떨어트렸을 때
     [SerializeField] GameObject hat;
     SpriteRenderer hatSP;
-    public float fadeDuration = 5f;
+    public float fadeDuration = 100f;
     public bool hatFall = false;
     public bool hatOn = false;
     public bool initializeHatOnce = true;
@@ -58,6 +58,11 @@ public class GameManager : MonoBehaviour
     public bool tJumpWithNoHat = false;
     private float timer;
 
+    //효과음
+    public AudioClip gameOverClip;
+    public AudioClip gameClearClip;
+    public AudioClip clearCheersClip;
+    private int sfxOnce; // Update()문 안에 gameOVer,gameClear클립들이 호출되기 때문에, 이 클립들을 한번만 호출하기 위한 변수
     public static GameManager Instance { get; private set; } // 싱글톤 인스턴스
 
     void Awake()
@@ -83,6 +88,7 @@ public class GameManager : MonoBehaviour
         time = 0; // 매 판마다 시간 0으로 초기화
         callFinalScoreOnce = 0; // 매 판마다 0으로 초기화
 
+        sfxOnce = 0; // 다시 시작하면 0으로
     }
 
     void Update()
@@ -100,11 +106,23 @@ public class GameManager : MonoBehaviour
         // isGameOverCalled로 GameOver()함수가 한번만 실행되도록 함. 아니면 계속 호출됨. -> 잠시 폐기
         if (gameOver)
         {
+            if(sfxOnce == 0)
+            {
+                Debug.Log("d");
+                SoundManager.Instance.SFXPlay("GameOver",gameOverClip);
+                sfxOnce = 1;
+            }
             GameOver();
         }
         // isGameClearCalled로 GameClear()함수가 한번만 실행되도록 함. 아니면 계속 호출됨.
         if (gameClear)
         {
+            if (sfxOnce == 0)
+            {
+                SoundManager.Instance.SFXPlay("GameClear", gameClearClip);
+                SoundManager.Instance.SFXPlay("ClearCheers", clearCheersClip);
+                sfxOnce = 1;
+            }
             GameClear();
         }
 

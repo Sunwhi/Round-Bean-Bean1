@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
@@ -22,9 +23,13 @@ public class PlayerDragMovement : MonoBehaviour
     [SerializeField] GameObject hat;
     [SerializeField] GameObject currentHatPosition;
 
+    Vector3 currentRotation;
+
     [SerializeField] GameObject textGoForward; // 역행 금지 안내 텍스트.
     // groundscroller에서 함수를 가져오려 했으나 키보드 기반 조작 코드를 삭제하게 될 경우를 고려해 분리 작성하였음.
 
+    //효과음들
+    public AudioClip jumpClip;
     // Start is called before the first frame update
     void Start()
     {
@@ -35,13 +40,13 @@ public class PlayerDragMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //for문 안 쓰면 터치 개수가 한개일 때 문제 발생
+        //for문 안 쓰면 터치 개수가 한 개일 때 문제 발생
         if (Input.touchCount > 0)
         {
             for (int i = 0; i < Input.touchCount; i++)
             {
                 Touch touch = Input.GetTouch(i);
-                TouchControl(touch);
+                if(!touch.IsUnityNull()) TouchControl(touch);
             }
         }
 
@@ -56,23 +61,44 @@ public class PlayerDragMovement : MonoBehaviour
             initializeHatOnce = false;
             // 모자 먹었을 때 터치 딕셔너리 초기화.
             // 안하면 오른쪽 터치한채로(이동하면서) 모자 먹고, 오른쪽 떼고 왼쪽 터치하면 오른쪽 터치작용이 일어남.
-            initialTouchPositions.Clear();
+            // -> 문제점 : 오른쪽 터치한채로 모자 먹으면 움직임이 멈춤.
+            // initialTouchPositions.Clear(); //*****************************************
         }
         // 점프 한 상태에서 모자를 썼을 때 바닥의 위치로 모자가 이동하는 오류를 고치기 위해
         // 모자가 있이 점프한 상태에서만 모자가 머리에 붙어있도록 바꿈
         if (!GameManager.Instance.tJumpWithNoHat && !hat.IsDestroyed())
         {
+
+            currentRotation = hat.transform.eulerAngles;
+
+            // Z값을 -180 ~ 180 범위로 변환 (Unity는 0 ~ 360으로 반환하기 때문에)
+            float zRotation = currentRotation.z;
+            if (zRotation > 180f)
+            {
+                zRotation -= 360f;  // 180° 이상이면 -360°을 더해줌
+            }
+
             // 점프하기 직전까지 currentHatPosition에 모자의 위치를 로컬(동물기준)로 저장
             if (GameManager.Instance.hatOn && isGround)
             {
                 currentHatPosition.transform.position = hat.transform.position;
                 currentHatPosition.transform.rotation = hat.transform.rotation;
             }
-            // 모자를 동물 머리 위에 부착(동물 기준으로)
+            // 점프 했을 때 모자를 동물 머리 위에 부착(동물 기준으로)
             if (GameManager.Instance.hatOn && !isGround)
             {
-                hat.transform.position = currentHatPosition.transform.position;
-                hat.transform.rotation = currentHatPosition.transform.rotation;
+                // 모자가 어느정도 기울어지면 더이상 점프해도 머리에 붙어있지 않게
+                if (zRotation > -50 && zRotation < 50)
+                {
+                    // 모자가 x축 방향으로 어느정도 떨어지면 점프해도 머리에 붙어있지 않게
+                    if (currentHatPosition.transform.localPosition.x < 0.5 && currentHatPosition.transform.localPosition.x > -0.5)
+                    {
+                        hat.transform.position = currentHatPosition.transform.position;
+                        hat.transform.rotation = currentHatPosition.transform.rotation;
+                    }
+
+                }
+
             }
         }
         if (isGround) GameManager.Instance.tJumpWithNoHat = false; // 땅에 닿아있을 때는 항상 false로
@@ -83,7 +109,6 @@ public class PlayerDragMovement : MonoBehaviour
     {
         // 터치에 고유한 fingerId 할당
         int touchId = touch.fingerId;
-
         if (touch.phase == TouchPhase.Began)
         {
             if(!initialTouchPositions.ContainsKey(touchId))
@@ -92,8 +117,7 @@ public class PlayerDragMovement : MonoBehaviour
             }
             isTouched = true; // 터치중임
         }
-
-        if(initialTouchPositions.ContainsKey(touchId))
+        if(initialTouchPositions.ContainsKey(touchId)) // 이게 안됨.
         {
             Vector2 initialTouchPosition = initialTouchPositions[touchId];
 
@@ -106,8 +130,8 @@ public class PlayerDragMovement : MonoBehaviour
                 RightTouchControl(touch, initialTouchPosition);
             }
         }
-
-        if(touch.phase == TouchPhase.Ended || touch.phase == TouchPhase.Canceled)
+            
+        if(touch.phase == TouchPhase.Ended || touch.phase == TouchPhase.Canceled) // 원인x
         {
             initialTouchPositions.Remove(touchId);
         }
@@ -121,7 +145,6 @@ public class PlayerDragMovement : MonoBehaviour
             Vector2 currentTouchPosition = touch.position; // 드래그한 후 위치를 계속 새로 받는다.
             Vector2 dragDirection = currentTouchPosition - leftInitialTouchPosition; // 드래그방향
 
-            //Debug.Log("화면 왼쪽");
             if (dragDirection.x < 0)
             {
                 frameRigidbody.AddTorque(balanceForce * Time.deltaTime); // 반시계 방향 회전
@@ -134,7 +157,6 @@ public class PlayerDragMovement : MonoBehaviour
     }
     private void RightTouchControl(Touch touch, Vector2 rightInitialTouchPosition)
     {
-        //Debug.Log("righttouch");
         // 터치한 상태로 움직일 때(드래그)
         if ((touch.phase == TouchPhase.Moved || touch.phase == TouchPhase.Stationary) && isTouched)
         {
@@ -199,6 +221,8 @@ public class PlayerDragMovement : MonoBehaviour
 
             if (dragDirection.y < 0 && isGround && (rightInitialTouchPosition.x > screenHalfWidth))
             {
+                SoundManager.Instance.SFXPlay("Jumpp", jumpClip); 
+
                 wheelRigidbody.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
                 isGround = false;
                 // 점프 한 상태, 모자가 머리에 없다 -> jumpWithNoHat:true 
