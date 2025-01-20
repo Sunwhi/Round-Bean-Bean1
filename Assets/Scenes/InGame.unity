@@ -10362,7 +10362,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 812cac0146dcf1544871ffd7db90c2ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bgSound: {fileID: 0}
+  bgSound: {fileID: 784829298}
   bglist:
   - {fileID: 8300000, guid: e72811621eb53b14eb82b207a5057b67, type: 3}
   - {fileID: 8300000, guid: 636da5ef039e6b340bf8c38a77e7df69, type: 3}
@@ -18629,7 +18629,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2117169973
 RectTransform:
   m_ObjectHideFlags: 0
