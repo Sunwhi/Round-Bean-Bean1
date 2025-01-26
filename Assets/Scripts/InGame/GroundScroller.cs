@@ -24,8 +24,9 @@ public class GroundScroller : MonoBehaviour
     float tempdist = 0; // 계절 타일 변화와 장애물 알고리즘 변화 사이에 유예를 두기 위해 사용되는 변수
     bool isTempDistValid = false; // 계절 타일 변화와 장애물 알고리즘 변경 사이의 시점인 경우 True
 
+    public static event Action<int> OnSeasonChanged; // BGScroller.cs에서의 배경 변경을 트리거하기 위한 이벤트
     private int currentSeason = 0; // 계절 기록용 변수, 장애물 생성 가능여부 판정에 사용함. 0: spring, 1: summer, 2: autumn, 3: winter
-    [SerializeField] int springTilesIndex; // 각 계절별 타일이 시작하는 위치. 타일이 하나씩인 경우 각각 0, 1, 2, 3.
+    [SerializeField] int springTilesIndex; // 각 계절별 타일의 시작 인덱스. ex) 타일이 하나씩인 경우 각각 0, 1, 2, 3.
     [SerializeField] int summerTilesIndex;
     [SerializeField] int autumnTilesIndex;
     [SerializeField] int winterTilesIndex;
@@ -39,7 +40,7 @@ public class GroundScroller : MonoBehaviour
     private bool cliffJudge = false;
     private int obstacleDelay = 0;
     private float obstacleChance = 0;
-    private bool[] obstacleFlag = new bool[26]; // false: judgeable, true: already judged. set to false when declared
+    private bool[] obstacleFlag = new bool[26]; // 이미 한 번 판정을 완료한 경우 true. 배열 크기는 ground 오브젝트 갯수와 같아야 함
 
     [SerializeField] GameObject textGoForward; // 역행 금지 안내 텍스트
 
@@ -59,7 +60,6 @@ public class GroundScroller : MonoBehaviour
         tilesEnd = summerTilesIndex; // 시작 계절 set, SetSeason() 사용 시 불필요한 동작이 있음
         for (int i = 0; i < tiles.Length; i++) // 게임 시작과 동시에 타일 이미지 set
             tiles[i].sprite = groundImg[UnityEngine.Random.Range(tilesStart, tilesEnd)];
-        // TODO: ground들의 기존 임시 이미지(ground뭐시기) 전부 교체할 것
     }
 
     // Update is called once per frame
@@ -137,7 +137,7 @@ public class GroundScroller : MonoBehaviour
                     Debug.Log("hat spawn failed");
                 }
 
-                // 가을 이후 생성 알고리즘
+                // TODO: 돌과 절벽의 생성 효과를 추가. Coroutine 이용하면 될 것으로 보임
                 if (currentSeason >= 2) 
                 {
                 #region afterAutumn
@@ -331,15 +331,18 @@ public class GroundScroller : MonoBehaviour
 
         if (newSeason != currentSeason)
         {
-            SetSeasonTiles(newSeason);
+            SetSeasonTiles(newSeason); // 땅 타일 변경 먼저
             tempdist = distance;
             isTempDistValid = true;
         }
-        if (isTempDistValid && distance > tempdist + 12)
+        if (isTempDistValid && distance > tempdist + 18) // 변경된 타일들로 실제로 넘어갈 때 장애물 알고리즘 변경. 게임 관점에선 실질적으로 계절이 바뀌는 부분.
         {
-            SetSeasonObs(newSeason);
+            SetSeasonObs(newSeason); 
+            OnSeasonChanged?.Invoke(newSeason); // UpdateBG() 트리거
+
             currentSeason = newSeason;
             isTempDistValid = false;
+
         }
     }
 
