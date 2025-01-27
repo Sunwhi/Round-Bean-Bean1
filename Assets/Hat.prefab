@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 408762444112797987}
   - component: {fileID: 4777802658546442506}
   - component: {fileID: 6440701594268467663}
+  - component: {fileID: 6759396106035946247}
   m_Layer: 0
   m_Name: Hat
   m_TagString: Hat
@@ -30,7 +31,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0.12885591, w: 0.9916634}
   m_LocalPosition: {x: 2, y: 0, z: 0}
-  m_LocalScale: {x: 0.24999999, y: 0.25, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -76,7 +77,7 @@ SpriteRenderer:
   m_SortingLayerID: 1680429511
   m_SortingLayer: 1
   m_SortingOrder: 3
-  m_Sprite: {fileID: 21300000, guid: 93a3d89e5c5ad134cb53ae11d5cb3899, type: 3}
+  m_Sprite: {fileID: 21300000, guid: f46746dbade89f94293dd93fddbb447e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -146,18 +147,18 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.0315547, y: 0.7584861}
+  m_Offset: {x: -0.006454706, y: 0.015113279}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 5.12, y: 5.12}
+    oldSize: {x: 2.34, y: 0.85}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 2.6618652, y: 1.881162}
+  m_Size: {x: 2.3833308, y: 0.874853}
   m_EdgeRadius: 0
 --- !u!114 &6440701594268467663
 MonoBehaviour:
@@ -176,3 +177,62 @@ MonoBehaviour:
   wheel: {fileID: 0}
   frameRigidBody: {fileID: 0}
   wheelRigidBody: {fileID: 0}
+  hatToHeadClip: {fileID: 0}
+  hatFallClip: {fileID: 0}
+--- !u!68 &6759396106035946247
+EdgeCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8157757056450085946}
+  m_Enabled: 0
+  m_Density: 1
+  m_Material: {fileID: 6200000, guid: 7cd60876fc5f6f640a1a2cd053dbb176, type: 2}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_EdgeRadius: 0
+  m_Points:
+  - {x: -1.1584382, y: -0.4248285}
+  - {x: -1.1631099, y: -0.40186173}
+  - {x: -1.1731857, y: -0.37292856}
+  - {x: -1.0924964, y: -0.26923016}
+  - {x: -0.9193507, y: -0.16841717}
+  - {x: -0.7827914, y: -0.004747495}
+  - {x: -0.65066653, y: 0.22258595}
+  - {x: -0.38020694, y: 0.3744866}
+  - {x: -0.1083253, y: 0.43608433}
+  - {x: 0.15072003, y: 0.42252705}
+  - {x: 0.40961692, y: 0.34915695}
+  - {x: 0.6327043, y: 0.19801909}
+  - {x: 0.7552775, y: -0.004244862}
+  - {x: 0.81652766, y: -0.13559583}
+  - {x: 1.0080701, y: -0.20500858}
+  - {x: 1.1487756, y: -0.31099486}
+  - {x: 1.1207454, y: -0.41288352}
+  - {x: -1.1699476, y: -0.42133895}
+  m_AdjacentStartPoint: {x: 0, y: 0}
+  m_AdjacentEndPoint: {x: 0, y: 0}
+  m_UseAdjacentStartPoint: 0
+  m_UseAdjacentEndPoint: 0
