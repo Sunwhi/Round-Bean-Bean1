@@ -20,11 +20,9 @@ public class GameManager : MonoBehaviour
     public bool gameOver = false;
     public bool gameClear = false;
     public bool gamePaused = false; // 게임 중단 -> 모자 썼을 때, 설정창
-    int callFinalScoreOnce; // 게임 끝나고 딱 한번만 기록 저장하기 위해 만든 임시변수
+    int gameOverScoreOnce; // 게임오버 기록 딱 한번만 저장하기 위해 만든 임시변수
+    int callFinalScoreOnce; // 게임 클리어 기록 //
     int callReplaceJointOnce;
-    // GameOver(), GameClear() 함수 각 한번씩만 호출하기 위한 변수
-    //bool isGameOverCalled = false; 
-    //bool isGameClearCalled = false;
 
     float time; // 게임 시간 기록
     public float finalScore; // 최종 시간 기록
@@ -63,6 +61,12 @@ public class GameManager : MonoBehaviour
     public AudioClip gameClearClip;
     public AudioClip clearCheersClip;
     private int sfxOnce; // Update()문 안에 gameOVer,gameClear클립들이 호출되기 때문에, 이 클립들을 한번만 호출하기 위한 변수
+
+    //어디서 죽었는지(클리어) 알아내기. AchieveGameOverScore로 넘길 recentSeason변수. 알맞은 clock 이미지 배치 위해.
+    private float distance = 0;
+    private int recentSeason = -1;
+    private float startPos = 0;
+
     public static GameManager Instance { get; private set; } // 싱글톤 인스턴스
 
     void Awake()
@@ -81,12 +85,14 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        startPos = animal.transform.position.x;
+
         inGameScene = SceneManager.GetActiveScene(); // 현재 작동되고 있는 InGame씬을 저장함
 
         unicycleController = wheel.GetComponent<UnicycleController>();
         playerDragMovement = wheel.GetComponent <PlayerDragMovement>();
         time = 0; // 매 판마다 시간 0으로 초기화
-        callFinalScoreOnce = 0; // 매 판마다 0으로 초기화
+        gameOverScoreOnce = 0; // 매 판마다 0으로 초기화
 
         sfxOnce = 0; // 다시 시작하면 0으로
     }
@@ -142,6 +148,12 @@ public class GameManager : MonoBehaviour
         {
             HatFall();
         }
+
+        // 최대 도달 거리 업데이트
+        if (animal.transform.position.x > distance)
+        {
+            distance = animal.transform.position.x - startPos;
+        }
     }
 
     private void HatFall()
@@ -195,6 +207,18 @@ public class GameManager : MonoBehaviour
 
             callFinalScoreOnce = 1;
         }*/
+        
+        // 게임오버 기록을 저장하는 하나의 PlayerPrefs
+        if(gameOverScoreOnce == 0)
+        {
+            float gameOverScore = time;
+            PlayerPrefs.SetFloat("recentScore", gameOverScore);
+            PlayerPrefs.SetString("recentDate", DateTime.Now.ToString("yyyy-MM-dd"));
+
+            gameOverScoreOnce = 1;
+
+            CurrentSeason(distance);
+        }
 
         textGameOver.SetActive(true); // 게임오버 텍스트
 
@@ -237,6 +261,10 @@ public class GameManager : MonoBehaviour
         // 이거 안하면 Update문 계속 호출되어 모든 기록들이 같아짐.
         if (callFinalScoreOnce == 0)
         {
+            float recentScore = time;
+            PlayerPrefs.SetFloat("recentScore", recentScore);
+            PlayerPrefs.SetString("recentDate", DateTime.Now.ToString("yyyy-MM-dd"));
+
             finalScore = time;
             RecordNewScore(finalScore);
 
@@ -245,6 +273,8 @@ public class GameManager : MonoBehaviour
             particles2.SetActive(true);
 
             callFinalScoreOnce = 1;
+
+            CurrentSeason(distance);
         }
 
         // 이동관련 스크립트 막아서 게임오버 이후 움직이지 못하게 함
@@ -307,6 +337,21 @@ public class GameManager : MonoBehaviour
             SceneManager.LoadScene(inGameScene.name);
         }
     }
+
+    // recentSeason에 게임오버된 혹은 게임클리어시에 계절을 저장
+    private void CurrentSeason(float distance)
+    {
+        // 24.12.28 기준 봄 50m, 여름 50m, 가을 55m, 겨울 60m, 봄2 10m
+        if (distance < 50 * 1) recentSeason = 0; // 봄
+        else if (distance < 100 * 1) recentSeason = 1; // 여름
+        else if (distance < 155 * 1) recentSeason = 2; // 가을
+        else if (distance < 215 * 1) recentSeason = 3; // 겨울
+        else if (distance < 225 * 1) recentSeason = 0; // spring2
+
+        PlayerPrefs.SetInt("recentSeason", recentSeason);
+    }
+
+
     // 코루틴으로 구현한 점프. 첫 번째, 두 번째 점프와 시간차를 두고 뛴다.
     IEnumerator clearJump1()
     {

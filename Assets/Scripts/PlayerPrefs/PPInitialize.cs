@@ -59,6 +59,9 @@ public class PPTEST : MonoBehaviour
             dateNum = "date" + i;
             PlayerPrefs.SetString(dateNum, null);
         }
+        PlayerPrefs.DeleteKey("recentScore");
+        PlayerPrefs.DeleteKey("recentDate");
+
         PlayerPrefs.SetInt("Initialized", 1);
 
         Debug.Log("PlayerPrefs are newly Initialized");

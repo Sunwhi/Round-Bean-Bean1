@@ -83,7 +83,7 @@ public class CleasRecordBtn : MonoBehaviour
     {
         float score = PlayerPrefs.GetFloat("score0");
         // 기록이 안 남아있을 시 버튼 흐리고 터치 x
-        if (score == 10000f)
+        if (score == 10000f && PlayerPrefs.GetFloat("recentScore") == 0)
         {
             achieveBtn.interactable = false; // 버튼 터치 불가, 흐리게 처리
         }
