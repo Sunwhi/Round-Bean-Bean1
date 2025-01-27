@@ -159,21 +159,18 @@ public class GroundScroller : MonoBehaviour
                                 }
                                 else
                                 {
-                                    var rock = ObjectPool.GetObject();
-                                    rock.transform.position = new Vector2(tiles[i].transform.position.x + 0.5f, -0.5f); // spawn rock
-                                    SoundManager.Instance.SFXPlay("StoneSpawned", rockSpawnClip);
+                                    SpawnRock(tiles[i]);
                                     Debug.Log("rock selected");
                                 }
                                 hatCount = 0;
                             }
-                            else SetTile(tiles[i], false); // hide tile
+                            else SetTile(tiles[i], false); // hide tile = spawn cliff
+                            SoundManager.Instance.SFXPlay("BluffSpawned", cliffSpawnClip);
                             hatCount = 0;
                         }
                         else if (!cliffJudge && rockJudge) // cliffJudge가 false고 rockjudge가 true인 경우에 대한 추가 처리
                         {
-                            var rock = ObjectPool.GetObject();
-                            rock.transform.position = new Vector2(tiles[i].transform.position.x + 0.5f, -0.5f); // spawn rock
-                            SoundManager.Instance.SFXPlay("StoneSpawned", rockSpawnClip);
+                            SpawnRock(tiles[i]);
                             Debug.Log("rock selected");
                             hatCount = 0;
                         }
@@ -197,9 +194,7 @@ public class GroundScroller : MonoBehaviour
                     Debug.Log("...judging rocks..." + rockJudge);
                     if (rockJudge)
                     {
-                        var rock = ObjectPool.GetObject();
-                        rock.transform.position = new Vector2(tiles[i].transform.position.x + 0.5f, -0.5f); // spawn rock
-                        SoundManager.Instance.SFXPlay("StoneSpawned", rockSpawnClip);
+                        SpawnRock(tiles[i]);
                         hatCount = 0;
                     }
                     else
@@ -231,7 +226,7 @@ public class GroundScroller : MonoBehaviour
     }
 
     /// <summary>
-    /// Hide or show tiles. Used for making cliffs for now.
+    /// Hide or show tiles. Used for map scrolling & making cliffs
     /// </summary>
     /// <param name="tile">tiles that you want to hide or show</param>
     /// <param name="boolean">set false to hide, true to show</param>
@@ -240,6 +235,17 @@ public class GroundScroller : MonoBehaviour
         tile.gameObject.GetComponent<Collider2D>().enabled = boolean;
         tile.gameObject.SetActive(boolean);
         // Debug.Log("SetTile Executed : " + boolean);
+    }
+
+    /// <summary>
+    /// Spawn rock.
+    /// </summary>
+    /// <param name="tile"></param>
+    private void SpawnRock(SpriteRenderer tile)
+    {
+        var rock = ObjectPool.GetObject();
+        rock.transform.position = new Vector2(tile.transform.position.x + 0.5f, -0.5f); // spawn rock
+        SoundManager.Instance.SFXPlay("StoneSpawned", rockSpawnClip);
     }
 
     /// <summary>
