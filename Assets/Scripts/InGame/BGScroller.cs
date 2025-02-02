@@ -70,6 +70,10 @@ public class BGScroller : MonoBehaviour
         {
             tile.sprite = bgImg[nextSeason];
             SetAlpha(tile, 0f); // 아직 안보이게
+
+            Vector3 newPos = tile.transform.position;
+            newPos.z = tile.transform.position.z - 0.1f;  // 기존보다 약간 앞에 위치
+            tile.transform.position = newPos;
         }
 
         // 전환
