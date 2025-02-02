@@ -5,9 +5,10 @@ using UnityEngine;
 public class BGScroller : MonoBehaviour
 {
     float cameraHalfWidth;
-    public SpriteRenderer[] bgTiles; // 오브젝트
-    public Sprite[] bgImg; // 배경 이미지셋
-    float fadeDuration = 0.75f; // 배경 전환 시간. fade out과 in 각각에 걸리는 시간이므로 실제 소요시간은 x2
+    [SerializeField] SpriteRenderer[] bgTiles; // 오브젝트
+    [SerializeField] SpriteRenderer[] nextBgTiles; // 다음 계절 전환용
+    [SerializeField] public Sprite[] bgImg; // 배경 이미지셋
+    [SerializeField] float fadeDuration = 1f; // 배경 전환 시간. fade out과 in 각각에 걸리는 시간이므로 실제 소요시간은 x2
     public Transform player; // 스크롤 기준: 캐릭터
     private float bgWidth; // 배경 이미지 가로 길이
     [SerializeField] private float parallaxEffectMultiplier; // 배경 이동 배율
@@ -21,8 +22,12 @@ public class BGScroller : MonoBehaviour
         {
             player = Camera.main.transform;
         }
+        //foreach (var tile in nextBgTiles)
+        //{
+        //    SetAlpha(tile, 0f);
+        //}
         lastPlayerPosition = player.position.x;
-        GroundScroller.OnSeasonChanged += UpdateBG; // 이벤트 구독
+        GroundScroller.OnSeasonChanged += UpdateBG; // 계절 변화 감지 이벤트 구독
     }
 
     private void OnDisable()
@@ -38,22 +43,17 @@ public class BGScroller : MonoBehaviour
 
         for (int i = 0; i < bgTiles.Length; i++)
         {
-            if (bgTiles[i].transform.position.x < Camera.main.transform.position.x - cameraHalfWidth - 20) // 배경 이미지가 화면을 벗어나면. 20은 역행을 대비한 추가 여유
+            if (bgTiles[i].transform.position.x < Camera.main.transform.position.x - cameraHalfWidth - 20) // 배경 이미지가 화면을 벗어나면 (20은 역행을 대비한 추가 여유)
             {
                 bgTiles[i].transform.position += new Vector3(bgWidth * 3, 0, 0); // 오른쪽 끝으로 이동
+                nextBgTiles[i].transform.position = bgTiles[i].transform.position; // 다음 계절용 타일도 똑같이 이동
             }
         }
 
     }
 
     private void UpdateBG(int season)
-    {
-        //for (int i = 0; i < bgTiles.Length; i++)
-        //{
-        //    bgTiles[i].sprite = bgImg[season];
-        //}
-        
-        // TODO: FadeBGImage를 완성해서 부드러운 화면 전환 효과 넣을 것. 
+    { 
         StartCoroutine(FadeBGImage(season));
     }
 
@@ -66,51 +66,48 @@ public class BGScroller : MonoBehaviour
     {
         float elapsedTime = 0f;
 
-        #region fadeout
+        foreach (var tile in nextBgTiles) // 다음 계절의 배경을 미리 설정
+        {
+            tile.sprite = bgImg[nextSeason];
+            SetAlpha(tile, 0f); // 아직 안보이게
+        }
+
+        // 전환
         while (elapsedTime < fadeDuration)
         {
             elapsedTime += Time.deltaTime;
             float alpha = Mathf.Clamp01(elapsedTime / fadeDuration);
 
-            foreach (var tile in bgTiles)
+            for (int i = 0; i < bgTiles.Length; i++)
             {
-                Color color = tile.color;
-                color.a = 1f - alpha;
-                tile.color = color;
+                // SetAlpha(bgTiles[i], 1 - alpha); // 기존 배경 Fade out
+                SetAlpha(nextBgTiles[i], alpha); // 다음 배경 Fade in
             }
             yield return null; // 다음 프레임 대기
         }
-        #endregion
 
-        // 완전히 fade out 된 이후
-        elapsedTime = 0f; // fade in을 위해 초기화
-        foreach (var tile in bgTiles)
-        {
-            tile.sprite = bgImg[nextSeason]; // 다음 계절 이미지로 변경 (아직 fade in 하기 전)
-        }
-
-        #region fadein
-        while (elapsedTime < fadeDuration)
-        {
-            elapsedTime += Time.deltaTime;
-            float alpha = Mathf.Clamp01(elapsedTime / fadeDuration);
-
-            foreach (var tile in bgTiles)
-            {
-                Color color = tile.color;
-                color.a = alpha;
-                tile.color = color;
-            }
-            yield return null; // 다음 프레임 대기
-        }
-        #endregion
-
-        // 알파값 마무리 보정
         for (int i = 0; i < bgTiles.Length; i++)
         {
-            Color color = bgTiles[i].color;
-            color.a = 1f;
-            bgTiles[i].color = color;
+            // 알파값 마무리 보정
+            SetAlpha(bgTiles[i], 0);
+            SetAlpha(nextBgTiles[i], 1);
+
+            // 배열 swap
+            SpriteRenderer temp = bgTiles[i];
+            bgTiles[i] = nextBgTiles[i];
+            nextBgTiles[i] = temp;
         }
+    }
+
+    /// <summary>
+    /// 이미지 알파값 조정
+    /// </summary>
+    /// <param name="renderer"></param>
+    /// <param name="alpha"></param>
+    private void SetAlpha(SpriteRenderer renderer, float alpha)
+    {
+        Color color = renderer.color;
+        color.a = alpha;
+        renderer.color = color;
     }
 }
