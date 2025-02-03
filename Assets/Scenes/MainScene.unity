@@ -6766,7 +6766,7 @@ RectTransform:
   m_GameObject: {fileID: 1872117197}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.8, y: 0.8, z: 0}
+  m_LocalScale: {x: 0.7, y: 0.7, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1509345926}
@@ -6789,10 +6789,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   seasonClockImg: {fileID: 1872117200}
-  clockAutumn: {fileID: 21300000, guid: 6fd00dbf822a0654c8a35e3e047f4aa7, type: 3}
-  clockWinter: {fileID: 21300000, guid: 0325933f27002724cad47eee2cd3fd4f, type: 3}
-  clockSpring: {fileID: 21300000, guid: 0f41a939e26634143b1cb1670436991c, type: 3}
-  clockSummer: {fileID: 21300000, guid: 079727293e82f1645a2e0f5e30b05d92, type: 3}
+  clockAutumn: {fileID: 21300000, guid: 3df29f1122b40be45ac4bfb7ae63730b, type: 3}
+  clockWinter: {fileID: 21300000, guid: 109a5c05b8925f24281de6aacbc9f035, type: 3}
+  clockSpring: {fileID: 21300000, guid: 6eda91e209f79814dac8851bb552d86b, type: 3}
+  clockSummer: {fileID: 21300000, guid: 886111ebc43006b43a8e5640059fa011, type: 3}
 --- !u!114 &1872117200
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6813,7 +6813,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 3df29f1122b40be45ac4bfb7ae63730b, type: 3}
+  m_Sprite: {fileID: 0}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
