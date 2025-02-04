@@ -1627,6 +1627,7 @@ MonoBehaviour:
   autumnTilesIndex: 6
   winterTilesIndex: 7
   textGoForward: {fileID: 482695293}
+  obsAnimDuration: 0.6
   rockSpawnClip: {fileID: 8300000, guid: b31fae91a7f1a2445a8bf0e100b2424f, type: 3}
   cliffSpawnClip: {fileID: 8300000, guid: 901dec12e7de64f44b75afc1366e0bc6, type: 3}
   hatSpawnClip: {fileID: 8300000, guid: c5ae4596a646a7c46b919f3f316b1f13, type: 3}
@@ -19191,7 +19192,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8303891622159372072, guid: 36fb0049e0382da48ab42dd81b6bb182, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 8303891622159372072, guid: 36fb0049e0382da48ab42dd81b6bb182, type: 3}
       propertyPath: m_LocalRotation.w

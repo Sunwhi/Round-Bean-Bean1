@@ -44,6 +44,9 @@ public class GroundScroller : MonoBehaviour
 
     [SerializeField] GameObject textGoForward; // 역행 금지 안내 텍스트
 
+    // obstacle animation
+    [SerializeField] float obsAnimDuration = 0.6f;
+
     // SFX
     public AudioClip rockSpawnClip;
     public AudioClip cliffSpawnClip;
@@ -153,8 +156,7 @@ public class GroundScroller : MonoBehaviour
                                 bool cliffOrRock = ProbabilityRandom(0.5f); // true: cliff, false: rock
                                 if (cliffOrRock)
                                 {
-                                    SetTile(tiles[i], false); // hide tile = spawn cliff
-                                    SoundManager.Instance.SFXPlay("BluffSpawned", cliffSpawnClip);
+                                    SpawnCliff(tiles[i]);
                                     Debug.Log("cliff selected");
                                 }
                                 else
@@ -164,8 +166,7 @@ public class GroundScroller : MonoBehaviour
                                 }
                                 hatCount = 0;
                             }
-                            else SetTile(tiles[i], false); // hide tile = spawn cliff
-                            SoundManager.Instance.SFXPlay("BluffSpawned", cliffSpawnClip);
+                            else SpawnCliff(tiles[i]);
                             hatCount = 0;
                         }
                         else if (!cliffJudge && rockJudge) // cliffJudge가 false고 rockjudge가 true인 경우에 대한 추가 처리
@@ -188,7 +189,7 @@ public class GroundScroller : MonoBehaviour
                 }
                 #region summer
                 // 여름 - 돌만 생성됨. 
-                if (obstacleCount > 0) // 가을 이후 절벽과의 동시 생성 여부 파악을 위해 미리 돌 판정
+                else if (obstacleCount > 0) // 가을 이후 절벽과의 동시 생성 여부 파악을 위해 미리 돌 판정
                 {
                     rockJudge = ProbabilityRandom(obstacleChance);
                     Debug.Log("...judging rocks..." + rockJudge);
@@ -226,7 +227,7 @@ public class GroundScroller : MonoBehaviour
     }
 
     /// <summary>
-    /// Hide or show tiles. Used for map scrolling & making cliffs
+    /// Hide or show tiles. Used for map scrolling
     /// </summary>
     /// <param name="tile">tiles that you want to hide or show</param>
     /// <param name="boolean">set false to hide, true to show</param>
@@ -238,14 +239,69 @@ public class GroundScroller : MonoBehaviour
     }
 
     /// <summary>
+    /// Hide tiles. Used for spawning cliffs
+    /// </summary>
+    /// <param name="tile"></param>
+    private void SpawnCliff(SpriteRenderer tile)
+    {
+        Vector2 cliffEndPos = new Vector2(tile.transform.position.x, tile.transform.position.y - 2);
+        StartCoroutine(AnimateCliff(tile, tile.transform.position, cliffEndPos));
+        SoundManager.Instance.SFXPlay("BluffSpawned", cliffSpawnClip); // SFX
+    }
+
+    /// <summary>
     /// Spawn rock.
     /// </summary>
     /// <param name="tile"></param>
     private void SpawnRock(SpriteRenderer tile)
     {
         var rock = ObjectPool.GetObject();
-        rock.transform.position = new Vector2(tile.transform.position.x + 0.5f, -0.5f); // spawn rock
+        rock.transform.position = new Vector3(tile.transform.position.x + 0.5f, -1.5f, 1.5f); // 땅 아래에 스폰
+        Vector3 rockEndPos = new Vector3(tile.transform.position.x + 0.5f, -0.5f, 1.5f);
+        StartCoroutine(AnimateRock(rock, rock.transform.position, rockEndPos));
         SoundManager.Instance.SFXPlay("StoneSpawned", rockSpawnClip);
+    }
+
+    /// <summary>
+    /// 절벽 연출용 코루틴. startPos부터 endPos까지 Lerp로 이동.
+    /// </summary>
+    /// <param name="tile"></param>
+    /// <param name="startPos"></param>
+    /// <param name="endPos"></param>
+    /// <returns></returns>
+    private IEnumerator AnimateCliff(SpriteRenderer tile, Vector2 startPos, Vector2 endPos)
+    {
+        float elapsedTime = 0;
+        while(elapsedTime < obsAnimDuration)
+        {
+            elapsedTime += Time.deltaTime;
+            float delta = Mathf.Clamp01(elapsedTime / obsAnimDuration);
+            tile.transform.position = Vector2.Lerp(startPos, endPos, delta);
+            yield return null;
+        }
+        tile.transform.position = endPos;
+        tile.gameObject.GetComponent<Collider2D>().enabled = false; // 다 내려가면 없앰
+        tile.gameObject.SetActive(false);
+    }
+
+    /// <summary>
+    /// AnimateObstacle의 Rock 오브젝트용 오버로딩.
+    /// </summary>
+    /// <param name="rock"></param>
+    /// <param name="startPos"></param>
+    /// <param name="endPos"></param>
+    /// <returns></returns>
+    private IEnumerator AnimateRock(Rock rock, Vector3 startPos, Vector3 endPos)
+    {
+        float elapsedTime = 0;
+        while (elapsedTime < obsAnimDuration)
+        {
+            elapsedTime += Time.deltaTime;
+            float delta = Mathf.Clamp01(elapsedTime / obsAnimDuration);
+            rock.transform.position = Vector3.Lerp(startPos, endPos, delta);
+            yield return null;
+        }
+        rock.transform.position = endPos;
     }
 
     /// <summary>
@@ -255,7 +311,7 @@ public class GroundScroller : MonoBehaviour
     /// <exception cref="Exception"></exception>
     private void SetSeasonTiles(int season) // change tile image range 
     {
-        Debug.Log("season tile set to " + season);
+        Debug.Log("season tile set to " + season + ", currentSeason: " + currentSeason);
         CreateSeasonSign(season, distance); // 계절 변경 안내 표지판 생성
         switch (season)
         {
@@ -292,7 +348,7 @@ public class GroundScroller : MonoBehaviour
     /// <exception cref="Exception"></exception>
     private void SetSeasonObs(int season) // change tile image range 
     {
-        Debug.Log("season obs set to " + season);
+        Debug.Log("season tile set to " + season + ", currentSeason: " + currentSeason);
         switch (season)
         {
             // summer: 20%/4m, autumn: 25%/2m, winter: 30%/1m
