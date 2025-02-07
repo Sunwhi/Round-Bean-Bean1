@@ -269,6 +269,7 @@ public class GameManager : MonoBehaviour
             RecordNewScore(finalScore);
 
             textGameClear.SetActive(true); // 게임 클리어 텍스트
+            // 폭죽 이미지
             particles1.SetActive(true);
             particles2.SetActive(true);
 

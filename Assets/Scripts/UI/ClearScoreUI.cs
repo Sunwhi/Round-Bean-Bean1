@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.EventSystems;
+//using UnityEngine.UIElements;
 
 public class ClearScoreUI : MonoBehaviour
 {
@@ -14,6 +15,8 @@ public class ClearScoreUI : MonoBehaviour
     [SerializeField] GameObject homeBtn;
     [SerializeField] GameObject recordBtn;
     [SerializeField] GameObject playAgainBtn;
+    [SerializeField] GameObject popperLeft;
+    [SerializeField] GameObject popperRight;
 
     private Vector2 startPosition;
     [SerializeField] Vector2 endPosition;
@@ -21,6 +24,17 @@ public class ClearScoreUI : MonoBehaviour
     private float startScale = 2f;
     private float endScale = 4f;
     private float timer;
+
+    //Popper 관련
+    Vector3 popperInitialScale = new Vector3(0, 0, 0);
+    Vector3 popperTargetScale1 = new Vector3(4, 3, 3);
+    Vector3 popperTargetScale2 = new Vector3(4, 4, 3);
+    Vector3 popperMinScale1 = new Vector3(2, 1, 1);
+    Vector3 popperMinScale2 = new Vector3(2, 2, 1);
+    private float timeElapsed1 = 0f;
+    private float timeElapsed2 = 0f;   
+    private float popperAnimaionDuration = 0.0001f;
+    private float timer2;
 
     // Start is called before the first frame update
     void Start()
@@ -31,6 +45,12 @@ public class ClearScoreUI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(GameManager.Instance.gameClear)
+        {
+            //popperLeft.SetActive(true);
+            //PopperAnimation();
+            StartCoroutine(PopperAnimation());
+        }
         if(timer < animationDuration && GameManager.Instance.gameClear && !clearText.activeSelf)
         {
             // 시간 지남에 따라 스코어 커지면서 가운데로 오게
@@ -61,6 +81,25 @@ public class ClearScoreUI : MonoBehaviour
             }
         }
 
+    }
+
+    IEnumerator PopperAnimation()
+    {
+        if(timeElapsed1 < popperAnimaionDuration)
+        {
+            timeElapsed1 += Time.deltaTime;
+            float t = timeElapsed1 / popperAnimaionDuration;
+            popperLeft.transform.localScale = Vector3.Lerp(popperInitialScale, popperTargetScale1, t);
+            popperRight.transform.localScale = Vector3.Lerp(popperInitialScale, popperTargetScale2, t);
+        }
+        if(timeElapsed2 > popperAnimaionDuration)
+        {
+            timeElapsed2 += Time.deltaTime;
+            float t = Mathf.PingPong(Time.time / popperAnimaionDuration, 1);
+            popperLeft.transform.localScale = Vector3.Lerp(popperMinScale1, popperTargetScale1, t);
+            popperRight.transform.localScale = Vector3.Lerp(popperMinScale2,popperTargetScale2, t);
+        }    
+        yield return null;
     }
     //클리어 시 8초 후(점수 크게 나타나지고 얼마후) 홈 버튼과 업적 버튼 활성화
     IEnumerator clearBtn()
