@@ -25,16 +25,23 @@ public class ClearScoreUI : MonoBehaviour
     private float endScale = 4f;
     private float timer;
 
-    //Popper 관련
-    Vector3 popperInitialScale = new Vector3(0, 0, 0);
-    Vector3 popperTargetScale1 = new Vector3(4, 3, 3);
-    Vector3 popperTargetScale2 = new Vector3(4, 4, 3);
-    Vector3 popperMinScale1 = new Vector3(2, 1, 1);
-    Vector3 popperMinScale2 = new Vector3(2, 2, 1);
+    /*Popper 관련*/
+    //1은 왼쪽, 2는 오른쪽
+    Vector3 popperZeroScale = new Vector3(0, 0, 0);
+    //pingpong의 max와 minscale, popper그림이 커졌다 작아졌다 할때 끝의 scale값들
+    Vector3 popperMaxScale1 = new Vector3(4, 3, 3);
+    Vector3 popperMaxScale2 = new Vector3(4, 4, 3);
+    Vector3 popperMinScale1 = new Vector3(2, 2, 1);
+    Vector3 popperMinScale2 = new Vector3(1, 2, 1);
+    //pingpong이 끝나고나서의 popper scalse
+    Vector3 popperLastScale1;
+    Vector3 popperLastScale2;
+
     private float timeElapsed1 = 0f;
     private float timeElapsed2 = 0f;   
-    private float popperAnimaionDuration = 0.0001f;
-    private float timer2;
+    private float popperDisappearDuration = 0.6f; // popper가 사라지는 애니메이션의 속도
+    private float popperPingPongDuration = 0.7f; // popper가 PingPong하는 속도(커졌다 작아졌다하는)
+    private float popperPingPongTime = 5f; // popper PingPong의 지속시간(커졌다 작아지는 애니메이션의 지속 시간)
 
     // Start is called before the first frame update
     void Start()
@@ -82,23 +89,32 @@ public class ClearScoreUI : MonoBehaviour
         }
 
     }
-
+    private float timeElapsed3;
     IEnumerator PopperAnimation()
     {
-        if(timeElapsed1 < popperAnimaionDuration)
+        // popper가 커졌다 작아졌다 하는 애니메이션
+        if(timeElapsed1 < popperPingPongTime)
         {
             timeElapsed1 += Time.deltaTime;
-            float t = timeElapsed1 / popperAnimaionDuration;
-            popperLeft.transform.localScale = Vector3.Lerp(popperInitialScale, popperTargetScale1, t);
-            popperRight.transform.localScale = Vector3.Lerp(popperInitialScale, popperTargetScale2, t);
+
+            float t = Mathf.PingPong(Time.time / popperPingPongDuration, 1);
+
+            popperLeft.transform.localScale = Vector3.Lerp(popperMaxScale1, popperMinScale1, t);
+            popperRight.transform.localScale = Vector3.Lerp(popperMaxScale2, popperMinScale2, t);
+
+            popperLastScale1 = popperLeft.transform.localScale;
+            popperLastScale2 = popperRight.transform.localScale;
         }
-        if(timeElapsed2 > popperAnimaionDuration)
+        // popper가 작아지면서 사라지는 애니메이션
+        if(timeElapsed1 > popperPingPongTime && timeElapsed2 < popperDisappearDuration)
         {
             timeElapsed2 += Time.deltaTime;
-            float t = Mathf.PingPong(Time.time / popperAnimaionDuration, 1);
-            popperLeft.transform.localScale = Vector3.Lerp(popperMinScale1, popperTargetScale1, t);
-            popperRight.transform.localScale = Vector3.Lerp(popperMinScale2,popperTargetScale2, t);
-        }    
+            
+            float t = timeElapsed2 / popperDisappearDuration;
+            
+            popperLeft.transform.localScale = Vector3.Lerp(popperLastScale1, popperZeroScale, t);
+            popperRight.transform.localScale = Vector3.Lerp(popperLastScale2, popperZeroScale, t);
+        }
         yield return null;
     }
     //클리어 시 8초 후(점수 크게 나타나지고 얼마후) 홈 버튼과 업적 버튼 활성화
