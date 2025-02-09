@@ -5963,8 +5963,8 @@ MonoBehaviour:
   homeBtn: {fileID: 784046498}
   recordBtn: {fileID: 436987704}
   playAgainBtn: {fileID: 505427752}
-  popperLeft: {fileID: 423848145}
-  popperRight: {fileID: 1193734501}
+  popperLeft: {fileID: 0}
+  popperRight: {fileID: 0}
   endPosition: {x: 0, y: 200}
 --- !u!1 &654881457
 GameObject:
@@ -8063,14 +8063,23 @@ MonoBehaviour:
   - {fileID: 995609686}
   - {fileID: 1028190284}
   - {fileID: 1342318486}
-  bgImg:
+  bgImgSet:
   - {fileID: 21300000, guid: a300c7d0695205b48ac99e1ab0df7daa, type: 3}
   - {fileID: 21300000, guid: d2926da4a84dc4b4ea3a9fe44442faf5, type: 3}
-  - {fileID: 21300000, guid: 2a469022cef9dbe4c8a4f0698fd20a08, type: 3}
+  - {fileID: 21300000, guid: 0a193184452f10040953a80c1d988c7d, type: 3}
+  - {fileID: 21300000, guid: 536c8eef821977b4cb5c3d02593fb85a, type: 3}
+  - {fileID: 21300000, guid: 18a1f8d83e6dc1f4f84723e2d3a63a8e, type: 3}
+  - {fileID: 21300000, guid: b120f0d14e67c0240970893057d2857d, type: 3}
+  - {fileID: 21300000, guid: 65dc82e72ae6584419f79fc794640ece, type: 3}
+  - {fileID: 21300000, guid: 70786b92f58caaa49951b2429d117948, type: 3}
   - {fileID: 21300000, guid: ba12380ae22781e4b982ca318716dba7, type: 3}
   fadeDuration: 1
   player: {fileID: 256649936}
   parallaxEffectMultiplier: 0.3
+  springBgIndex: 0
+  summerBgIndex: 1
+  autumnBgIndex: 2
+  winterBgIndex: 8
 --- !u!4 &964296942
 Transform:
   m_ObjectHideFlags: 0

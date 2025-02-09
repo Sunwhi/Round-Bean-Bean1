@@ -26,7 +26,7 @@ public class GroundScroller : MonoBehaviour
 
     public static event Action<int> OnSeasonChanged; // BGScroller.cs에서의 배경 변경을 트리거하기 위한 이벤트
     private int currentSeason = 0; // 계절 기록용 변수, 장애물 생성 가능여부 판정에 사용함. 0: spring, 1: summer, 2: autumn, 3: winter
-    [SerializeField] int springTilesIndex; // 각 계절별 타일의 시작 인덱스. ex) 타일이 하나씩인 경우 각각 0, 1, 2, 3.
+    [SerializeField] int springTilesIndex; // groundImg 내 각 계절별 타일의 시작 인덱스. ex) 타일이 하나씩인 경우 각각 0, 1, 2, 3. 
     [SerializeField] int summerTilesIndex;
     [SerializeField] int autumnTilesIndex;
     [SerializeField] int winterTilesIndex;
@@ -140,7 +140,6 @@ public class GroundScroller : MonoBehaviour
                     Debug.Log("hat spawn failed");
                 }
 
-                // TODO: 돌과 절벽의 생성 효과를 추가. Coroutine 이용하면 될 것으로 보임
                 if (currentSeason >= 2) 
                 {
                 #region afterAutumn
