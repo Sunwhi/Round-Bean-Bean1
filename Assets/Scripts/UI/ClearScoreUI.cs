@@ -40,8 +40,8 @@ public class ClearScoreUI : MonoBehaviour
     private float timeElapsed1 = 0f;
     private float timeElapsed2 = 0f;   
     private float popperDisappearDuration = 0.6f; // popper가 사라지는 애니메이션의 속도
-    private float popperPingPongDuration = 0.7f; // popper가 PingPong하는 속도(커졌다 작아졌다하는)
-    private float popperPingPongTime = 5f; // popper PingPong의 지속시간(커졌다 작아지는 애니메이션의 지속 시간)
+    private float popperPingPongDuration = 0.6f; // popper가 PingPong하는 속도(커졌다 작아졌다하는)
+    private float popperPingPongTime = 4.5f; // popper PingPong의 지속시간(커졌다 작아지는 애니메이션의 지속 시간)
 
     // Start is called before the first frame update
     void Start()

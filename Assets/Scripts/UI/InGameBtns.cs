@@ -42,7 +42,9 @@ public class CleasRecordBtn : MonoBehaviour
     {
         if (!ClearRecordPanel.activeSelf)
         {
+            BackgroundPanel.SetActive(true);
             ClearRecordPanel.SetActive(true);
+            OptionPanel.SetActive(false);
         }
     }
     public void ExitBtn()
@@ -63,7 +65,7 @@ public class CleasRecordBtn : MonoBehaviour
         SoundManager.Instance.SFXPlay("OptionClick", optionClickClip);
 
         OptionPanel.SetActive(true);
-        BackgroundPanel.SetActive(true);
+        //BackgroundPanel.SetActive(true);
         Time.timeScale = 0;
     }
 
