@@ -52,7 +52,7 @@ public class BGScroller : MonoBehaviour
     void Update()
     {
         float deltax = player.position.x - lastPlayerPosition;
-        transform.position += new Vector3(deltax * parallaxEffectMultiplier, 0, 0);
+        transform.position += new Vector3(deltax * parallaxEffectMultiplier, 0, 0); // BackGround 객체 전체에 적용
         lastPlayerPosition = player.position.x;
 
         for (int i = 0; i < bgTiles.Length; i++)
@@ -60,7 +60,6 @@ public class BGScroller : MonoBehaviour
             if (bgTiles[i].transform.position.x < Camera.main.transform.position.x - cameraHalfWidth - 20) // 배경 이미지가 화면을 벗어나면 (20은 역행을 대비한 추가 여유)
             {
                 bgTiles[i].transform.position += new Vector3(bgWidth * 3, 0, 0); // 오른쪽 끝으로 이동
-                nextBgTiles[i].transform.position = bgTiles[i].transform.position; // 다음 계절용 타일도 똑같이 이동
 
                 currentImageIndex = (currentImageIndex + 1) % (bgEnd - bgStart);
                 bgTiles[i].sprite = bgImgSet[currentImageIndex + bgStart];
@@ -70,7 +69,8 @@ public class BGScroller : MonoBehaviour
     }
 
     private void UpdateBG(int season)
-    { 
+    {
+        currentImageIndex = 2;
         StartCoroutine(FadeBGImage(season));
     }
 
@@ -89,12 +89,14 @@ public class BGScroller : MonoBehaviour
 
         for (int i = 0; i < nextBgTiles.Length; i++) // 다음 계절의 배경을 미리 설정
         {
-            if (bgTiles[0])
             nextBgTiles[i].sprite = bgImgSet[(i % (bgEnd - bgStart)) + bgStart];
             SetAlpha(nextBgTiles[i], 0f); // 아직 안보이게
-
             Vector3 newPos = nextBgTiles[i].transform.position;
-            newPos.z = nextBgTiles[i].transform.position.z - 0.1f;  // 기존보다 약간 앞에 위치
+            newPos = new Vector3(
+                player.transform.position.x + bgWidth * i - cameraHalfWidth - 4, 
+                bgTiles[i].transform.position.y, 
+                bgTiles[i].transform.position.z - 0.1f
+                );  // 기존보다 약간 앞에 위치
             nextBgTiles[i].transform.position = newPos;
         }
 
