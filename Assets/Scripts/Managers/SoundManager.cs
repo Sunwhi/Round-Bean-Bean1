@@ -170,10 +170,10 @@ public class SoundManager : MonoBehaviour
 
     private int GetClipIndexByDistance(float distance)
     {
-        if (distance < 60) return 1; // spring
-        else if (distance < 110) return 2; // summer
-        else if (distance < 165) return 3; // fall
-        else if (distance < 225) return 4; // winter
+        if (distance < 50 - 10) return 1; // spring
+        else if (distance < 100 - 10) return 2; // summer
+        else if (distance < 155 - 10) return 3; // fall
+        else if (distance < 215 - 10) return 4; // winter
         else return 5; // spring2
     }
 

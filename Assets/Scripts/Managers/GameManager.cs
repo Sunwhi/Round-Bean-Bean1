@@ -343,10 +343,10 @@ public class GameManager : MonoBehaviour
     private void CurrentSeason(float distance)
     {
         // 24.12.28 기준 봄 50m, 여름 50m, 가을 55m, 겨울 60m, 봄2 10m
-        if (distance < 75 * 1) recentSeason = 0; // 봄
-        else if (distance < 125 * 1) recentSeason = 1; // 여름
-        else if (distance < 180 * 1) recentSeason = 2; // 가을
-        else if (distance < 240 * 1) recentSeason = 3; // 겨울
+        if (distance < 50 * 1) recentSeason = 0; // 봄
+        else if (distance < 100 * 1) recentSeason = 1; // 여름
+        else if (distance < 155 * 1) recentSeason = 2; // 가을
+        else if (distance < 215 * 1) recentSeason = 3; // 겨울
         else if (distance < 300 * 1) recentSeason = 0; // spring2 - 임시값
 
         PlayerPrefs.SetInt("recentSeason", recentSeason);
