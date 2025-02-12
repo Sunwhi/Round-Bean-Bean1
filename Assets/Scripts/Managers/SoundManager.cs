@@ -50,8 +50,12 @@ public class SoundManager : MonoBehaviour
             bgSound = gameObject.AddComponent<AudioSource>();
             bgSound.volume = 0.5f;
             bgSound.loop = true;
+            bgSound.spatialBlend = 0;        // 2D 사운드로 설정
+            bgSound.priority = 128;          // 우선순위 낮춤 (0이 가장 높음)
+            bgSound.dopplerLevel = 0;        // Doppler 효과 비활성화
         }
     }
+
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
@@ -118,24 +122,25 @@ public class SoundManager : MonoBehaviour
         }
     }
 
-    void Start()
+    private void Start()
     {
-        // 초기화 과정에서 button이 할당되었는지 확인하고 이벤트를 연결합니다.
-        //if (button != null)
-        //{
-        //    button.onClick.AddListener(ButtonClicked);  // 버튼 클릭 이벤트 연결
-        //}
+        foreach (var clip in bglist)
+        {
+            if (clip.loadState != AudioDataLoadState.Loaded)
+            {
+                clip.LoadAudioData();
+            }
+        }
     }
-
-   //public void ButtonClicked()
-   //{
-   //    if (button != null)  // 버튼이 null인 경우를 방지
-   //    {
-   //        isOn = !isOn;
-   //        button.image.sprite = isOn ? soundOnImage : soundOffImage;
-   //        bgSound.mute = !isOn;
-   //    }
-   //}
+    //public void ButtonClicked()
+    //{
+    //    if (button != null)  // 버튼이 null인 경우를 방지
+    //    {
+    //        isOn = !isOn;
+    //        button.image.sprite = isOn ? soundOnImage : soundOffImage;
+    //        bgSound.mute = !isOn;
+    //    }
+    //}
 
     void Update()
     {
@@ -145,6 +150,9 @@ public class SoundManager : MonoBehaviour
             PlaySoundWithDistance(distance);
         }
     }
+
+    private Coroutine currentFadeCoroutine = null; // 현재 실행 중인 코루틴 추적
+
     public void PlaySoundWithDistance(float distance)
     {
         int clipIndex = GetClipIndexByDistance(distance);
@@ -152,14 +160,11 @@ public class SoundManager : MonoBehaviour
         {
             lastPlayedClipIndex = clipIndex;
 
-            if (clipIndex == 0 && SceneManager.GetActiveScene().name == "InGame") 
+            if (currentFadeCoroutine != null)
             {
-                PlayBGMImmediately(bglist[clipIndex]);
+                StopCoroutine(currentFadeCoroutine); // 기존 코루틴 중지
             }
-            else
-            {
-                StartCoroutine(FadeInBGM(bglist[clipIndex]));
-            }
+            currentFadeCoroutine = StartCoroutine(FadeInBGM(bglist[clipIndex]));
         }
     }
 
@@ -185,16 +190,28 @@ public class SoundManager : MonoBehaviour
 
     private IEnumerator FadeInBGM(AudioClip newClip)
     {
-        yield return StartCoroutine(FadeOutBGM());
+        if (bgSound.isPlaying)
+        {
+            float startVolume = bgSound.volume;
+            for (float t = 0; t < 1; t += Time.deltaTime / 1.5f)
+            {
+                bgSound.volume = Mathf.Lerp(startVolume, 0, t);
+                yield return null;
+            }
+            bgSound.Stop();
+        }
+
         bgSound.clip = newClip;
         bgSound.Play();
-        bgSound.volume = 0;
-        while (bgSound.volume < 0.5f)
+
+        for (float t = 0; t < 1; t += Time.deltaTime / 1.5f)
         {
-            bgSound.volume += Time.deltaTime / 2.5f; // FadeIn 
+            bgSound.volume = Mathf.Lerp(0, 0.5f, t);
             yield return null;
         }
+        bgSound.volume = 0.5f; // 최종 볼륨 보정
     }
+
 
     public void BgSoundPlay(AudioClip clip)
     {
