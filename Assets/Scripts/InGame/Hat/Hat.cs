@@ -18,6 +18,7 @@ public class Hat : MonoBehaviour
     private bool hatOn; // 모자를 착용하고 있는 상태
     private bool hatFall; // 모자를 착용하다 떨어진 상태
     Vector3 hatTargetRotation;
+    private bool hatAnimationIng = false; //모자 애니메이션이 실행되고 있다면 true
 
     public AudioClip hatToHeadClip;
     public AudioClip hatFallClip;
@@ -91,10 +92,13 @@ public class Hat : MonoBehaviour
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Player"))
+        // 모자 애니메이션이 작동중이라면 충돌판정 시키지 않는다.
+        // 안드로이드에서 모자 애니메이션이 두번 작동하는 오류 수정하기 위해 조건 추가
+        if (collision.gameObject.CompareTag("Player") && !hatAnimationIng)
         {
-            if (!hatFall)
+            if (!hatFall && !hatOn)
             {
+                //hatOn = true;
                 SoundManager.Instance.SFXPlay("hatToHead", hatToHeadClip);
                 HatAnimation();
             }
@@ -109,6 +113,8 @@ public class Hat : MonoBehaviour
     }
     void HatAnimation()
     {
+        if (hatOn) return;
+        hatAnimationIng = true;
         GameManager.Instance.gamePaused = true;
         // 조작 불가
         //unicycleController.enabled = false;
@@ -142,7 +148,7 @@ public class Hat : MonoBehaviour
                 hatOn = true;
                 GameManager.Instance.hatOn = true;
                 GameManager.Instance.gamePaused = false;
-
+                hatAnimationIng = false;
             });
     }
 
