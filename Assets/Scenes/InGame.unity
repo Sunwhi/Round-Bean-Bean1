@@ -1840,7 +1840,8 @@ MonoBehaviour:
   isGround: 0
   hat: {fileID: 8157757056450085946, guid: 7815b06a15c223747aaf4ca0becd815e, type: 3}
   currentHatPosition: {fileID: 94358173}
-  textGoForward: {fileID: 0}
+  backgroundPanel: {fileID: 160043254}
+  textGoForward: {fileID: 482695293}
   jumpClip: {fileID: 8300000, guid: a2d69eea7606f1643bce5bdf45b9ef16, type: 3}
 --- !u!114 &256649940
 MonoBehaviour:
@@ -5917,6 +5918,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Protracter: {fileID: 578460521}
   Speedometer: {fileID: 1282106343}
+  backgroundPanel: {fileID: 160043254}
 --- !u!114 &644607144
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13466,7 +13468,7 @@ GameObject:
   - component: {fileID: 1756424523}
   - component: {fileID: 1756424525}
   - component: {fileID: 1756424524}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: ScoreUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13809,7 +13811,7 @@ GameObject:
   - component: {fileID: 1832723135}
   - component: {fileID: 1832723136}
   - component: {fileID: 1832723137}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: AchievePanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}

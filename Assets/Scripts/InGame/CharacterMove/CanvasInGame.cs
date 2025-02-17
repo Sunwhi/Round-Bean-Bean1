@@ -8,6 +8,7 @@ public class CanvasDragImage : MonoBehaviour
     private float screenWidthHalf;
     [SerializeField] GameObject Protracter;
     [SerializeField] GameObject Speedometer;
+    [SerializeField] GameObject backgroundPanel;
     private GameObject optionBtn; 
     private RectTransform protracterRect;
     private RectTransform speedometerRect;
@@ -41,7 +42,7 @@ public class CanvasDragImage : MonoBehaviour
                 for (int i = 0; i < Input.touchCount; i++)
                 {
                     Touch touch = Input.GetTouch(i);
-                    DragImage(touch);
+                    if(!backgroundPanel.activeSelf)DragImage(touch);
                 }
             }
         }

@@ -9,7 +9,7 @@ public class InGameAchievePanel : MonoBehaviour
     [SerializeField] GameObject backgroundPanel;
     public void ExitBtn()
     {
-        backgroundPanel.SetActive(false);
+        //backgroundPanel.SetActive(false);
         achievePanel.SetActive(false);
         optionPanel.SetActive(true);
     }
