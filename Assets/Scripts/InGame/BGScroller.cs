@@ -13,7 +13,7 @@ public class BGScroller : MonoBehaviour
     [SerializeField] float fadeDuration = 1f; // 배경 전환 시간. fade out과 in 각각에 걸리는 시간이므로 실제 소요시간은 x2
     public Transform player; // 스크롤 기준: 캐릭터
     private float bgWidth; // 배경 이미지 가로 길이
-    [SerializeField] private float parallaxEffectMultiplier; // 배경 이동 배율
+    [SerializeField] private float parallaxEffectMultiplier; // 배경 이동 배율. 낮을수록 배경 스크롤 속도 증가
     private float lastPlayerPosition; // 캐릭터 이동 감지를 위한 변수
 
     private int bgStart;
@@ -39,7 +39,7 @@ public class BGScroller : MonoBehaviour
         //}
         bgStart = springBgIndex;
         bgEnd = summerBgIndex;
-
+        currentImageIndex = 2;
         lastPlayerPosition = player.position.x;
         GroundScroller.OnSeasonChanged += UpdateBG; // 계절 변화 감지 이벤트 구독
     }
@@ -145,21 +145,26 @@ public class BGScroller : MonoBehaviour
             case 0:
                 bgStart = springBgIndex;
                 bgEnd = summerBgIndex;
+                currentSeason = 0;
+                parallaxEffectMultiplier = 0.3f;
                 break;
             case 1:
                 bgStart = summerBgIndex;
                 bgEnd = autumnBgIndex;
                 currentSeason = 1;
+                parallaxEffectMultiplier = 0.1f;
                 break;
             case 2:
                 bgStart = autumnBgIndex;
                 bgEnd = winterBgIndex;
                 currentSeason = 2;
+                parallaxEffectMultiplier = 0.1f;
                 break;
             case 3:
                 bgStart = winterBgIndex;
                 bgEnd = bgImgSet.Length;
                 currentSeason = 3;
+                parallaxEffectMultiplier = 0.3f;
                 break;
             default:
                 throw new Exception("Season index not valid");
