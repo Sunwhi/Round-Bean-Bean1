@@ -97,7 +97,7 @@ public class GameManager : MonoBehaviour
         sfxOnce = 0; // 다시 시작하면 0으로
     }
 
-    void Update()
+    void FixedUpdate()
     {
         //게임이 중단되지 않는 이상 시간점수 센다.
         if(!gamePaused && !hatOn) time += Time.deltaTime;
@@ -293,7 +293,7 @@ public class GameManager : MonoBehaviour
         if (Mathf.Abs(currentZRotation) > 0.1)
         {
             Quaternion targetRotation = Quaternion.Euler(0, 0, 0);
-            float rotationSpeed = 0.05f;
+            float rotationSpeed = 0.3f;
             if(currentZRotation < 0)
             {
                 frameRigidBody.transform.rotation = Quaternion.RotateTowards(frameRigidBody.transform.rotation, targetRotation, rotationSpeed);

@@ -49,7 +49,6 @@ public class PlayerDragMovement : MonoBehaviour
                 Touch touch = Input.GetTouch(i);
                 //backgroundPanel이 활성화되어있을때, 옵션창이나 업적창이 열려있으면 뒤에 화면 터치 되지 않도록
                 if(!touch.IsUnityNull() && !backgroundPanel.activeSelf) TouchControl(touch); 
-                
             }
         }
 
@@ -110,7 +109,6 @@ public class PlayerDragMovement : MonoBehaviour
 
     private void TouchControl(Touch touch)
     {
-        Debug.Log("hailesfj");
         // 터치에 고유한 fingerId 할당
         int touchId = touch.fingerId;
         if (touch.phase == TouchPhase.Began)

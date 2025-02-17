@@ -64,7 +64,6 @@ public class CleasRecordBtn : MonoBehaviour
     public void OptionBtn()
     {
         SoundManager.Instance.SFXPlay("OptionClick", optionClickClip);
-
         OptionPanel.SetActive(true);
         BackgroundPanel.SetActive(true);
         Time.timeScale = 0;

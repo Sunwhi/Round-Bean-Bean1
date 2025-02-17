@@ -120,7 +120,7 @@ public class ClearScoreUI : MonoBehaviour
     //클리어 시 8초 후(점수 크게 나타나지고 얼마후) 홈 버튼과 업적 버튼 활성화
     IEnumerator clearBtn()
     {
-        yield return new WaitForSecondsRealtime(8f);
+        yield return new WaitForSecondsRealtime(7f);
 
         homeBtn.SetActive(true);
         recordBtn.SetActive(true); 
