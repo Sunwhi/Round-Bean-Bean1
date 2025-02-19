@@ -11,6 +11,7 @@ public class InGameAchievePanel : MonoBehaviour
     {
         //backgroundPanel.SetActive(false);
         achievePanel.SetActive(false);
-        optionPanel.SetActive(true);
+        if(!GameManager.Instance.gameClear) optionPanel.SetActive(true);
+        else backgroundPanel.SetActive(false);
     }
 }

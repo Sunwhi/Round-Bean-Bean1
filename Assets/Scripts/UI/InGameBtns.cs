@@ -43,7 +43,7 @@ public class CleasRecordBtn : MonoBehaviour
         if (!ClearRecordPanel.activeSelf)
         {
             Time.timeScale = 0;
-            BackgroundPanel.SetActive(true);
+            if(!GameManager.Instance.gameClear) BackgroundPanel.SetActive(true);
             ClearRecordPanel.SetActive(true);
             OptionPanel.SetActive(false);
         }

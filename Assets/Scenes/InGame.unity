@@ -282,7 +282,7 @@ Transform:
   m_GameObject: {fileID: 15175109}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.066, y: 0.634, z: 0}
+  m_LocalPosition: {x: 0.066, y: 0.484, z: 0}
   m_LocalScale: {x: 0.27771568, y: 0.9020074, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1834,7 +1834,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   frameRigidbody: {fileID: 635412800}
   wheelRigidbody: {fileID: 256649934}
-  balanceForce: 400
+  balanceForce: 450
   moveSpeed: 300
   jumpForce: 9
   isGround: 0
@@ -5623,7 +5623,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 9a6a2277ea17bb5418de29bae18c44b9, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 188855e9da7ec4a49b1d4d141cb24999, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -5918,7 +5918,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Protracter: {fileID: 578460521}
   Speedometer: {fileID: 1282106343}
-  backgroundPanel: {fileID: 0}
+  backgroundPanel: {fileID: 160043254}
 --- !u!114 &644607144
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7522,7 +7522,7 @@ Transform:
   m_GameObject: {fileID: 888336131}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.05, y: 2.344, z: 0}
+  m_LocalPosition: {x: -0.05, y: 2.327, z: 0}
   m_LocalScale: {x: 3.600805, y: 1.1086384, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -7626,7 +7626,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.037846476, y: -0.29861504}
+  m_Offset: {x: 0.037846446, y: -0.31871623}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -7637,7 +7637,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1.0468736, y: 1.4756418}
+  m_Size: {x: 1.0468736, y: 1.4354395}
   m_EdgeRadius: 0
 --- !u!58 &888336137
 CircleCollider2D:
@@ -7671,9 +7671,9 @@ CircleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.02385503, y: -0.29703534}
+  m_Offset: {x: 0.02385503, y: -0.32048666}
   serializedVersion: 2
-  m_Radius: 0.73411286
+  m_Radius: 0.71066153
 --- !u!114 &888336138
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7697,7 +7697,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: de9da29a71dfb2c43bc6e41711520a7c, type: 3}
   - {fileID: 21300000, guid: 48a05f337ba0edd47b0cb9d8bbf9e0a9, type: 3}
   - {fileID: 21300000, guid: 47dee85d727ce6c4c86474bb64dd50d6, type: 3}
-  - {fileID: 21300000, guid: 213d8c0f970aed446931708dfcac3204, type: 3}
+  - {fileID: 21300000, guid: ddaffb381fe450c4a94b8297a9316f1f, type: 3}
   - {fileID: 21300000, guid: 35d84cb4904d41046a35bc1ea08c1c3b, type: 3}
   - {fileID: 21300000, guid: 8ad31a656acd15d4288a067f5b3e6e03, type: 3}
 --- !u!1 &915619511
@@ -13198,7 +13198,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ded18f0d1fabc3438e2d1e970664e25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  finish: 235
+  finish: 10
 --- !u!1 &1742607410
 GameObject:
   m_ObjectHideFlags: 0
