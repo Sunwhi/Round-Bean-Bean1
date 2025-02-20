@@ -1631,10 +1631,10 @@ MonoBehaviour:
   - {fileID: 21300000, guid: a91fc683566680445ba74b0f8e7cb5bf, type: 3}
   - {fileID: 21300000, guid: 2a5754fba2a197443ac641c92c68341b, type: 3}
   seasonSign:
-  - {fileID: 337262472}
   - {fileID: 1001031547}
   - {fileID: 1316518486}
   - {fileID: 1369492802}
+  - {fileID: 337262472}
   player: {fileID: 256649931}
   hat: {fileID: 8157757056450085946, guid: 7815b06a15c223747aaf4ca0becd815e, type: 3}
   distance: 0
@@ -1642,6 +1642,7 @@ MonoBehaviour:
   summerTilesIndex: 5
   autumnTilesIndex: 6
   winterTilesIndex: 7
+  spring2TilesIndex: 0
   textGoForward: {fileID: 482695293}
   obsAnimDuration: 0.6
   rockSpawnClip: {fileID: 8300000, guid: b31fae91a7f1a2445a8bf0e100b2424f, type: 3}
@@ -2541,7 +2542,7 @@ GameObject:
   - component: {fileID: 337262473}
   - component: {fileID: 337262472}
   m_Layer: 0
-  m_Name: SpringSign
+  m_Name: Spring2Sign
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8257,8 +8258,16 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 536c8eef821977b4cb5c3d02593fb85a, type: 3}
   - {fileID: 21300000, guid: 18a1f8d83e6dc1f4f84723e2d3a63a8e, type: 3}
   - {fileID: 21300000, guid: b120f0d14e67c0240970893057d2857d, type: 3}
-  - {fileID: 21300000, guid: ba12380ae22781e4b982ca318716dba7, type: 3}
-  - {fileID: 21300000, guid: ba12380ae22781e4b982ca318716dba7, type: 3}
+  - {fileID: 21300000, guid: bb49cc934bb79704daa6e86d8b44fb44, type: 3}
+  - {fileID: 21300000, guid: bb49cc934bb79704daa6e86d8b44fb44, type: 3}
+  - {fileID: 21300000, guid: 7d0f229f8de4e5c44957c410947bab41, type: 3}
+  - {fileID: 21300000, guid: 6a40da21a46b800439c00dc9cd059d1a, type: 3}
+  - {fileID: 21300000, guid: 932a1d4ab45dc5748bcf7abe7571b729, type: 3}
+  - {fileID: 21300000, guid: 1fad39de973e75e42884f72d59748982, type: 3}
+  - {fileID: 21300000, guid: 1fad39de973e75e42884f72d59748982, type: 3}
+  - {fileID: 21300000, guid: ab846190a196f6345836004194c54b81, type: 3}
+  - {fileID: 21300000, guid: 95b284f740cc39b43a19880cd10665e3, type: 3}
+  - {fileID: 21300000, guid: 95b284f740cc39b43a19880cd10665e3, type: 3}
   fadeDuration: 1
   player: {fileID: 256649936}
   parallaxEffectMultiplier: 0.3
@@ -8266,6 +8275,7 @@ MonoBehaviour:
   summerBgIndex: 4
   autumnBgIndex: 9
   winterBgIndex: 14
+  spring2BgIndex: 19
 --- !u!4 &964296942
 Transform:
   m_ObjectHideFlags: 0

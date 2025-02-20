@@ -24,6 +24,7 @@ public class BGScroller : MonoBehaviour
     [SerializeField] int summerBgIndex;
     [SerializeField] int autumnBgIndex;
     [SerializeField] int winterBgIndex;
+    [SerializeField] int spring2BgIndex;
 
     void Start()
     {
@@ -162,8 +163,14 @@ public class BGScroller : MonoBehaviour
                 break;
             case 3:
                 bgStart = winterBgIndex;
-                bgEnd = bgImgSet.Length;
+                bgEnd = spring2BgIndex;
                 currentSeason = 3;
+                parallaxEffectMultiplier = 0.3f;
+                break;
+            case 4:
+                bgStart = spring2BgIndex;
+                bgEnd = bgImgSet.Length;
+                currentSeason = 4;
                 parallaxEffectMultiplier = 0.3f;
                 break;
             default:
