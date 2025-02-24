@@ -6,22 +6,21 @@ using UnityEngine.SceneManagement;
 
 public class SoundManager : MonoBehaviour
 {
-    //public Sprite soundOnImage;
-    //public Sprite soundOffImage;
-    //public Button button;
-    //public Button offbutton;
-    //private bool isOn = true;
-
     public AudioSource bgSound;
     public AudioClip[] bglist;
     public GroundScroller groundScroller;
-    public AudioSource audioSource;
-    private List<AudioSource> audioSources = new List<AudioSource>(); 
+    private List<AudioSource> audioSources = new List<AudioSource>();
 
     private int lastPlayedClipIndex = -1;
-
+    private bool isMuted = false; // 음소거 상태 변수
+    public Button muteButton; // 음소거 버튼
+    public Sprite soundOnImage; // 음소거 해제 아이콘
+    public Sprite soundOffImage; // 음소거 아이콘
+    public Sprite soundOnImageMainScene; // 메인 씬용 음소거 해제 아이콘
+    public Sprite soundOffImageMainScene; // 메인 씬용 음소거 아이콘
 
     public static SoundManager Instance { get; private set; } // 싱글톤 인스턴스
+
     private void Awake()
     {
         EnsureAudioSourceExists();
@@ -31,18 +30,21 @@ public class SoundManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            //DontDestroyOnLoad(gameObject); // 씬이 바뀌어도 유지 -> 씬 재시작(게임 재시작)시에 변수들이 초기화되지 않는 문제가 발생! DontDestroyOnLoad는 잠시 끄는걸로
         }
         else
         {
             Destroy(gameObject); // 이미 GameManager가 존재하면 새로 생성된 오브젝트는 삭제
         }
+
+        // 음소거 상태 불러오기
+        isMuted = PlayerPrefs.GetInt("SoundMuted", 0) == 1; // 1이면 음소거, 0이면 음소거 아님
     }
 
     private void OnDestroy()
     {
         SceneManager.sceneLoaded -= OnSceneLoaded; // 씬 전환 시 이벤트 제거
     }
+
     private void EnsureAudioSourceExists()
     {
         if (bgSound == null)
@@ -56,57 +58,22 @@ public class SoundManager : MonoBehaviour
         }
     }
 
-
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        // 버튼을 씬에서 찾아서 button 변수에 할당
-        //button = GameObject.Find("SoundBtn")?.GetComponent<Button>();
-        //if (button != null)
-        //{
-        //    Transform canvasTransform = GameObject.Find("MainCanvas").transform;
-        //    if (canvasTransform != null)
-        //    {
-        //        // OptionalPanel은 Canvas의 첫 번째 자식 (예시: 인덱스 0)
-        //        Transform optionalPanel = canvasTransform.GetChild(5);
-        //        if (optionalPanel != null)
-        //        {
-        //            offbutton = optionalPanel.GetComponent<Button>();
-        //            soundOffImage = offbutton.image.sprite;
-        //        }
-        //    }
-        //    soundOnImage = button.image.sprite;
-        //    button.onClick.AddListener(ButtonClicked);  // 버튼 클릭 이벤트 연결
-        //}
-        //else
-        //{
-        //    Transform canvasTransform = GameObject.Find("Canvas").transform;
-        //
-        //    if (canvasTransform != null)
-        //    {
-        //        // OptionalPanel은 Canvas의 첫 번째 자식 (예시: 인덱스 0)
-        //        Transform optionalPanel = canvasTransform.GetChild(15);
-        //
-        //        if (optionalPanel != null)
-        //        {
-        //            // SoundBtn은 OptionalPanel의 첫 번째 자식 (예시: 인덱스 0)
-        //            Transform soundBtnTransform = optionalPanel.GetChild(4);
-        //            Transform soundBtnTransform2 = optionalPanel.GetChild(5);
-        //
-        //            if (soundBtnTransform != null)
-        //            {
-        //                offbutton= soundBtnTransform2.GetComponent<Button>();
-        //                button = soundBtnTransform.GetComponent<Button>();
-        //                soundOffImage = offbutton.image.sprite;
-        //                soundOnImage = button.image.sprite;
-        //                button.onClick.AddListener(ButtonClicked);
-        //            }
-        //        }
-        //    }
-        //}
         EnsureAudioSourceExists();
+
+        // 음소거 버튼 이벤트 연결
+        if (muteButton != null)
+        {
+            muteButton.onClick.RemoveAllListeners();
+            muteButton.onClick.AddListener(ToggleMute); // 버튼 클릭 시 음소거 토글
+        }
+
         if (scene.name == "MainScene")
         {
             StartCoroutine(FadeInBGM(bglist[0]));
+            // 메인 씬에서는 다른 아이콘 사용
+            muteButton.image.sprite = isMuted ? soundOffImageMainScene : soundOnImageMainScene;
         }
         else if (scene.name == "InGame")
         {
@@ -119,7 +86,12 @@ public class SoundManager : MonoBehaviour
                 }
             }
             PlaySoundWithDistance(groundScroller != null ? groundScroller.distance : 0);
+            // 인게임 씬에서는 다른 아이콘 사용
+            muteButton.image.sprite = isMuted ? soundOffImage : soundOnImage;
         }
+
+        // 음소거 상태 적용
+        bgSound.mute = isMuted;
     }
 
     private void Start()
@@ -132,15 +104,6 @@ public class SoundManager : MonoBehaviour
             }
         }
     }
-    //public void ButtonClicked()
-    //{
-    //    if (button != null)  // 버튼이 null인 경우를 방지
-    //    {
-    //        isOn = !isOn;
-    //        button.image.sprite = isOn ? soundOnImage : soundOffImage;
-    //        bgSound.mute = !isOn;
-    //    }
-    //}
 
     void Update()
     {
@@ -151,7 +114,35 @@ public class SoundManager : MonoBehaviour
         }
     }
 
-    private Coroutine currentFadeCoroutine = null; // 현재 실행 중인 코루틴 추적
+    public void ToggleMute()
+    {
+        isMuted = !isMuted; // 음소거 상태 반전
+        bgSound.mute = isMuted; // 음소거 적용
+
+        // 음소거 상태 저장
+        PlayerPrefs.SetInt("SoundMuted", isMuted ? 1 : 0);
+        PlayerPrefs.Save();
+
+        // 버튼 아이콘 업데이트
+        UpdateMuteButtonIcon();
+    }
+
+    private void UpdateMuteButtonIcon()
+    {
+        if (muteButton != null)
+        {
+            if (SceneManager.GetActiveScene().name == "MainScene")
+            {
+                muteButton.image.sprite = isMuted ? soundOffImageMainScene : soundOnImageMainScene; // 메인 씬 아이콘
+            }
+            else
+            {
+                muteButton.image.sprite = isMuted ? soundOffImage : soundOnImage; // 인게임 씬 아이콘
+            }
+        }
+    }
+
+    private Coroutine currentFadeCoroutine = null;
 
     public void PlaySoundWithDistance(float distance)
     {
@@ -162,7 +153,7 @@ public class SoundManager : MonoBehaviour
 
             if (currentFadeCoroutine != null)
             {
-                StopCoroutine(currentFadeCoroutine); // 기존 코루틴 중지
+                StopCoroutine(currentFadeCoroutine);
             }
             currentFadeCoroutine = StartCoroutine(FadeInBGM(bglist[clipIndex]));
         }
@@ -181,11 +172,11 @@ public class SoundManager : MonoBehaviour
     {
         while (bgSound.volume > 0)
         {
-            bgSound.volume -= Time.deltaTime / 2.5f; // FadeOut
+            bgSound.volume -= Time.deltaTime / 2.5f;
             yield return null;
         }
         bgSound.Stop();
-        bgSound.volume = 0.5f; 
+        bgSound.volume = 0.5f;
     }
 
     private IEnumerator FadeInBGM(AudioClip newClip)
@@ -209,9 +200,8 @@ public class SoundManager : MonoBehaviour
             bgSound.volume = Mathf.Lerp(0, 0.5f, t);
             yield return null;
         }
-        bgSound.volume = 0.5f; // 최종 볼륨 보정
+        bgSound.volume = 0.5f;
     }
-
 
     public void BgSoundPlay(AudioClip clip)
     {
@@ -227,13 +217,6 @@ public class SoundManager : MonoBehaviour
         Destroy(go, clip.length);
     }
 
-    private void PlayBGMImmediately(AudioClip newClip)
-    {
-        bgSound.Stop();           
-        bgSound.clip = newClip;   
-        bgSound.volume = 0.5f;    
-        bgSound.Play();          
-    }
     public void RegisterAudioSource(AudioSource audioSource)
     {
         if (!audioSources.Contains(audioSource))
@@ -263,5 +246,4 @@ public class SoundManager : MonoBehaviour
             }
         }
     }
-
 }
