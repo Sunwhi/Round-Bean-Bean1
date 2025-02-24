@@ -31,8 +31,8 @@ public class ClearScoreUI : MonoBehaviour
     //pingpong의 max와 minscale, popper그림이 커졌다 작아졌다 할때 끝의 scale값들
     Vector3 popperMaxScale1 = new Vector3(4, 3, 3);
     Vector3 popperMaxScale2 = new Vector3(4, 4, 3);
-    Vector3 popperMinScale1 = new Vector3(2, 2, 1);
-    Vector3 popperMinScale2 = new Vector3(1, 2, 1);
+    Vector3 popperMinScale1 = new Vector3(3, 2, 1);
+    Vector3 popperMinScale2 = new Vector3(2, 3, 1);
     //pingpong이 끝나고나서의 popper scalse
     Vector3 popperLastScale1;
     Vector3 popperLastScale2;
@@ -120,7 +120,7 @@ public class ClearScoreUI : MonoBehaviour
     //클리어 시 8초 후(점수 크게 나타나지고 얼마후) 홈 버튼과 업적 버튼 활성화
     IEnumerator clearBtn()
     {
-        yield return new WaitForSecondsRealtime(8f);
+        yield return new WaitForSecondsRealtime(7f);
 
         homeBtn.SetActive(true);
         recordBtn.SetActive(true); 

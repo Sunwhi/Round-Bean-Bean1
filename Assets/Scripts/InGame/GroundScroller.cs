@@ -30,6 +30,7 @@ public class GroundScroller : MonoBehaviour
     [SerializeField] int summerTilesIndex;
     [SerializeField] int autumnTilesIndex;
     [SerializeField] int winterTilesIndex;
+    [SerializeField] int spring2TilesIndex;
 
     private int tilesStart;
     private int tilesEnd;
@@ -306,7 +307,7 @@ public class GroundScroller : MonoBehaviour
     /// <summary>
     /// 계절별 타일 변경을 위한 함수. UpdateSeason에 의해 계절이 변경될 때만 호출됨.
     /// </summary>
-    /// <param name="season">0: spring, 1: summer, 2: autumn, 3: winter. other values are not accepted.</param>
+    /// <param name="season">0: spring, 1: summer, 2: autumn, 3: winter, 4: spring2. other values are not accepted.</param>
     /// <exception cref="Exception"></exception>
     private void SetSeasonTiles(int season) // change tile image range 
     {
@@ -318,6 +319,7 @@ public class GroundScroller : MonoBehaviour
             case 0:
                 tilesStart = springTilesIndex;
                 tilesEnd = summerTilesIndex;
+                currentSeason = 0;
                 break;
             case 1:
                 tilesStart = summerTilesIndex;
@@ -331,9 +333,21 @@ public class GroundScroller : MonoBehaviour
                 break;
             case 3:
                 tilesStart = winterTilesIndex;
+            //    tilesEnd = spring2TilesIndex;
                 tilesEnd = groundImg.Length;
                 currentSeason = 3;
                 break;
+            case 4:
+                tilesStart = springTilesIndex;
+                tilesEnd = summerTilesIndex;
+                currentSeason = 4;
+                break;
+            //case 4:
+            //    tilesStart = spring2TilesIndex;
+            //    tilesEnd = groundImg.Length;
+            //    currentSeason = 4;
+            //    break;
+            // TODO: 땅 타일 리소스 없음
             default:
                 throw new Exception("Season index not valid");
         }
@@ -366,6 +380,9 @@ public class GroundScroller : MonoBehaviour
                 obstacleDelay = -1;
                 obstacleChance = 0.3f;
                 break;
+            case 4:
+                obstacleChance = 0f;
+                break;
             default:
                 throw new Exception("Season index not valid");
         }
@@ -384,11 +401,11 @@ public class GroundScroller : MonoBehaviour
         int newSeason = 0;
 
         // 24.12.28 기준 봄 50m, 여름 50m, 가을 55m, 겨울 60m, 봄2 10m
-        if (distance < 50 * 1) newSeason = 0;
-        else if (distance < 100 * 1) newSeason = 1;
-        else if (distance < 155 * 1) newSeason = 2; // 가을 이후의 장애물 디버깅을 위해 거리를 늘리는 부분 (곱하는 수를 조정하면 됨)
-        else if (distance < 215 * 1) newSeason = 3;
-        else if (distance < 225 * 1) newSeason = 0; // spring2
+        if (distance < 50 * 1 - 25) newSeason = 0; // 계절 변경 후 25m 뒤 지점부터 여름 타일로 바뀌기 시작하므로 타이밍 당기기
+        else if (distance < 100 * 1 - 25) newSeason = 1;
+        else if (distance < 155 * 1 - 25) newSeason = 2; // 가을 이후의 장애물 디버깅을 위해 거리를 늘리는 부분 (곱하는 수를 조정하면 됨)
+        else if (distance < 215 * 1 - 25) newSeason = 3;
+        else newSeason = 4; // spring2
 
         if (newSeason != currentSeason)
         {
@@ -400,7 +417,6 @@ public class GroundScroller : MonoBehaviour
         {
             SetSeasonObs(newSeason); 
             OnSeasonChanged?.Invoke(newSeason); // UpdateBG() 트리거
-
             currentSeason = newSeason;
             isTempDistValid = false;
 
@@ -414,7 +430,8 @@ public class GroundScroller : MonoBehaviour
     /// <param name="season">계절에 해당하는 표지판을 세우기 위함</param>
     private void CreateSeasonSign(int season, float distance)
     {
-        seasonSign[season].transform.position = new Vector3(distance+21, 1f, 0.5f); // z 값이 클수록 뒤로. groundImg는 1f, 나머지는 0f이다.
-        seasonSign[season].gameObject.SetActive(true);
+        Debug.Log("executing CreateSeasonSign with" + season + ", " + distance);
+        seasonSign[season-1].transform.position = new Vector3(distance+21, 1.5f, 0.5f); // z 값이 클수록 뒤로. groundImg는 1f, 나머지는 0f이다.
+        seasonSign[season-1].gameObject.SetActive(true);
     }
 }
