@@ -431,7 +431,7 @@ public class GroundScroller : MonoBehaviour
     private void CreateSeasonSign(int season, float distance)
     {
         Debug.Log("executing CreateSeasonSign with" + season + ", " + distance);
-        seasonSign[season-1].transform.position = new Vector3(distance+21, 1f, 0.5f); // z 값이 클수록 뒤로. groundImg는 1f, 나머지는 0f이다.
+        seasonSign[season-1].transform.position = new Vector3(distance+21, 1.5f, 0.5f); // z 값이 클수록 뒤로. groundImg는 1f, 나머지는 0f이다.
         seasonSign[season-1].gameObject.SetActive(true);
     }
 }
