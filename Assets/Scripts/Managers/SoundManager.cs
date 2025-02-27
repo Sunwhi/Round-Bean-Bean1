@@ -104,13 +104,30 @@ public class SoundManager : MonoBehaviour
             }
         }
     }
+    public GameObject specificPanel; 
 
     void Update()
     {
-        if (groundScroller != null && SceneManager.GetActiveScene().name == "InGame")
+        if (SceneManager.GetActiveScene().name == "InGame")
         {
-            float distance = groundScroller.distance;
+            float distance = groundScroller != null ? groundScroller.distance : 0;
             PlaySoundWithDistance(distance);
+
+            // 특정 패널이 활성화되어 있다면 배경 음악 정지
+            if (specificPanel != null && specificPanel.activeSelf)
+            {
+                if (bgSound.isPlaying)
+                {
+                    bgSound.Pause();
+                }
+            }
+            else
+            {
+                if (!bgSound.isPlaying && !isMuted)
+                {
+                    bgSound.Play();
+                }
+            }
         }
     }
 
