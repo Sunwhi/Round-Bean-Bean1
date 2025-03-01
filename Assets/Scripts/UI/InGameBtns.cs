@@ -15,7 +15,8 @@ public class CleasRecordBtn : MonoBehaviour
     [SerializeField] Button achieveBtn;
     [SerializeField] GameObject optionExitBtn;
     [SerializeField] GameObject soundBtn;
-
+    [SerializeField] GameObject instructionPanel;
+    [SerializeField] GameObject instructionExitBtn;
     //È¿°úÀ½
     public AudioClip optionClickClip;
     public void StartGame()
@@ -32,6 +33,7 @@ public class CleasRecordBtn : MonoBehaviour
         ConfirmPanel.SetActive(true);
         optionExitBtn.SetActive(false);
         soundBtn.SetActive(false);
+
     }
     public void PlayAgainBtn()
     {
@@ -80,7 +82,15 @@ public class CleasRecordBtn : MonoBehaviour
         optionExitBtn.SetActive(true);
         soundBtn.SetActive(true);
     }
-
+    
+    public void InstructionBtn()
+    {
+        instructionPanel.SetActive(true);
+    }
+    public void InstructionExitBtn()
+    {
+        instructionPanel.SetActive(false);
+    }
     void Update()
     {
         float score = PlayerPrefs.GetFloat("score0");

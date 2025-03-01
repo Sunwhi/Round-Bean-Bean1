@@ -8,7 +8,9 @@ public class MainMenuBtn : MonoBehaviour
     [SerializeField] GameObject AchievePanel;
     [SerializeField] GameObject BackgroundPanel;
     [SerializeField] Button achieveBtn;
-    public void ClearRecordBtn()
+    [SerializeField] GameObject instructionPanel;
+    [SerializeField] GameObject creditPanel;
+    public void AchieveBtn()
     {
         if (!AchievePanel.activeSelf)
         {
@@ -29,6 +31,22 @@ public class MainMenuBtn : MonoBehaviour
         {
             BackgroundPanel.SetActive(false);
         }
+
+        if(instructionPanel.activeSelf)
+            instructionPanel.SetActive(false);
+         
+        if(creditPanel.activeSelf)
+            creditPanel.SetActive(false);
+    }
+    public void InstructionBtn()
+    {
+        if (!instructionPanel.activeSelf)
+            instructionPanel.SetActive(true);
+    }
+    public void CreditBtn()
+    {
+        if(!creditPanel.activeSelf)
+            creditPanel.SetActive(true);
     }
     // Start is called before the first frame update
     void Start()
