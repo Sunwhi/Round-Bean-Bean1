@@ -6,6 +6,8 @@ public class Rock : MonoBehaviour
 {
     public GameObject player;
     float cameraHalfWidth;
+    public SpriteRenderer spriteRenderer;
+
     private void Start()
     {
         cameraHalfWidth = Camera.main.aspect * Camera.main.orthographicSize;

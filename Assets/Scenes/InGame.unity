@@ -15087,6 +15087,9 @@ MonoBehaviour:
   defaultCapacity: 10
   maxPoolSize: 10
   rockPrefab: {fileID: 395175507676296984}
+  rockImg:
+  - {fileID: 21300000, guid: 744b58d19c197964387de5d2da3b862a, type: 3}
+  - {fileID: 21300000, guid: 8ad31a656acd15d4288a067f5b3e6e03, type: 3}
 --- !u!4 &1931567119
 Transform:
   m_ObjectHideFlags: 0
@@ -16603,6 +16606,11 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 7278826764101231972, guid: 36fb0049e0382da48ab42dd81b6bb182, type: 3}
   m_PrefabInstance: {fileID: 1809797278946531448}
   m_PrefabAsset: {fileID: 0}
+--- !u!212 &395175507676296987 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 4715249957768922262, guid: 36fb0049e0382da48ab42dd81b6bb182, type: 3}
+  m_PrefabInstance: {fileID: 1809797278946531448}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1809797278946531448
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -16619,6 +16627,10 @@ PrefabInstance:
       propertyPath: player
       value: 
       objectReference: {fileID: 256649931}
+    - target: {fileID: 1073881661045366352, guid: 36fb0049e0382da48ab42dd81b6bb182, type: 3}
+      propertyPath: spriteRenderer
+      value: 
+      objectReference: {fileID: 395175507676296987}
     - target: {fileID: 7278826764101231972, guid: 36fb0049e0382da48ab42dd81b6bb182, type: 3}
       propertyPath: m_Name
       value: Rock

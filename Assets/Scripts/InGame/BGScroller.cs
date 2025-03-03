@@ -47,7 +47,7 @@ public class BGScroller : MonoBehaviour
 
     private void OnDisable()
     {
-        GroundScroller.OnSeasonChanged -= UpdateBG; // 이벤트 구독 해제 - 필요한가?
+        GroundScroller.OnSeasonChanged -= UpdateBG; // 이벤트 구독 해제
     }
 
     void Update()
@@ -71,7 +71,7 @@ public class BGScroller : MonoBehaviour
 
     private void UpdateBG(int season)
     {
-        currentImageIndex = 2;
+        currentImageIndex = 2; // 0, 1, 2번 이미지 로드 후 다음 이미지가 3번으로 정상 로드되기 위함
         StartCoroutine(FadeBGImage(season));
     }
 
@@ -94,10 +94,10 @@ public class BGScroller : MonoBehaviour
             SetAlpha(nextBgTiles[i], 0f); // 아직 안보이게
             Vector3 newPos = nextBgTiles[i].transform.position;
             newPos = new Vector3(
-                player.transform.position.x + bgWidth * i - cameraHalfWidth - 4, 
+                player.transform.position.x + bgWidth * i - cameraHalfWidth - 4, // 타일 순서 정렬 및 위치 조정
                 bgTiles[i].transform.position.y, 
-                bgTiles[i].transform.position.z - 0.1f
-                );  // 기존보다 약간 앞에 위치
+                bgTiles[i].transform.position.z - 0.1f // 기존보다 약간 앞에 위치
+                ); 
             nextBgTiles[i].transform.position = newPos;
         }
 
