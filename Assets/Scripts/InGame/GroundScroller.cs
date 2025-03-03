@@ -333,21 +333,14 @@ public class GroundScroller : MonoBehaviour
                 break;
             case 3:
                 tilesStart = winterTilesIndex;
-            //    tilesEnd = spring2TilesIndex;
-                tilesEnd = groundImg.Length;
+                tilesEnd = spring2TilesIndex;
                 currentSeason = 3;
                 break;
             case 4:
-                tilesStart = springTilesIndex;
-                tilesEnd = summerTilesIndex;
+                tilesStart = spring2TilesIndex;
+                tilesEnd = groundImg.Length;
                 currentSeason = 4;
                 break;
-            //case 4:
-            //    tilesStart = spring2TilesIndex;
-            //    tilesEnd = groundImg.Length;
-            //    currentSeason = 4;
-            //    break;
-            // TODO: 땅 타일 리소스 없음
             default:
                 throw new Exception("Season index not valid");
         }
