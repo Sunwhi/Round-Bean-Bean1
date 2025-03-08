@@ -257,7 +257,7 @@ public class GroundScroller : MonoBehaviour
     {
         var rock = ObjectPool.GetObject();
         rock.transform.position = new Vector3(tile.transform.position.x + 0.5f, -1.5f, 1.5f); // 땅 아래에 스폰
-        Vector3 rockEndPos = new Vector3(tile.transform.position.x + 0.5f, -0.5f, 1.5f);
+        Vector3 rockEndPos = new Vector3(tile.transform.position.x + 0.5f, -0.7f, 1.5f); // 스폰 목표 위치
         StartCoroutine(AnimateRock(rock, rock.transform.position, rockEndPos));
         SoundManager.Instance.SFXPlay("StoneSpawned", rockSpawnClip);
     }
