@@ -2255,7 +2255,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53602cecbaa730a4b844b6a89ba88a8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  clip: {fileID: 8300000, guid: 3a9096903322d834cbf5c55c8b2e323a, type: 3}
+  clip: {fileID: 8300000, guid: efd5d61081d3a9a42b870a251bc8666c, type: 3}
 --- !u!1 &293683636
 GameObject:
   m_ObjectHideFlags: 0
@@ -12951,7 +12951,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53602cecbaa730a4b844b6a89ba88a8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  clip: {fileID: 8300000, guid: 3a9096903322d834cbf5c55c8b2e323a, type: 3}
+  clip: {fileID: 8300000, guid: bf67aee69c7e13243b3ffffeb60d76c1, type: 3}
 --- !u!1 &1592744201
 GameObject:
   m_ObjectHideFlags: 0
@@ -15166,7 +15166,7 @@ MonoBehaviour:
   panel3: {fileID: 2030657367}
   leftArrow: {fileID: 428585670}
   rightArrow: {fileID: 846973455}
-  arrowSfx: {fileID: 8300000, guid: 3a9096903322d834cbf5c55c8b2e323a, type: 3}
+  arrowSfx: {fileID: 8300000, guid: bf67aee69c7e13243b3ffffeb60d76c1, type: 3}
 --- !u!114 &1944827515
 MonoBehaviour:
   m_ObjectHideFlags: 0
