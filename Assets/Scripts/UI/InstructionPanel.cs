@@ -9,9 +9,11 @@ public class InstructionPanel : MonoBehaviour
     [SerializeField] GameObject panel3;
     [SerializeField] GameObject leftArrow;
     [SerializeField] GameObject rightArrow;
+    public AudioClip arrowSfx;
     int activePanel = 1;
     public void RightArrow()
     {
+        SoundManager.Instance.SFXPlay("arrowClick",arrowSfx);
         switch(activePanel)
         {
             case 1:
@@ -28,7 +30,8 @@ public class InstructionPanel : MonoBehaviour
     }
     public void LeftArrow()
     {
-        switch(activePanel)
+        SoundManager.Instance.SFXPlay("arrowClick", arrowSfx);
+        switch (activePanel)
         {
             case 2:
                 panel1.SetActive(true);
