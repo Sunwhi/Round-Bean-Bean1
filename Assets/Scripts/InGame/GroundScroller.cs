@@ -10,9 +10,10 @@ using UnityEngine;
 
 public class GroundScroller : MonoBehaviour
 {
-    public SpriteRenderer[] tiles;
-    public Sprite[] groundImg;
-    public SpriteRenderer[] seasonSign;
+    [SerializeField] SpriteRenderer[] tiles;
+    [SerializeField] SpriteRenderer[] nextTiles;
+    [SerializeField] Sprite[] groundImg;
+    [SerializeField] SpriteRenderer[] seasonSign;
 
     public GameObject player;
     public GameObject hat;
@@ -23,6 +24,7 @@ public class GroundScroller : MonoBehaviour
     public float distance;
     float tempdist = 0; // 계절 타일 변화와 장애물 알고리즘 변화 사이에 유예를 두기 위해 사용되는 변수
     bool isTempDistValid = false; // 계절 타일 변화와 장애물 알고리즘 변경 사이의 시점인 경우 True
+    bool isSwapping = false; // 계절 변화 도중 땅이 스크롤되는 경우 그만큼의 구멍이 생기게 됨. 따라서 변화 도중엔 스크롤을 멈추기 위함
 
     public static event Action<int> OnSeasonChanged; // BGScroller.cs에서의 배경 변경을 트리거하기 위한 이벤트
     private int currentSeason = 0; // 계절 기록용 변수, 장애물 생성 가능여부 판정에 사용함. 0: spring, 1: summer, 2: autumn, 3: winter
@@ -34,6 +36,7 @@ public class GroundScroller : MonoBehaviour
 
     private int tilesStart;
     private int tilesEnd;
+    [SerializeField] float fadeDuration = 1f;
 
     private int obstacleCount = 0;
     private int hatCount = 0;
@@ -89,11 +92,11 @@ public class GroundScroller : MonoBehaviour
 
         UpdateSeason(distance);
 
-        // check every tiles
+        // 땅 타일 스크롤 & 장애물 생성
         for (int i = 0; i < tiles.Length; i++)
         {
             // set when to move the leftmost block that player already passed
-            if (player.transform.position.x - cameraHalfWidth - 19 >= tiles[i].transform.position.x)
+            if (!isSwapping && player.transform.position.x - cameraHalfWidth - 19 >= tiles[i].transform.position.x)
             {
                 for (int q = 0; q < tiles.Length; q++)
                 {
@@ -154,7 +157,7 @@ public class GroundScroller : MonoBehaviour
                             if (rockJudge)
                             {
                                 bool cliffOrRock = ProbabilityRandom(0.5f); // true: cliff, false: rock
-                                if (cliffOrRock)
+                                if (cliffOrRock && !isSwapping)
                                 {
                                     SpawnCliff(tiles[i]);
                                     Debug.Log("cliff selected");
@@ -166,7 +169,7 @@ public class GroundScroller : MonoBehaviour
                                 }
                                 hatCount = 0;
                             }
-                            else SpawnCliff(tiles[i]);
+                            else if (!isSwapping) SpawnCliff(tiles[i]);
                             hatCount = 0;
                         }
                         else if (!cliffJudge && rockJudge) // cliffJudge가 false고 rockjudge가 true인 경우에 대한 추가 처리
@@ -312,7 +315,6 @@ public class GroundScroller : MonoBehaviour
     private void SetSeasonTiles(int season) // change tile image range 
     {
         Debug.Log("season tile set to " + season + ", currentSeason: " + currentSeason);
-        CreateSeasonSign(season, distance); // 계절 변경 안내 표지판 생성
         switch (season)
         {
             // summer: 20%/4m, autumn: 25%/2m, winter: 30%/1m
@@ -400,19 +402,20 @@ public class GroundScroller : MonoBehaviour
         else if (distance < 215 * 1 - 25) newSeason = 3;
         else newSeason = 4; // spring2
 
-        if (newSeason != currentSeason)
+        if (!isTempDistValid && newSeason != currentSeason)
         {
-            SetSeasonTiles(newSeason); // 땅 타일 변경 먼저
+            CreateSeasonSign(newSeason, distance); // 계절 변경 안내 표지판 생성
             tempdist = distance;
             isTempDistValid = true;
         }
         if (isTempDistValid && distance > tempdist + 18) // 변경된 타일들로 실제로 넘어갈 때 장애물 알고리즘 변경. 게임 관점에선 실질적으로 계절이 바뀌는 부분.
         {
-            SetSeasonObs(newSeason); 
+            SetSeasonObs(newSeason);
             OnSeasonChanged?.Invoke(newSeason); // UpdateBG() 트리거
+            isSwapping = true;
+            StartCoroutine(FadeTileImage(newSeason));
             currentSeason = newSeason;
             isTempDistValid = false;
-
         }
     }
 
@@ -426,5 +429,65 @@ public class GroundScroller : MonoBehaviour
         Debug.Log("executing CreateSeasonSign with" + season + ", " + distance);
         seasonSign[season-1].transform.position = new Vector3(distance+21, 1.5f, 0.5f); // z 값이 클수록 뒤로. groundImg는 1f, 나머지는 0f이다.
         seasonSign[season-1].gameObject.SetActive(true);
+    }
+
+    private IEnumerator FadeTileImage(int nextseason)
+    {
+        float elapsedTime = 0f;
+        SetSeasonTiles(nextseason);
+
+        for (int i = 0; i < nextTiles.Length; i++)
+        {
+            nextTiles[i].sprite = groundImg[(i % (tilesEnd - tilesStart)) + tilesStart];
+            SetAlpha(nextTiles[i], 0f);
+            nextTiles[i].gameObject.SetActive(true);
+            Vector3 newPos = nextTiles[i].transform.position;
+            newPos = new Vector3(
+                player.transform.position.x + 2 * i - cameraHalfWidth - 16, // 타일 순서 정렬 및 위치 조정
+                tiles[i].transform.position.y,
+                tiles[i].transform.position.z - 0.1f // 기존보다 약간 앞에 위치
+                );
+            nextTiles[i].transform.position = newPos;
+        }
+        // 전환
+        while (elapsedTime < fadeDuration)
+        {
+            elapsedTime += Time.deltaTime;
+            float alpha = Mathf.Clamp01(elapsedTime / fadeDuration);
+
+            for (int i = 0; i < tiles.Length; i++)
+            {
+                SetAlpha(nextTiles[i], alpha); // 다음 배경 Fade in
+            }
+            yield return null; // 다음 프레임 대기
+        }
+
+        for (int i = 0; i < tiles.Length; i++)
+        {
+            // 알파값 마무리 보정
+            SetAlpha(tiles[i], 0);
+            tiles[i].gameObject.SetActive(false);
+            SetAlpha(nextTiles[i], 1);
+            nextTiles[i].gameObject.SetActive(true);
+
+            // 배열 swap
+            SpriteRenderer temp = tiles[i];
+            tiles[i] = nextTiles[i];
+            nextTiles[i] = temp;
+        }
+
+        isSwapping = false;
+    }
+
+    /// <summary>
+    /// 이미지 알파값 조정
+    /// </summary>
+    /// <param name="renderer"></param>
+    /// <param name="alpha"></param>
+    private void SetAlpha(SpriteRenderer renderer, float alpha)
+    {
+        Color color = renderer.color;
+        color.a = alpha;
+        renderer.color = color;
     }
 }

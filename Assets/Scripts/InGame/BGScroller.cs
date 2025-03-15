@@ -86,8 +86,6 @@ public class BGScroller : MonoBehaviour
         float elapsedTime = 0f;
         SetSeasonBgSet(nextSeason);
 
-        // TODO: 스크롤링으로 인해 바뀐 타일 순서가 이미지에도 그대로 나타남. 배경 타일을 배열 순서대로 재정렬하기
-
         for (int i = 0; i < nextBgTiles.Length; i++) // 다음 계절의 배경을 미리 설정
         {
             nextBgTiles[i].sprite = bgImgSet[(i % (bgEnd - bgStart)) + bgStart];
