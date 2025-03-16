@@ -212,7 +212,8 @@ public class SoundManager : MonoBehaviour
         bgSound.clip = newClip;
         bgSound.Play();
 
-        for (float t = 0; t < 1; t += Time.deltaTime / 1.5f)
+        // Time.deltaTime / 1.5f에서 5f로 변경, StartBtnClick 소리하고 최대한 안 겹치기 위해 FadeIn 시간 늘림
+        for (float t = 0; t < 1; t += Time.deltaTime / 5f) 
         {
             bgSound.volume = Mathf.Lerp(0, 0.5f, t);
             yield return null;
