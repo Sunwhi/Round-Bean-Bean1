@@ -7,6 +7,9 @@ public class InstructionPanel : MonoBehaviour
     [SerializeField] GameObject panel1;
     [SerializeField] GameObject panel2;
     [SerializeField] GameObject panel3;
+    [SerializeField] GameObject panel4;
+    [SerializeField] GameObject panel5;
+    [SerializeField] GameObject panel6;
     [SerializeField] GameObject leftArrow;
     [SerializeField] GameObject rightArrow;
     public AudioClip arrowSfx;
@@ -26,6 +29,21 @@ public class InstructionPanel : MonoBehaviour
                 panel3.SetActive(true);
                 activePanel = 3;
                 break;
+            case 3:
+                panel3.SetActive(false);
+                panel4.SetActive(true);
+                activePanel = 4;
+                break;
+            case 4:
+                panel4.SetActive(false);
+                panel5.SetActive(true);
+                activePanel = 5;
+                break;
+            case 5:
+                panel5.SetActive(false);
+                panel6.SetActive(true);
+                activePanel = 6;
+                break;
         }
     }
     public void LeftArrow()
@@ -42,6 +60,21 @@ public class InstructionPanel : MonoBehaviour
                 panel2.SetActive(true);
                 panel3.SetActive(false);
                 activePanel = 2;
+                break;
+            case 4:
+                panel3.SetActive(true);
+                panel4.SetActive(false);
+                activePanel = 3;
+                break;
+            case 5:
+                panel4.SetActive(true);
+                panel5.SetActive(false);
+                activePanel = 4;
+                break;
+            case 6:
+                panel5.SetActive(true);
+                panel6.SetActive(false);
+                activePanel = 5;
                 break;
         }
     }
@@ -63,7 +96,11 @@ public class InstructionPanel : MonoBehaviour
                 leftArrow.SetActive(true);
                 rightArrow.SetActive(true);
                 break;
-            case 3:
+            case 5:
+                leftArrow.SetActive(true);
+                rightArrow.SetActive(true);
+                break;
+            case 6:
                 rightArrow.SetActive(false);
                 break;
 
