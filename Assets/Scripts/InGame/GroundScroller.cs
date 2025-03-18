@@ -443,7 +443,7 @@ public class GroundScroller : MonoBehaviour
             nextTiles[i].gameObject.SetActive(true);
             Vector3 newPos = nextTiles[i].transform.position;
             newPos = new Vector3(
-                player.transform.position.x + 2 * i - cameraHalfWidth - 16, // 타일 순서 정렬 및 위치 조정
+                tiles[i].transform.position.x, // 배경처럼 재정렬 안해도 되잖아
                 tiles[i].transform.position.y,
                 tiles[i].transform.position.z - 0.1f // 기존보다 약간 앞에 위치
                 );
