@@ -106,15 +106,15 @@ public class SoundManager : MonoBehaviour
     }
     public GameObject specificPanel; 
 
-    void Update()
+    void Update()   
     {
         if (SceneManager.GetActiveScene().name == "InGame")
         {
             float distance = groundScroller != null ? groundScroller.distance : 0;
             PlaySoundWithDistance(distance);
 
-            // 특정 패널이 활성화되어 있다면 배경 음악 정지
-            if (specificPanel != null && specificPanel.activeSelf)
+            // Tutorial 패널이 활성화되어 있다면 배경 음악 정지
+            if ((specificPanel != null && specificPanel.activeSelf))
             {
                 if (bgSound.isPlaying)
                 {
@@ -122,8 +122,10 @@ public class SoundManager : MonoBehaviour
                 }
             }
             else
-            {
-                if (!bgSound.isPlaying && !isMuted)
+            {   
+                // 시작버튼 효과음이 재생중이 아닐때 배경음악(spring1)을 재생하자.
+                // 효과음과 배경음이 겹치지 않게
+                if (!bgSound.isPlaying && !isMuted && !StartBtnSound.Instance.audioSource.isPlaying)
                 {
                     bgSound.Play();
                 }
@@ -173,6 +175,9 @@ public class SoundManager : MonoBehaviour
                 StopCoroutine(currentFadeCoroutine);
             }
             currentFadeCoroutine = StartCoroutine(FadeInBGM(bglist[clipIndex]));
+            /*if (!StartBtnSound.Instance.audioSource.isPlaying)
+            {
+            }*/
         }
     }
 
@@ -212,9 +217,9 @@ public class SoundManager : MonoBehaviour
         bgSound.clip = newClip;
         bgSound.Play();
 
-        // Time.deltaTime / 1.5f에서 5f로 변경, StartBtnClick 소리하고 최대한 안 겹치기 위해 FadeIn 시간 늘림
-        for (float t = 0; t < 1; t += Time.deltaTime / 5f) 
+        for (float t = 0; t < 1; t += Time.deltaTime / 1.5f)
         {
+            if (StartBtnSound.Instance.audioSource.isPlaying) t = 0; // start버튼 효과음과 배경음이 겹쳐 들리던 원인
             bgSound.volume = Mathf.Lerp(0, 0.5f, t);
             yield return null;
         }
