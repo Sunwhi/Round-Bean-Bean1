@@ -2520,7 +2520,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   frameRigidbody: {fileID: 635412800}
   wheelRigidbody: {fileID: 256649934}
-  balanceForce: 450
+  balanceForce: 350
   moveSpeed: 300
   jumpForce: 9
   isGround: 0
@@ -3695,7 +3695,6 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 10, y: 279.19}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &385825923
@@ -3720,8 +3719,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\uADE0\uD615"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 0c3748c38620cff4b905d7e56b1f5c57, type: 2}
-  m_sharedMaterial: {fileID: 8881977279723822510, guid: 0c3748c38620cff4b905d7e56b1f5c57, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 1f8e2fd5cfc1af9499d811b5042191eb, type: 2}
+  m_sharedMaterial: {fileID: 8593945476792686203, guid: 1f8e2fd5cfc1af9499d811b5042191eb, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -5287,6 +5286,7 @@ GameObject:
   - component: {fileID: 436987708}
   - component: {fileID: 436987707}
   - component: {fileID: 436987706}
+  - component: {fileID: 436987709}
   m_Layer: 5
   m_Name: AchieveBtn
   m_TagString: Untagged
@@ -5369,6 +5369,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+      - m_Target: {fileID: 436987709}
+        m_TargetAssemblyTypeName: MuteBypassSFX, Assembly-CSharp
+        m_MethodName: PlayEffectSound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
 --- !u!114 &436987707
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5407,6 +5419,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 436987704}
   m_CullTransparentMesh: 1
+--- !u!114 &436987709
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 436987704}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53602cecbaa730a4b844b6a89ba88a8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  clip: {fileID: 8300000, guid: 3a9096903322d834cbf5c55c8b2e323a, type: 3}
 --- !u!1 &443617511
 GameObject:
   m_ObjectHideFlags: 0
@@ -6142,6 +6167,7 @@ GameObject:
   - component: {fileID: 505427756}
   - component: {fileID: 505427755}
   - component: {fileID: 505427754}
+  - component: {fileID: 505427757}
   m_Layer: 5
   m_Name: PlayAgainBtn
   m_TagString: Untagged
@@ -6224,6 +6250,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 505427757}
+        m_TargetAssemblyTypeName: MuteBypassSFX, Assembly-CSharp
+        m_MethodName: PlayEffectSound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &505427755
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6262,6 +6300,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 505427752}
   m_CullTransparentMesh: 1
+--- !u!114 &505427757
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 505427752}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53602cecbaa730a4b844b6a89ba88a8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  clip: {fileID: 8300000, guid: 3a9096903322d834cbf5c55c8b2e323a, type: 3}
 --- !u!1 &506226895
 GameObject:
   m_ObjectHideFlags: 0
@@ -8159,7 +8210,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 27, y: 255}
+  m_AnchoredPosition: {x: 21, y: 255}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &772601778
@@ -8184,8 +8235,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\uC774\uB3D9"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 0c3748c38620cff4b905d7e56b1f5c57, type: 2}
-  m_sharedMaterial: {fileID: 8881977279723822510, guid: 0c3748c38620cff4b905d7e56b1f5c57, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 1f8e2fd5cfc1af9499d811b5042191eb, type: 2}
+  m_sharedMaterial: {fileID: 8593945476792686203, guid: 1f8e2fd5cfc1af9499d811b5042191eb, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -8271,6 +8322,7 @@ GameObject:
   - component: {fileID: 784046503}
   - component: {fileID: 784046502}
   - component: {fileID: 784046501}
+  - component: {fileID: 784046504}
   m_Layer: 5
   m_Name: HomeBtn
   m_TagString: Untagged
@@ -8353,6 +8405,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 784046504}
+        m_TargetAssemblyTypeName: MuteBypassSFX, Assembly-CSharp
+        m_MethodName: PlayEffectSound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &784046502
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8391,6 +8455,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 784046498}
   m_CullTransparentMesh: 1
+--- !u!114 &784046504
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 784046498}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53602cecbaa730a4b844b6a89ba88a8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  clip: {fileID: 8300000, guid: 3a9096903322d834cbf5c55c8b2e323a, type: 3}
 --- !u!1 &784829297
 GameObject:
   m_ObjectHideFlags: 0
