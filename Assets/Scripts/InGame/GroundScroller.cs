@@ -283,7 +283,7 @@ public class GroundScroller : MonoBehaviour
             yield return null;
         }
         tile.transform.position = endPos;
-        tile.gameObject.GetComponent<Collider2D>().enabled = false; // 다 내려가면 없앰
+        //tile.gameObject.GetComponent<Collider2D>().enabled = false; // 다 내려가면 없앰
         tile.gameObject.SetActive(false);
     }
 
@@ -440,7 +440,7 @@ public class GroundScroller : MonoBehaviour
         {
             nextTiles[i].sprite = groundImg[(i % (tilesEnd - tilesStart)) + tilesStart];
             SetAlpha(nextTiles[i], 0f);
-            nextTiles[i].gameObject.SetActive(true);
+            if (tiles[i].gameObject.activeSelf) nextTiles[i].gameObject.SetActive(true);
             Vector3 newPos = nextTiles[i].transform.position;
             newPos = new Vector3(
                 tiles[i].transform.position.x, // 배경처럼 재정렬 안해도 되잖아
@@ -465,10 +465,13 @@ public class GroundScroller : MonoBehaviour
         for (int i = 0; i < tiles.Length; i++)
         {
             // 알파값 마무리 보정
+            SetAlpha(nextTiles[i], 1);
+            // nextTiles[i].gameObject.SetActive(true);
+
             SetAlpha(tiles[i], 0);
             tiles[i].gameObject.SetActive(false);
-            SetAlpha(nextTiles[i], 1);
-            nextTiles[i].gameObject.SetActive(true);
+            // tiles[i].gameObject.GetComponent<Collider2D>().enabled = false;
+            // nextTiles[i].gameObject.GetComponent<Collider2D>().enabled = true;
 
             // 배열 swap
             SpriteRenderer temp = tiles[i];
