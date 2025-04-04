@@ -236,9 +236,7 @@ public class GroundScroller : MonoBehaviour
     /// <param name="boolean">set false to hide, true to show</param>
     private void SetTile(SpriteRenderer tile, bool boolean)
     {
-        tile.gameObject.GetComponent<Collider2D>().enabled = boolean;
         tile.gameObject.SetActive(boolean);
-        // Debug.Log("SetTile Executed : " + boolean);
     }
 
     /// <summary>
@@ -283,8 +281,7 @@ public class GroundScroller : MonoBehaviour
             yield return null;
         }
         tile.transform.position = endPos;
-        //tile.gameObject.GetComponent<Collider2D>().enabled = false; // 다 내려가면 없앰
-        tile.gameObject.SetActive(false);
+        tile.gameObject.SetActive(false); // 다 내려가면 없앰
     }
 
     /// <summary>
@@ -466,12 +463,9 @@ public class GroundScroller : MonoBehaviour
         {
             // 알파값 마무리 보정
             SetAlpha(nextTiles[i], 1);
-            // nextTiles[i].gameObject.SetActive(true);
 
             SetAlpha(tiles[i], 0);
             tiles[i].gameObject.SetActive(false);
-            // tiles[i].gameObject.GetComponent<Collider2D>().enabled = false;
-            // nextTiles[i].gameObject.GetComponent<Collider2D>().enabled = true;
 
             // 배열 swap
             SpriteRenderer temp = tiles[i];
