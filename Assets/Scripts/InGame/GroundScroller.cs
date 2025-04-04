@@ -45,6 +45,7 @@ public class GroundScroller : MonoBehaviour
     private int obstacleDelay = 0;
     private float obstacleChance = 0;
     private bool[] obstacleFlag = new bool[26]; // 이미 한 번 판정을 완료한 경우 true. 배열 크기는 ground 오브젝트 갯수와 같아야 함
+    private bool[] isMoving = new bool[26]; // 코루틴 동시 적용 방지
 
     [SerializeField] GameObject textGoForward; // 역행 금지 안내 텍스트
 
@@ -120,7 +121,7 @@ public class GroundScroller : MonoBehaviour
             // spawning obstacles. is seperation to another file needed? and possible?
             if (player.transform.position.x + cameraHalfWidth * 0.59 <= tiles[i].transform.position.x
                 && player.transform.position.x + cameraHalfWidth * 0.61 >= tiles[i].transform.position.x // when the block reaches at 80% of the display
-                && !obstacleFlag[i] && currentSeason >= 1) // and spawning obstacles is not judged yet, and season is after spring 
+                && !obstacleFlag[i] && currentSeason >= 1 && !isSwapping) // and spawning obstacles is not judged yet, and season is after spring 
             {
                 obstacleFlag[i] = true; // 중복판정 방지
 
@@ -157,9 +158,10 @@ public class GroundScroller : MonoBehaviour
                             if (rockJudge)
                             {
                                 bool cliffOrRock = ProbabilityRandom(0.5f); // true: cliff, false: rock
-                                if (cliffOrRock && !isSwapping)
+                                if (cliffOrRock)
                                 {
-                                    SpawnCliff(tiles[i]);
+                                    isMoving[i] = true;
+                                    SpawnCliff(tiles[i], i);
                                     Debug.Log("cliff selected");
                                 }
                                 else
@@ -169,7 +171,11 @@ public class GroundScroller : MonoBehaviour
                                 }
                                 hatCount = 0;
                             }
-                            else if (!isSwapping) SpawnCliff(tiles[i]);
+                            else
+                            {
+                                isMoving[i] = true;
+                                SpawnCliff(tiles[i], i);
+                            }
                             hatCount = 0;
                         }
                         else if (!cliffJudge && rockJudge) // cliffJudge가 false고 rockjudge가 true인 경우에 대한 추가 처리
@@ -243,10 +249,10 @@ public class GroundScroller : MonoBehaviour
     /// Hide tiles. Used for spawning cliffs
     /// </summary>
     /// <param name="tile"></param>
-    private void SpawnCliff(SpriteRenderer tile)
+    private void SpawnCliff(SpriteRenderer tile, int i)
     {
         Vector2 cliffEndPos = new Vector2(tile.transform.position.x, tile.transform.position.y - 2);
-        StartCoroutine(AnimateCliff(tile, tile.transform.position, cliffEndPos));
+        StartCoroutine(AnimateCliff(tile, tile.transform.position, cliffEndPos, i));
         SoundManager.Instance.SFXPlay("BluffSpawned", cliffSpawnClip); // SFX
     }
 
@@ -270,7 +276,7 @@ public class GroundScroller : MonoBehaviour
     /// <param name="startPos"></param>
     /// <param name="endPos"></param>
     /// <returns></returns>
-    private IEnumerator AnimateCliff(SpriteRenderer tile, Vector2 startPos, Vector2 endPos)
+    private IEnumerator AnimateCliff(SpriteRenderer tile, Vector2 startPos, Vector2 endPos, int i)
     {
         float elapsedTime = 0;
         while(elapsedTime < obsAnimDuration)
@@ -282,6 +288,7 @@ public class GroundScroller : MonoBehaviour
         }
         tile.transform.position = endPos;
         tile.gameObject.SetActive(false); // 다 내려가면 없앰
+        isMoving[i] = false;
     }
 
     /// <summary>
@@ -437,10 +444,10 @@ public class GroundScroller : MonoBehaviour
         {
             nextTiles[i].sprite = groundImg[(i % (tilesEnd - tilesStart)) + tilesStart];
             SetAlpha(nextTiles[i], 0f);
-            if (tiles[i].gameObject.activeSelf) nextTiles[i].gameObject.SetActive(true);
+            if (tiles[i].gameObject.activeSelf && !isMoving[i]) nextTiles[i].gameObject.SetActive(true);
             Vector3 newPos = nextTiles[i].transform.position;
             newPos = new Vector3(
-                tiles[i].transform.position.x, // 배경처럼 재정렬 안해도 되잖아
+                tiles[i].transform.position.x,
                 tiles[i].transform.position.y,
                 tiles[i].transform.position.z - 0.1f // 기존보다 약간 앞에 위치
                 );
