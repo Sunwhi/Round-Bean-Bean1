@@ -156,6 +156,9 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    /*
+     * 모자 떨어졌을 때의 상호작용, 애니메이션
+     */
     private void HatFall()
     {
         //모자와 캐릭터 충돌막기
@@ -181,7 +184,8 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    /* 초 단위의 time을 분과 초로 나누어서 표기함
+    /* 
+     * 초 단위의 time을 분과 초로 나누어서 표기함
      * 00:00 (분, 초)로 표기됨.
     */
     public string FormatTime(float time)
@@ -255,6 +259,9 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    /*
+     * 게임 클리어시 여러 작용 구현한 함수
+     */
     private void GameClear()
     {
         // 게임이 딱 끝났을 때 한번만 finalScore에 저장 / 딱 한번만 PlayerPrefs 기록 새롭게 쓰기
@@ -282,7 +289,7 @@ public class GameManager : MonoBehaviour
         playerDragMovement.enabled = false;
         unicycleController.enabled = false;
 
-
+        //frame이 회전하지 못하게
         frameRigidBody.freezeRotation = true;
 
         // 현재 각도를 오일러 각도로 변환
@@ -366,21 +373,7 @@ public class GameManager : MonoBehaviour
         Rigidbody2D animalRigidBody = animal.GetComponent<Rigidbody2D>();
         animalRigidBody.AddForce(Vector2.up * 5, ForceMode2D.Impulse);
     }
-    /*
-     * hingeJoint2D -> fixedJoint2D
-     
-    private void ReplaceJoint()
-    {
-        HingeJoint2D hingeJoint2D = frame.transform.GetComponent<HingeJoint2D>();
 
-        if(hingeJoint2D != null)
-        {
-            Destroy(hingeJoint2D);
-        }
-
-        FixedJoint2D fixedJoint2D = frame.transform.AddComponent<FixedJoint2D>();
-        fixedJoint2D.connectedBody = wheel.GetComponent<Rigidbody2D>();
-    }*/
     /*
      * 스코어를 넣으면 PlayerPrefs에 기존 스코어들의 순서에 맞춰 새롭게 기록한다. 
      * 즉, 정렬되어 기록들이 저장.

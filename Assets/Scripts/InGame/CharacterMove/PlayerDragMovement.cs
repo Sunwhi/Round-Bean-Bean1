@@ -38,7 +38,7 @@ public class PlayerDragMovement : MonoBehaviour
         //Instantiate(hat); // 모자 테스트 위해
     }
     private bool initializeHatOnce = true;
-    // Update is called once per frame
+
     void Update()
     {
         //for문 안 쓰면 터치 개수가 한 개일 때 문제 발생
@@ -52,7 +52,7 @@ public class PlayerDragMovement : MonoBehaviour
             }
         }
 
-        // 모자 파트
+        // *모자 파트
         // 점프한 상태에서 모자 먹었을 시 정상적으로 머리 위로 착용되도록 함.
         // 모자 쓴 상태에서 점프 했을 시 머리에 붙어있게 함.
         if (GameManager.Instance.newHatGenerated) initializeHatOnce = true;
@@ -111,6 +111,7 @@ public class PlayerDragMovement : MonoBehaviour
     {
         // 터치에 고유한 fingerId 할당
         int touchId = touch.fingerId;
+        // 터치 시작
         if (touch.phase == TouchPhase.Began)
         {
             if(!initialTouchPositions.ContainsKey(touchId))
@@ -119,7 +120,7 @@ public class PlayerDragMovement : MonoBehaviour
             }
             isTouched = true; // 터치중임
         }
-        if(initialTouchPositions.ContainsKey(touchId)) // 이게 안됨.
+        if(initialTouchPositions.ContainsKey(touchId))
         {
             Vector2 initialTouchPosition = initialTouchPositions[touchId];
 
@@ -133,12 +134,16 @@ public class PlayerDragMovement : MonoBehaviour
             }
         }
             
-        if(touch.phase == TouchPhase.Ended || touch.phase == TouchPhase.Canceled) // 원인x
+        if(touch.phase == TouchPhase.Ended || touch.phase == TouchPhase.Canceled) 
         {
             initialTouchPositions.Remove(touchId);
         }
     }
 
+    /*
+     * 왼쪽 화면 터치와 관련된 작업을 처리한다.
+     * 기울기 균형
+     */
     private void LeftTouchControl(Touch touch, Vector2 leftInitialTouchPosition)
     {
         // 터치한 상태로 움직일 때(드래그)
@@ -157,6 +162,10 @@ public class PlayerDragMovement : MonoBehaviour
             }
         }
     }
+    /*
+     * 오른쪽 화면 터치와 관련된 작업을 처리한다.
+     * 움직임, 점프
+     */
     private void RightTouchControl(Touch touch, Vector2 rightInitialTouchPosition)
     {
         // 터치한 상태로 움직일 때(드래그)
@@ -169,18 +178,6 @@ public class PlayerDragMovement : MonoBehaviour
             {
                 // 왼쪽으로 굴러감
                 wheelRigidbody.AddTorque(moveSpeed * Time.deltaTime);
-
-                // 아래로 내렸다 떼면 점프
-                /*if (dragDirection.y < 0 && isGround)
-                {
-                    if (touch.phase == TouchPhase.Ended)
-                    {
-                        wheelRigidbody.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
-                        isGround = false;
-                        if (!GameManager.Instance.hatOn) GameManager.Instance.tJumpWithNoHat = true;
-
-                    }
-                }*/
 
                 // 오른쪽으로 가다가 왼쪽으로 확 꺾을 때 관성을 줄이기 위한 조건문
                 if (frameRigidbody.angularVelocity < 0 && Mathf.Abs(frameRigidbody.angularVelocity) > 150f)
@@ -197,18 +194,6 @@ public class PlayerDragMovement : MonoBehaviour
 
                 // 오른쪽으로 굴러감
                 wheelRigidbody.AddTorque(-moveSpeed * Time.deltaTime);
-
-                // 아래로 내렸다 떼면 점프
-                /*if (dragDirection.y < 0 && isGround)
-                {
-                    if (touch.phase == TouchPhase.Ended)
-                    {
-                        wheelRigidbody.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
-                        isGround = false;
-                        if (!GameManager.Instance.hatOn) GameManager.Instance.tJumpWithNoHat = true;
-
-                    }
-                }*/
 
                 //왼쪽으로 가다가 오른쪽으로 확 꺾을 때 관성을 줄이기 위한 조건문
                 if (frameRigidbody.angularVelocity > 0 && Mathf.Abs(frameRigidbody.angularVelocity) > 150f)

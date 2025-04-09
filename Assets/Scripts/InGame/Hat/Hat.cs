@@ -48,34 +48,6 @@ public class Hat : MonoBehaviour
     {
         if (hatOn)
         {
-            //모자를 동물 머리 위에 부착
-            //this.transform.position = hatTargetPosition.position;
-            //this.transform.rotation = hatTargetPosition.rotation;
-            /*
-            Vector3 currentRotation = frame.transform.eulerAngles;
-
-            // Z값을 -180 ~ 180 범위로 변환 (Unity는 0 ~ 360으로 반환하기 때문에)
-            float zRotation = currentRotation.z;
-            if (zRotation > 180f)
-            {
-                zRotation -= 360f;  // 180° 이상이면 -360°을 더해줌
-            }
-
-            // Z값이 -50 ~ 50 사이일 때 조건문 실행
-            if (zRotation >= -50f && zRotation <= 50f)
-            {
-                //Debug.Log("Z 회전 값이 -50° ~ 50° 사이에 있습니다.");
-                // 여기에 원하는 로직을 추가
-            }
-            else
-            {
-                Debug.Log(zRotation);
-                hatOn = false;
-                hatFall = true;
-                GameManager.Instance.hatFall = true;
-                GameManager.Instance.hatOn = false;
-            }
-            */
             //모자가 타겟 포지션보다 y축으로 아래로 1만큼 떨어지면 hatFall판정
             //HatFall!
             if (hatTargetPosition.position.y - transform.position.y > 1)
