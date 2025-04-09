@@ -376,7 +376,7 @@ public class GroundScroller : MonoBehaviour
                 obstacleChance = 0.25f;
                 break;
             case 3:
-                obstacleDelay = -1;
+                obstacleDelay = -2;
                 obstacleChance = 0.3f;
                 break;
             case 4:
