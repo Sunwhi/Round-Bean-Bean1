@@ -35,7 +35,7 @@ public class ObjectPool : MonoBehaviour
     private Rock CreateObject()
     {
         var newObj = Instantiate(rockPrefab).GetComponent<Rock>();
-        newObj.spriteRenderer.sprite = rockImg[Random.Range(0, rockImg.Length)];
+        newObj.spriteRenderer.sprite = rockImg[0]; // ±âº» µ¹
         newObj.gameObject.SetActive(false);
         newObj.transform.SetParent(null);
         return newObj;

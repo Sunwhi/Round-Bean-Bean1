@@ -263,6 +263,10 @@ public class GroundScroller : MonoBehaviour
     private void SpawnRock(SpriteRenderer tile)
     {
         var rock = ObjectPool.GetObject();
+        if (currentSeason == 1)
+        {
+            rock.spriteRenderer.sprite = ObjectPool.instance.rockImg[UnityEngine.Random.Range(0, ObjectPool.instance.rockImg.Length)];
+        }
         rock.transform.position = new Vector3(tile.transform.position.x + 0.5f, -1.5f, 1.5f); // 땅 아래에 스폰
         Vector3 rockEndPos = new Vector3(tile.transform.position.x + 0.5f, -0.8f, 1.5f); // 스폰 목표 위치
         StartCoroutine(AnimateRock(rock, rock.transform.position, rockEndPos));
